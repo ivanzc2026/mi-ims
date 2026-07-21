@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MI Fall Pilot Plan</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:2rem;color:#3d3d3a;font-size:12px}
+.page{max-width:1000px;margin:0 auto}
+h1{font-size:13px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.subtitle{font-size:11px;color:#aaa;margin-bottom:1.5rem;line-height:1.6}
+.principles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.p-card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:12px 14px}
+.p-icon{font-size:18px;margin-bottom:6px}
+.p-title{font-size:11px;font-weight:600;color:#2c2c2a;margin-bottom:3px}
+.p-desc{font-size:11px;color:#666;line-height:1.5}
+.section-title{font-size:12px;font-weight:600;color:#2c2c2a;margin:1.5rem 0 .6rem;padding-bottom:.5rem;border-bottom:1px solid #e0ddd8}
+.card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:14px 16px;margin-bottom:1rem}
+.card h2{font-size:12px;font-weight:600;color:#2c2c2a;margin-bottom:8px}
+.card p{font-size:11px;color:#666;line-height:1.6;margin-bottom:6px}
+.card p:last-child{margin-bottom:0}
+.card ul,.card ol{padding-left:16px;margin:6px 0}
+.card li{font-size:11px;color:#666;line-height:1.6;margin-bottom:2px}
+.school-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:1.5rem}
+.school-card{border-radius:8px;padding:11px 12px;min-height:110px}
+.sc-1{background:#eaf5e8;border:0.5px solid #8dc880}
+.sc-2{background:#eaf5e8;border:0.5px solid #8dc880}
+.sc-3{background:#e8f0fb;border:0.5px solid #8ab0e0}
+.sc-4{background:#e8f0fb;border:0.5px solid #8ab0e0}
+.sc-5{background:#fde8e8;border:0.5px solid #f0a0a0}
+.sc-label{font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.sc-1 .sc-label,.sc-2 .sc-label{color:#2a6e1a}
+.sc-3 .sc-label,.sc-4 .sc-label{color:#1a4e8a}
+.sc-5 .sc-label{color:#8a1a1a}
+.sc-title{font-size:11px;font-weight:600;color:#2c2c2a;margin-bottom:3px}
+.sc-desc{font-size:10px;color:#666;line-height:1.4}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e0ddd8}
+th{padding:8px 10px;text-align:left;font-size:9px;font-weight:600;color:#888;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid #e0ddd8;background:#faf9f7}
+td{padding:7px 10px;border-bottom:0.5px solid #f0efe9;vertical-align:top;font-size:11px;color:#555;line-height:1.5}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#faf9f7}
+.week-pill{font-size:9px;font-weight:600;padding:2px 7px;border-radius:4px;white-space:nowrap;display:inline-block}
+.w1{background:#eaf5e8;color:#2a6e1a}
+.w2{background:#e8f0fb;color:#1a4e8a}
+.w3{background:#fff8e6;color:#a07010}
+.w4{background:#f0e8fb;color:#5c2a9a}
+.priority-pill{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block}
+.pr-must{background:#f8cdb8;color:#712b13}
+.pr-should{background:#fde5b5;color:#633806}
+.pr-defer{background:#f0efe9;color:#666}
+.dep-note{font-size:10px;color:#a07010;font-style:italic;margin-top:2px}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem}
+.metric-card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:12px 14px}
+.metric-q{font-size:11px;font-weight:600;color:#2c2c2a;margin-bottom:3px}
+.metric-target{font-size:10px;color:#2a6e1a;font-weight:600;margin-bottom:4px}
+.metric-method{font-size:10px;color:#888;font-style:italic}
+.defer-list{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.defer-item{background:#fff;border:0.5px solid #e0ddd8;border-radius:6px;padding:10px 12px}
+.defer-name{font-size:11px;font-weight:500;color:#2c2c2a;margin-bottom:2px}
+.defer-why{font-size:11px;color:#888;line-height:1.4}
+.revisit-card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:14px 16px;margin-bottom:1rem}
+.revisit-card h2{font-size:12px;font-weight:600;color:#2c2c2a;margin-bottom:8px}
+.revisit-q{font-size:11px;color:#555;padding:5px 0;display:flex;gap:8px;border-bottom:0.5px solid #f0efe9;line-height:1.5}
+.revisit-q:last-child{border-bottom:none}
+.revisit-q::before{content:'→';color:#aaa;flex-shrink:0;font-weight:500}
+.feedback-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:1.5rem}
+.fb-card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:12px 14px}
+.fb-who{font-size:9px;font-weight:600;color:#888;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.fb-q{font-size:11px;color:#555;padding:3px 0;display:flex;gap:6px;line-height:1.4}
+.fb-q::before{content:'·';color:#ccc;flex-shrink:0}
+.chipp-timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem}
+.ct-card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:11px 12px}
+.ct-period{font-size:9px;font-weight:600;color:#888;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.ct-title{font-size:11px;font-weight:600;color:#2c2c2a;margin-bottom:4px}
+.ct-items{list-style:none;padding:0}
+.ct-items li{font-size:10px;color:#666;padding:2px 0;display:flex;gap:5px;line-height:1.3}
+.ct-items li::before{content:'▸';color:#ccc;flex-shrink:0;font-size:9px;margin-top:1px}
+.open-flag{font-size:10px;color:#a07010;font-style:italic}
+.action-item{font-size:10px;color:#712b13;font-weight:600}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Quest MI — Fall Pilot Plan</h1>
+<p class="subtitle">A structured 5-school pilot of the Horizon 1 system, designed to generate the ground truth needed to scale to 20+ schools in spring and to inform the Chipp Bot build in SY26-27 Q1.</p>
+
+<div class="principles">
+  <div class="p-card">
+    <div class="p-icon">🎯</div>
+    <div class="p-title">Primary goal</div>
+    <div class="p-desc">Test whether the H1 automation system detects risk earlier than the current manual approach and reduces Ivan's monitoring time per school.</div>
+  </div>
+  <div class="p-card">
+    <div class="p-icon">📊</div>
+    <div class="p-title">Secondary goal</div>
+    <div class="p-desc">Generate the ground truth — failure patterns, compliance rates, teacher behavior — that the Chipp Bot needs as design input before build begins.</div>
+  </div>
+  <div class="p-card">
+    <div class="p-icon">⚖️</div>
+    <div class="p-title">Design principle</div>
+    <div class="p-desc">5 schools is small enough to observe closely, large enough to test automation under real variance. Don't scale until the pilot proves the system works.</div>
+  </div>
+</div>
+
+<!-- SCHOOL SELECTION -->
+<div class="section-title">Pilot school selection — 5 schools, 5 different risk profiles</div>
+<div class="school-grid">
+  <div class="school-card sc-1">
+    <div class="sc-label">School A — Returning / Strong</div>
+    <div class="sc-title">Control: proven implementation</div>
+    <div class="sc-desc">Returning school with a Facilitator Strength = Strong from a prior cycle. Low risk. Tests whether the system correctly identifies a Green site and leaves it alone.</div>
+  </div>
+  <div class="school-card sc-2">
+    <div class="sc-label">School B — Returning / Average</div>
+    <div class="sc-title">Control: baseline comparison</div>
+    <div class="sc-desc">Returning school with Average facilitator strength. Some known challenges. Tests whether the system detects drift from a school with a mixed track record.</div>
+  </div>
+  <div class="school-card sc-3">
+    <div class="sc-label">School C — New / PBL-experienced</div>
+    <div class="sc-title">New school, strong facilitator</div>
+    <div class="sc-desc">First implementation, but teacher has prior PBL experience. Tests onboarding automation and whether the readiness checkpoint correctly identifies a capable teacher.</div>
+  </div>
+  <div class="school-card sc-4">
+    <div class="sc-label">School D — New / PBL-inexperienced</div>
+    <div class="sc-title">New school, new to PBL</div>
+    <div class="sc-desc">First implementation, teacher new to project-based learning — the highest-risk teacher profile per SY25-26 data. Tests whether M3 risk flags fire early enough to make a difference.</div>
+  </div>
+  <div class="school-card sc-5">
+    <div class="sc-label">School E — High risk</div>
+    <div class="sc-title">Multiple known risk factors</div>
+    <div class="sc-desc">New school with at least 2 known risk factors (attendance concerns, scheduling complexity, or weak school culture). Tests whether the system catches a Red site before it becomes a failed implementation.</div>
+  </div>
+</div>
+<p style="font-size:11px;color:#888;margin-bottom:1.5rem;font-style:italic"><span class="open-flag">Action item: Ivan to select specific schools from the fall implementation list before pilot launch. Pull School E from the SY25-26 "Weak implementation profile" list if any of those networks are returning for fall.</span></p>
+
+<!-- BUILD SEQUENCE -->
+<div class="section-title">Pre-launch build sequence — 4 weeks before pilot begins</div>
+<table>
+<thead><tr>
+  <th style="width:60px">Week</th>
+  <th style="width:200px">Build item</th>
+  <th style="width:60px">Priority</th>
+  <th style="width:80px">Estimated time</th>
+  <th>Owner + dependency notes</th>
+</tr></thead>
+<tbody>
+<tr>
+  <td><span class="week-pill w1">Week 1</span></td>
+  <td>Add new fields to Program Implementation table in Airtable (all 22 new fields from D3)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>3–4 hours</td>
+  <td>Ivan + Airtable AI (Omni). Do this first — every automation depends on these fields existing. Start with Implementation Status, Current Tier, Open Flag, and the 4 date fields. Add training and pulse fields in round 2.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w1">Week 1</span></td>
+  <td>Create Weekly Pulse Log table with 7 fields; link to Program Implementation</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>2 hours</td>
+  <td>Ivan + Airtable AI. Must be created before Zap 4 (pulse routing) can be built. Set up the linked record relationship first; add fields after.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w1">Week 1</span></td>
+  <td>Weekly pulse form (Google Form, mobile-optimized)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>2 hours</td>
+  <td>Ivan designs; must be mobile-first (teachers submit on phones). Pre-populate "which school" dropdown from Airtable Implementation Keys to prevent matching errors. Include conditional logic: module deliverable Y/N only appears at session numbers 5, 10, 15, 19, 24.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w1">Week 1</span></td>
+  <td>Zapier: Pulse form → Airtable (Zap 4 — most complex)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>4–5 hours</td>
+  <td>Ivan builds or assigns to a Zapier-experienced team member. Test with synthetic data before real school uses the form. Most important automation in the system — budget extra time for debugging.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w1">Week 1</span></td>
+  <td>Zapier: Welcome + stakeholder mapping (Zap 1)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>1 hour</td>
+  <td>Simple email trigger. Write the welcome email copy before building the Zap. Stakeholder mapping form must also be built (30 min) before this Zap can fire.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w2">Week 2</span></td>
+  <td>Pacing mapper Google Sheet template</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>3–4 hours</td>
+  <td>Ivan builds or assigns. Inputs: start date, sessions/week, session length. Outputs: dated session calendar with M1–M7 breakpoints, 3 client interaction windows flagged, and risk alerts (M3 consecutive, &lt;25 sessions, showcase near end-of-year). This is the highest-leverage H1 content artifact.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w2">Week 2</span></td>
+  <td>Calendly setup for Part 2 PD windows (3–4 options)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>1 hour</td>
+  <td>Ivan sets up Calendly with 3–4 event types (one per Part 2 window option). Zapier: Calendly invitee created → Airtable Part 2 Window Selected field updated (Zap 3). Must decide: does Ivan facilitate all Part 2 sessions, or is one a high-quality recording?</td>
+</tr>
+<tr>
+  <td><span class="week-pill w2">Week 2</span></td>
+  <td>Zapier: Reach 360 webhook → Part 2 window email (Zap 2)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>2 hours</td>
+  <td>Reach 360 course.completed webhook fires → Zapier → Calendly link email to teacher. Test with Steve — he owns A360/Reach 360 and can confirm webhook configuration. Calendly setup must be complete before this Zap can be built.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w2">Week 2</span></td>
+  <td>Zapier: Pacing mapper delivery on Training Complete (Zap from D4)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>1 hour</td>
+  <td>Simple: Implementation Status flips to Training Complete → mapper link email fires to teacher. Pacing mapper Google Sheet must be finalized before this Zap can send a useful link.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w2">Week 2</span></td>
+  <td>Launch gate 7-item checklist fields in Airtable</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>1 hour</td>
+  <td>Seven checkbox fields on the Program Implementation record. Airtable automation: all 7 = true → alert to Ivan (launch approval queue). Ivan approves manually → flips Implementation Status to Active → Zap fires "go" text + M1 kit.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w3">Week 3</span></td>
+  <td>JIT Loom kits — record M1, M2, and M3 (minimum for fall)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>3–4 hours</td>
+  <td>Ivan records. M3 kit is the highest priority — most teachers struggle here. Keep each kit under 3 minutes. Content focus: M1 = client kickoff coaching, M2 = interview quality coaching (what strong vs. weak interview data looks like), M3 = synthesis leap coaching (genuine insight vs. theme summary). M4 and M5 kits can be recorded after fall launch if needed.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w3">Week 3</span></td>
+  <td>Zapier: Module transition → JIT kit email (Zap 6)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>2 hours</td>
+  <td>Current Session field crosses 6, 11, 16, 20 → corresponding JIT Loom kit email fires. Loom kits must be recorded and links captured before this Zap can be built. Four separate Zap paths or one multi-path Zap using Zapier Paths.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w3">Week 3</span></td>
+  <td>Zapier: Missed pulse detection + Saturday reminder (Zap 5)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>3 hours</td>
+  <td>Zapier Schedule (Friday 5pm) → search Airtable for implementations with Last Pulse Submission Date &gt; 6 days ago → generate reminder list for Ivan. In fall pilot: Ivan manually texts or emails from the list. SMS automation deferred until tool decision made. Second consecutive miss: set Open Flag = true.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w3">Week 3</span></td>
+  <td>Client presentation rubric + 2–3 exemplar summaries</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>3–4 hours</td>
+  <td><span class="action-item">ACTION ITEM: Ivan owns this content build.</span> Source: client presentation guide (Ivan's Drive), Module 6 wrapper. Model from strong SY25-26 implementations: Contreras Spring 2026, Sylmar Spring 2026, Alliance Summer 2025. Must exist before T-7 rubric delivery automation can fire.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w4">Week 4</span></td>
+  <td>Zapier: T-21 showcase prep trigger (Zap 7)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>2 hours</td>
+  <td>Daily Zapier schedule checks Showcase Date = today + 21 → fires client re-confirmation email + updates Implementation Status to Showcase Prep + Ivan digest flag. Simple date-math trigger.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w4">Week 4</span></td>
+  <td>Zapier: Post-showcase survey + debrief delivery (Zap 8)</td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td>2 hours</td>
+  <td>Daily schedule: Showcase Date = today → student survey link to teacher + teacher feedback form + client debrief scheduling link + pre-conversation form. Survey links must exist before this Zap fires.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w4">Week 4</span></td>
+  <td>Monday digest Zap (Zap 9)</td>
+  <td><span class="priority-pill pr-should">Should</span></td>
+  <td>4–5 hours</td>
+  <td>Most complex formatting. Monday 8am → Airtable search for all active implementations → format as digest email sorted by tier → send to Ivan. The formatting step (building the email table) is the hardest part. Defer to Week 4 so the underlying data is flowing before you build the digest.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w4">Week 4</span></td>
+  <td>Airtable Interface — Implementation Control Center</td>
+  <td><span class="priority-pill pr-should">Should</span></td>
+  <td>3–4 hours</td>
+  <td>Build after all fields and automations are live — the interface is only as good as the data flowing into it. Five sections: stat blocks, alert section (Open Flag = true), module risk section (entering M2/M3), upcoming showcases, all-clear list. Available on Enterprise plan.</td>
+</tr>
+<tr>
+  <td><span class="week-pill w4">Week 4</span></td>
+  <td>Renewal follow-up Zap (Zap 10)</td>
+  <td><span class="priority-pill pr-should">Should</span></td>
+  <td>1 hour</td>
+  <td>Lowest effort in the set. Renewal Disposition = Yes/Maybe → schedule 30-day and 60-day reminder emails to Ivan. Build last since renewal happens at the end of the cycle — not needed on day 1 of pilot.</td>
+</tr>
+</tbody>
+</table>
+
+<!-- WHAT TO IGNORE -->
+<div class="section-title">What to ignore for the fall pilot</div>
+<div class="defer-list">
+  <div class="defer-item">
+    <div class="defer-name">SMS automation tool</div>
+    <div class="defer-why">Ivan texts pilot teachers manually. Measure response rates vs. email. Choose a tool based on what the pilot reveals. Don't build before you know what you need.</div>
+  </div>
+  <div class="defer-item">
+    <div class="defer-name">Claude API integration (auto-summarization)</div>
+    <div class="defer-why">Ivan manually pastes pulse open-text responses into Claude for Monday summarization. The manual version builds the habit and generates the use cases before automating.</div>
+  </div>
+  <div class="defer-item">
+    <div class="defer-name">Chipp Bot (teacher or admin)</div>
+    <div class="defer-why">Begin Chipp.ai technical verification conversations during the pilot. Don't build until H1 data is flowing — the admin bot has nothing useful to say until Airtable is populated.</div>
+  </div>
+  <div class="defer-item">
+    <div class="defer-name">Student work rubric library (full set)</div>
+    <div class="defer-why">Start M3 Insight Statement rubric only. The full 6-module library takes time to calibrate well. Don't rush it — a bad rubric is worse than no rubric for the bot's quality detection.</div>
+  </div>
+  <div class="defer-item">
+    <div class="defer-name">Custom microsite or A360 as LMS</div>
+    <div class="defer-why">Platform decision requires Steve's assessment and a team discussion. Cannot be designed in isolation. Defer to spring after the pilot generates evidence about signal gaps.</div>
+  </div>
+  <div class="defer-item">
+    <div class="defer-name">Full 20-school rollout on day 1</div>
+    <div class="defer-why">Too much surface area for a first test. 5 schools is the right scope to observe closely, debug automations, and generate learning before scaling. Spring rollout builds on fall pilot findings.</div>
+  </div>
+</div>
+
+<!-- SUCCESS METRICS -->
+<div class="section-title">Pilot success metrics — what to measure after 4 weeks</div>
+<div class="metrics-grid">
+  <div class="metric-card">
+    <div class="metric-q">Did the pulse form get submitted consistently?</div>
+    <div class="metric-target">Target: ≥ 70% weekly compliance across 5 schools</div>
+    <div class="metric-method">Measure: Weekly Pulse Log record count vs. expected submissions. If below 70%, incentive structure or form design needs revision before scaling.</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-q">Did the JIT kits get opened and used?</div>
+    <div class="metric-target">Target: ≥ 60% open rate; at least 1 teacher references content in pulse open text</div>
+    <div class="metric-method">Measure: Loom view counts + Mailchimp or Gmail link tracking. If kits go unopened, content or timing needs revision.</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-q">Did the M3 risk flag fire predictively?</div>
+    <div class="metric-target">Target: every school rated Red at M3 entry produces an Average or Weak showcase outcome; every Green school produces Average or Strong</div>
+    <div class="metric-method">Measure: Cross-reference M3 tier at session 11 with final Implementation Outcome field. This is the most important accuracy test in the system.</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-q">Did the pacing mapper reduce planning time?</div>
+    <div class="metric-target">Target: pacing map completed within 48h of being sent; Farah reports time savings vs. prior cycles</div>
+    <div class="metric-method">Measure: timestamp difference between mapper sent and mapper completed. Ask Farah directly how long pacing maps took to finalize vs. prior cycles.</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-q">Did the system catch anything Ivan would have missed?</div>
+    <div class="metric-target">Target: at least 1 risk flag fires before Ivan would have noticed through manual monitoring</div>
+    <div class="metric-method">Measure: Ivan logs every Red/Yellow flag that fires and whether he would have caught it without the system. Qualitative — this is the most important learning from the pilot.</div>
+  </div>
+  <div class="metric-card">
+    <div class="metric-q">How much time did Ivan spend per school per week?</div>
+    <div class="metric-target">Target: &lt; 30 min/school/week average for Green sites; &lt; 60 min for Yellow; unlimited for Red</div>
+    <div class="metric-method">Measure: Ivan tracks time manually for 4 weeks. This is the baseline for the automation ROI case when presenting to team for spring scale-up.</div>
+  </div>
+</div>
+
+<!-- WHAT TO REVISIT AFTER 4 WEEKS -->
+<div class="revisit-card">
+  <h2>What to revisit after 4 weeks — the learning agenda for the fall pilot</h2>
+  <div class="revisit-q">Is pulse form compliance above 70%? If not: was it a form design problem (too long, not mobile-friendly), a framing problem (teachers didn't understand why), or a consequences problem (no real incentive to submit)? The answer determines whether we adjust the form, add an incentive, or accept that the Chipp Bot is needed sooner than planned to replace the form.</div>
+  <div class="revisit-q">Did the M3 risk flag fire predictively for School D (new PBL teacher) and School E (high-risk)? If the system correctly identified these as Red before the showcase, it's working. If they went undetected, the flag logic or trigger timing needs recalibration.</div>
+  <div class="revisit-q">Was the missed-submission detection catching real risk, or generating false alarms? False positives (teachers who submitted but Zapier didn't log it) erode trust in the system faster than no alerts at all. Debug immediately if this happens.</div>
+  <div class="revisit-q">Did the JIT kits land well, or were they generic? The M3 kit in particular needs to feel specific enough to be immediately useful. If teachers describe it as vague, the content needs revision before spring.</div>
+  <div class="revisit-q">Did the Monday digest give Ivan the right information in the right format? Or was it too noisy, too sparse, or formatted in a way that required interpretation? The digest design should be refined based on 4 weeks of actual use before scaling.</div>
+  <div class="revisit-q">What's the single thing that fell through the system that shouldn't have? There will be something — the pilot's job is to find it before it happens at 20 schools. Name it explicitly in the 4-week retrospective.</div>
+  <div class="revisit-q">If we ran 70 schools on this system tomorrow, what would break first? Answer this question at the 4-week retrospective. The answer should drive the spring build priorities and the Chipp Bot feature prioritization.</div>
+</div>
+
+<!-- TEAM FEEDBACK -->
+<div class="section-title">Feedback to collect from the team — end of pilot</div>
+<div class="feedback-grid">
+  <div class="fb-card">
+    <div class="fb-who">Ivan</div>
+    <div class="fb-q">What signals did the system surface that you acted on?</div>
+    <div class="fb-q">What risk did you catch anyway that the system missed?</div>
+    <div class="fb-q">What manual tasks remain that feel automatable?</div>
+    <div class="fb-q">How long did you spend per school per week, by tier?</div>
+  </div>
+  <div class="fb-card">
+    <div class="fb-who">Farah</div>
+    <div class="fb-q">Did the employer check-in automation reduce client relationship problems you had to personally manage?</div>
+    <div class="fb-q">Was the pacing mapper faster than building maps manually? By how much?</div>
+    <div class="fb-q">What would you need from this system to confidently hand off implementation to Ivan full-time?</div>
+  </div>
+  <div class="fb-card">
+    <div class="fb-who">Teachers (via debrief)</div>
+    <div class="fb-q">Was the pulse form a burden or a benefit? How long did it take?</div>
+    <div class="fb-q">Did the JIT kits arrive at the right time? Were they useful?</div>
+    <div class="fb-q">Would you use a bot instead of email/texts for implementation support?</div>
+    <div class="fb-q">What's one thing that would have made the program easier to run?</div>
+  </div>
+</div>
+
+<!-- CHIPP BOT TIMELINE -->
+<div class="section-title">Chipp Bot development timeline — running alongside the fall pilot</div>
+<div class="chipp-timeline">
+  <div class="ct-card">
+    <div class="ct-period">Sept–Oct 2026 (during pilot)</div>
+    <div class="ct-title">Technical verification</div>
+    <ul class="ct-items">
+      <li>Schedule call with Chipp.ai — bring the 7 open questions from the PRD</li>
+      <li>Confirm: Drive monitoring native or external?</li>
+      <li>Confirm: proactive digest capability?</li>
+      <li>Confirm: SMS channel support?</li>
+      <li>Confirm: data-retention terms (for Legal)</li>
+      <li>Submit Chipp.ai for Cambiar Legal/AI Lab review</li>
+    </ul>
+  </div>
+  <div class="ct-card">
+    <div class="ct-period">Oct–Nov 2026</div>
+    <div class="ct-title">Teacher bot build (Phase 1)</div>
+    <ul class="ct-items">
+      <li>Load MI curriculum knowledge base into Chipp.ai</li>
+      <li>Configure teacher bot with guardrails</li>
+      <li>Test against synthetic teacher questions</li>
+      <li>Pilot with 2 teachers from the fall cohort (de-identified data only)</li>
+      <li>Begin M3 Insight Statement rubric development</li>
+    </ul>
+  </div>
+  <div class="ct-card">
+    <div class="ct-period">Nov–Dec 2026</div>
+    <div class="ct-title">Admin bot build (Phase 2)</div>
+    <ul class="ct-items">
+      <li>Configure admin bot with Airtable API access</li>
+      <li>Test daily digest generation</li>
+      <li>Test cross-site query capability ("how is Roosevelt High doing?")</li>
+      <li>Validate against fall pilot Airtable data (must be live and populated)</li>
+      <li>Legal/AI Lab clearance received before any student data flows</li>
+    </ul>
+  </div>
+  <div class="ct-card">
+    <div class="ct-period">Jan 2027 (spring launch)</div>
+    <div class="ct-title">Bot-assisted spring rollout</div>
+    <ul class="ct-items">
+      <li>Teacher bot available to all spring implementations</li>
+      <li>Admin bot replaces manual Monday digest</li>
+      <li>Pulse form remains in parallel until bot compliance is proven</li>
+      <li>Drive scraping (student work quality) — Phase 3, only after Legal clearance</li>
+      <li>Rubric library: target 3 modules complete by spring launch</li>
+    </ul>
+  </div>
+</div>
+
+<div style="background:#fde8e8;border:0.5px solid #f0a0a0;border-radius:6px;padding:10px 12px;font-size:11px;color:#712b13;margin-bottom:1.5rem">
+<strong>Hard dependencies for spring scale-up:</strong> Fall pilot must complete before spring planning begins. The pilot's 4-week retrospective answers the question of how many schools the system can handle without additional staffing or platform changes. Don't commit to spring scale-up numbers until the retrospective is done.
+</div>
+
+<div style="background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:14px 16px">
+<div style="font-size:11px;font-weight:600;color:#2c2c2a;margin-bottom:8px">Open items before pilot launch</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+  <div style="font-size:11px;color:#a07010;display:flex;gap:8px"><span style="font-weight:600;flex-shrink:0">⚑ Ivan:</span> Select 5 pilot schools from fall implementation list (profiles: 2 returning, 2 new, 1 high-risk)</div>
+  <div style="font-size:11px;color:#a07010;display:flex;gap:8px"><span style="font-weight:600;flex-shrink:0">⚑ Ivan:</span> Build client presentation rubric + 2–3 exemplar summaries before fall launch (Stage 6 dependency)</div>
+  <div style="font-size:11px;color:#a07010;display:flex;gap:8px"><span style="font-weight:600;flex-shrink:0">⚑ Ivan:</span> Record M1, M2, M3 JIT Loom kits (content before automation)</div>
+  <div style="font-size:11px;color:#a07010;display:flex;gap:8px"><span style="font-weight:600;flex-shrink:0">⚑ Steve:</span> Confirm Reach 360 webhook configuration and Zapier integration</div>
+  <div style="font-size:11px;color:#a07010;display:flex;gap:8px"><span style="font-weight:600;flex-shrink:0">⚑ Farah:</span> Confirm network decision-maker contacts for each pilot school (Stage 8 dependency)</div>
+  <div style="font-size:11px;color:#a07010;display:flex;gap:8px"><span style="font-weight:600;flex-shrink:0">⚑ Team:</span> Confirm district SMS policy before any automated texting is piloted (even manually)</div>
+  <div style="font-size:11px;color:#a07010;display:flex;gap:8px"><span style="font-weight:600;flex-shrink:0">⚑ Ivan:</span> Schedule Chipp.ai technical verification call during pilot period (Oct 2026)</div>
+</div>
+</div>
+
+</div>
+</body>
+</html>

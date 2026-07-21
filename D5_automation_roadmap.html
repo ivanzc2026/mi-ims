@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MI Automation Roadmap</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:2rem;color:#3d3d3a;font-size:12px}
+.page{max-width:1100px;margin:0 auto}
+h1{font-size:13px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.subtitle{font-size:11px;color:#aaa;margin-bottom:1.5rem;line-height:1.6}
+.horizon-intro{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.5rem}
+.hi-card{border-radius:8px;padding:12px 14px}
+.hi-h1{background:#eaf5e8;border:0.5px solid #8dc880}
+.hi-h2{background:#e8f0fb;border:0.5px solid #8ab0e0}
+.hi-h3{background:#f0e8fb;border:0.5px solid #c4a0e8}
+.hi-label{font-size:10px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px}
+.hi-h1 .hi-label{color:#2a6e1a}
+.hi-h2 .hi-label{color:#1a4e8a}
+.hi-h3 .hi-label{color:#5c2a9a}
+.hi-title{font-size:12px;font-weight:600;color:#2c2c2a;margin-bottom:3px}
+.hi-desc{font-size:11px;color:#666;line-height:1.5}
+.controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.controls span{font-size:11px;color:#999}
+button{font-size:11px;padding:4px 11px;border-radius:20px;border:1px solid #ccc;background:#fff;color:#666;cursor:pointer;transition:all .15s}
+button.on,button:hover{background:#eee;color:#333;border-color:#999}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e0ddd8;margin-bottom:1.5rem}
+th{padding:8px 10px;text-align:left;font-size:9px;font-weight:600;color:#888;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid #e0ddd8;background:#faf9f7;white-space:nowrap}
+td{padding:8px 10px;border-bottom:0.5px solid #f0efe9;vertical-align:top;line-height:1.5}
+tr:last-child td{border-bottom:none}
+tr.hide{display:none}
+tr:hover td{background:#faf9f7}
+tr.section-row td{background:#f5f4f0;font-size:10px;font-weight:600;color:#888;letter-spacing:.05em;text-transform:uppercase;padding:6px 10px;border-bottom:1px solid #e0ddd8}
+.hz-pill{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
+.hz-1{background:#eaf5e8;color:#2a6e1a}
+.hz-2{background:#e8f0fb;color:#1a4e8a}
+.hz-3{background:#f0e8fb;color:#5c2a9a}
+.effort-pill{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
+.ef-low{background:#eaf5e8;color:#2a6e1a}
+.ef-med{background:#fff8e6;color:#a07010}
+.ef-high{background:#fde8e8;color:#8a1a1a}
+.tool-text{font-size:11px;color:#555;font-family:monospace}
+.benefit-text{font-size:11px;color:#555}
+.current-text{font-size:11px;color:#888;font-style:italic}
+.auto-name{font-weight:500;color:#2c2c2a;font-size:12px}
+.auto-detail{font-size:11px;color:#888;margin-top:2px}
+.note-flag{font-size:10px;color:#a07010;font-style:italic;margin-top:3px}
+.section-title{font-size:12px;font-weight:600;color:#2c2c2a;margin:1.5rem 0 .6rem;padding-bottom:.5rem;border-bottom:1px solid #e0ddd8}
+.sms-table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e0ddd8;margin-bottom:1rem}
+.sms-table th{padding:8px 10px;text-align:left;font-size:9px;font-weight:600;color:#888;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid #e0ddd8;background:#faf9f7}
+.sms-table td{padding:8px 10px;border-bottom:0.5px solid #f0efe9;vertical-align:top;font-size:11px;color:#555;line-height:1.5}
+.sms-table tr:last-child td{border-bottom:none}
+.rec-pill{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block}
+.rec-defer{background:#f5f4f0;color:#666}
+.rec-pilot{background:#fff8e6;color:#a07010}
+.rec-best{background:#eaf5e8;color:#2a6e1a}
+.rec-check{background:#e8f0fb;color:#1a4e8a}
+.chipp-card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:16px;margin-bottom:1.5rem}
+.chipp-card h2{font-size:12px;font-weight:600;color:#2c2c2a;margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid #eee}
+.chipp-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px}
+.chipp-section h3{font-size:11px;font-weight:600;color:#555;margin-bottom:4px}
+.chipp-section p,.chipp-section li{font-size:11px;color:#666;line-height:1.6}
+.chipp-section ul{padding-left:14px}
+.chipp-section li{margin-bottom:2px}
+.open-q{font-size:10px;color:#a07010;font-style:italic;padding:3px 0;display:flex;gap:5px}
+.open-q::before{content:'?';font-style:normal;font-weight:600;color:#a07010;flex-shrink:0}
+.stage-tag{font-size:9px;font-weight:600;padding:2px 5px;border-radius:3px;background:#f0efe9;color:#555;display:inline-block;margin-right:3px}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Quest MI — Automation Roadmap</h1>
+<p class="subtitle">Three-horizon roadmap from fall quick wins through Chipp Bot deployment and long-term platform architecture.<br>Horizon 1 = build for fall 2026. Horizon 2 = SY26-27 Q1 (mid-term). Horizon 3 = long-term platform decisions.</p>
+
+<div class="horizon-intro">
+  <div class="hi-card hi-h1">
+    <div class="hi-label">Horizon 1 — Fall 2026</div>
+    <div class="hi-title">Quick wins with existing tools</div>
+    <div class="hi-desc">Airtable + Zapier + Google Forms + Reach 360 + Calendly. No new platforms. ~20–25 hours total build time. Deployable before fall launch.</div>
+  </div>
+  <div class="hi-card hi-h2">
+    <div class="hi-label">Horizon 2 — SY26-27 Q1</div>
+    <div class="hi-title">Chipp Bot + mid-term improvements</div>
+    <div class="hi-desc">Teacher-facing Q&A bot + admin digest bot. Begin build during fall pilot. Deploy to a subset of schools by winter 2026. Depends on H1 Airtable infrastructure being live.</div>
+  </div>
+  <div class="hi-card hi-h3">
+    <div class="hi-label">Horizon 3 — Long-term</div>
+    <div class="hi-title">Platform architecture decision</div>
+    <div class="hi-desc">Where does curriculum live? A360 as LMS, custom microsite, or Drive + deep instrumentation. This decision unlocks true passive tracking. Requires Steve's input and a team decision.</div>
+  </div>
+</div>
+
+<div class="controls">
+  <span>Filter:</span>
+  <button class="on" onclick="fil('all',this)">All</button>
+  <button onclick="fil('h1',this)">Horizon 1</button>
+  <button onclick="fil('h2',this)">Horizon 2</button>
+  <button onclick="fil('h3',this)">Horizon 3</button>
+  <button onclick="fil('low',this)">Low effort</button>
+  <button onclick="fil('med',this)">Med effort</button>
+  <button onclick="fil('high',this)">High effort</button>
+</div>
+
+<table>
+<thead><tr>
+  <th style="width:70px">Horizon</th>
+  <th style="width:170px">Automation</th>
+  <th style="width:130px">Current state</th>
+  <th style="width:140px">Tool(s)</th>
+  <th style="width:60px">Effort</th>
+  <th>Expected benefit + notes</th>
+</tr></thead>
+<tbody>
+
+<tr class="section-row"><td colspan="6">Horizon 1 — Quick wins (build for fall)</td></tr>
+
+<tr data-hz="h1" data-ef="low">
+<td><span class="hz-pill hz-1">H1</span></td>
+<td><div class="auto-name">Welcome + stakeholder mapping</div><div class="auto-detail">Stage 1: fires on commitment</div></td>
+<td class="current-text">Farah sends manually; stakeholder info collected ad hoc</td>
+<td class="tool-text">Zapier + Gmail or Mailchimp</td>
+<td><span class="effort-pill ef-low">Low</span></td>
+<td class="benefit-text">First consistent touch at commitment; stakeholder map data flows to Airtable automatically; Farah's manual send eliminated. Trigger: AT status = Committed.</td>
+</tr>
+
+<tr data-hz="h1" data-ef="low">
+<td><span class="hz-pill hz-1">H1</span></td>
+<td><div class="auto-name">Reach 360 → Part 2 window email</div><div class="auto-detail">Stage 2: fires on Part 1 completion</div></td>
+<td class="current-text">Farah manually schedules Part 2 for each teacher; many miss it</td>
+<td class="tool-text">Reach 360 webhook + Zapier + Calendly</td>
+<td><span class="effort-pill ef-low">Low</span></td>
+<td class="benefit-text">Part 2 completion rate rises because selection is immediate and easy. No Farah time. Trigger: Reach 360 course.completed webhook (confirmed supported natively).</td>
+</tr>
+
+<tr data-hz="h1" data-ef="low">
+<td><span class="hz-pill hz-1">H1</span></td>
+<td><div class="auto-name">Pacing mapper auto-delivery</div><div class="auto-detail">Stage 3: fires on Training Complete</div></td>
+<td class="current-text">Farah manually creates pacing map for each school — her biggest manual pain point</td>
+<td class="tool-text">Zapier + Google Sheets template</td>
+<td><span class="effort-pill ef-low">Low</span></td>
+<td class="benefit-text">Mapper link auto-sends the moment Ivan flips status to Training Complete. Unblocks Farah's highest time cost. Client calendar scheduling can begin same day. Content (the mapper template itself) must be built first.</td>
+</tr>
+
+<tr data-hz="h1" data-ef="low">
+<td><span class="hz-pill hz-1">H1</span></td>
+<td><div class="auto-name">Launch gate alert + "go" text</div><div class="auto-detail">Stage 4: fires on all-7-green</div></td>
+<td class="current-text">Ivan manually checks each gate item; "go" confirmation sent manually</td>
+<td class="tool-text">Airtable automation + Zapier</td>
+<td><span class="effort-pill ef-low">Low</span></td>
+<td class="benefit-text">Ivan gets alerted the moment a school hits all 7 gates green — no manual checking. "Go" text to teacher auto-sends after Ivan approves. M1 JIT kit fires on launch day. Reduces Ivan's monitoring burden significantly.</td>
+</tr>
+
+<tr data-hz="h1" data-ef="med">
+<td><span class="hz-pill hz-1">H1</span></td>
+<td><div class="auto-name">Pulse form → Airtable routing</div><div class="auto-detail">Stage 5: fires on every pulse submission</div></td>
+<td class="current-text">No pulse form exists; Ivan has zero in-flight visibility</td>
+<td class="tool-text">Google Forms + Zapier + Airtable</td>
+<td><span class="effort-pill ef-med">Med</span></td>
+<td class="benefit-text">Every pulse submission creates a Weekly Pulse Log record, updates the parent implementation record, and triggers flags if score ≤ 2 in M2/M3. Zero manual data entry. This is the most important H1 automation — it creates the signal the entire system reads from.</div></td>
+</tr>
+
+<tr data-hz="h1" data-ef="med">
+<td><span class="hz-pill hz-1">H1</span></td>
+<td><div class="auto-name">Missed submission detection + reminder</div><div class="auto-detail">Stage 5: fires every Friday 5pm</div></td>
+<td class="current-text">Ivan notices missed submissions by memory or doesn't notice at all</td>
+<td class="tool-text">Zapier Schedule + Airtable search + Gmail or SMS</td>
+<td><span class="effort-pill ef-med">Med</span></td>
+<td class="benefit-text">Saturday morning reminder fires automatically for any school missing a Friday pulse. Second consecutive miss flags Ivan for a direct call. Drift detection without human monitoring. SMS delivery TBD pending tool decision.</td>
+</tr>
+
+<tr data-hz="h1" data-ef="med">
+<td><span class="hz-pill hz-1">H1</span></td>
+<td><div class="auto-name">Module transition JIT kits</div><div class="auto-detail">Stage 5: fires when session crosses M2/M3/M4/M5 threshold</div></td>
+<td class="current-text">JIT kits don't exist; no structured support is delivered at module transitions</td>
+<td class="tool-text">Zapier + Gmail or Mailchimp + Loom (content)</td>
+<td><span class="effort-pill ef-med">Med</span></td>
+<td class="benefit-text">Support fires because of where the teacher is in the curriculum — not a calendar schedule. M3 kit is the highest priority to build and most likely to prevent Failure Moment #2. Loom kits must be recorded before this automation can activate.
+<div class="note-flag">Content dependency: M1, M2, M3 kits must be recorded before fall. M4, M5 kits can follow.</div></td>
+</tr>
+
+<tr data-hz="h1" data-ef="low">
+<td><span class="hz-pill hz-1">H1</span></td>
+<td><div class="auto-name">T-21 showcase prep trigger</div><div class="auto-detail">Stage 6: fires 21 days before showcase</div></td>
+<td class="current-text">Showcase prep begins when someone remembers — inconsistent</td>
+<td class="tool-text">Zapier Schedule (daily check) + Airtable + Gmail</td>
+<td><span class="effort-pill ef-low">Low</span></td>
+<td class="benefit-text">Client re-confirmation email fires automatically. Status updates to Showcase Prep. Ivan gets a digest flag. T-10 structured form goes to Green sites. Nothing falls through because of oversight.</td>
+</tr>
+
+<tr data-hz="h1" data-ef="low">
+<td><span class="hz-pill hz-1">H1</span></td>
+<td><div class="auto-name">Post-showcase survey + debrief delivery</div><div class="auto-detail">Stage 7: fires on showcase date</div></td>
+<td class="current-text">Surveys sent manually; often delayed or forgotten</td>
+<td class="tool-text">Zapier Schedule + Gmail</td>
+<td><span class="effort-pill ef-low">Low</span></td>
+<td class="benefit-text">Student + teacher survey links fire within 24h of showcase date. Client debrief scheduling link + pre-conversation form auto-sends. No Ivan manual action required for any of these sends.</td>
+</tr>
+
+<tr data-hz="h1" data-ef="med">
+<td><span class="hz-pill hz-1">H1</span></td>
+<td><div class="auto-name">Monday morning digest to Ivan</div><div class="auto-detail">All stages: fires every Monday 8am</div></td>
+<td class="current-text">Ivan manually checks Airtable — takes 30–45 min; some things still missed</td>
+<td class="tool-text">Zapier Schedule + Airtable search + Gmail (formatted HTML)</td>
+<td><span class="effort-pill ef-med">Med</span></td>
+<td class="benefit-text">Every Monday: Ivan receives a formatted email showing all active schools sorted by tier (Red first), current session, last pulse date, open flags, and upcoming showcases. Triage takes 10 minutes instead of 45. The formatting step is the hardest part of this Zap.</td>
+</tr>
+
+<tr data-hz="h1" data-ef="low">
+<td><span class="hz-pill hz-1">H1</span></td>
+<td><div class="auto-name">Renewal follow-up reminders</div><div class="auto-detail">Stage 8: fires on Yes/Maybe disposition</div></td>
+<td class="current-text">No renewal tracking system; follow-ups depend on Ivan's memory</td>
+<td class="tool-text">Zapier + Gmail (Delay step)</td>
+<td><span class="effort-pill ef-low">Low</span></td>
+<td class="benefit-text">30-day and 60-day follow-up reminders auto-schedule when Ivan logs a Yes or Maybe disposition. Nothing falls through. Lowest-effort automation in the set — high leverage for a 30-minute build.</td>
+</tr>
+
+<tr class="section-row"><td colspan="6">Horizon 2 — Mid-term (SY26-27 Q1, build during fall pilot)</td></tr>
+
+<tr data-hz="h2" data-ef="med">
+<td><span class="hz-pill hz-2">H2</span></td>
+<td><div class="auto-name">Chipp Bot: Teacher Q&A</div><div class="auto-detail">Stage 2–5: teacher-facing conversational bot</div></td>
+<td class="current-text">Teachers call or email Farah/Ivan with curriculum questions; same questions answered repeatedly</td>
+<td class="tool-text">Chipp.ai + MI curriculum knowledge base</td>
+<td><span class="effort-pill ef-med">Med</span></td>
+<td class="benefit-text">Teachers get instant answers grounded in MI curriculum at any hour. Common questions (where's the M3 template? what do I do when students won't interview?) resolved without Ivan. Inbound load drops significantly at scale. Estimated build: 2–4 weeks for teacher bot alone.
+<div class="note-flag">Dependency: Chipp.ai technical verification (§5 questions) must be completed before build begins. Start conversations during fall pilot.</div></td>
+</tr>
+
+<tr data-hz="h2" data-ef="med">
+<td><span class="hz-pill hz-2">H2</span></td>
+<td><div class="auto-name">Chipp Bot: Admin digest</div><div class="auto-detail">Stage 5–7: admin-facing cross-site visibility bot</div></td>
+<td class="current-text">Ivan reads Monday digest email; manually interprets data; calls Red sites</td>
+<td class="tool-text">Chipp.ai + Airtable API</td>
+<td><span class="effort-pill ef-med">Med</span></td>
+<td class="benefit-text">Admin bot queries Airtable daily and delivers a plain-language digest: "Roosevelt High is in M3, confidence score dropped to 2, Insight Statements not yet submitted — flag." Ivan asks follow-up questions conversationally. Estimated build: 4–8 weeks. Depends on H1 Airtable/Zapier pipeline being live first — bot has nothing useful to say until data is flowing.
+<div class="note-flag">Dependency: H1 Airtable + Zapier infrastructure must be live and populated before admin bot can be meaningful.</div></td>
+</tr>
+
+<tr data-hz="h2" data-ef="med">
+<td><span class="hz-pill hz-2">H2</span></td>
+<td><div class="auto-name">Pulse open-text Claude summarization</div><div class="auto-detail">Stage 5: Monday triage enhancement</div></td>
+<td class="current-text">Open-text pulse responses are unread; Ivan doesn't have time to read 20 responses manually</td>
+<td class="tool-text">Claude (manual paste in H1; API in H2)</td>
+<td><span class="effort-pill ef-low">Low (H1 manual)</span></td>
+<td class="benefit-text">H1 version: Ivan pastes the week's open-text responses into Claude, gets a 3-bullet summary with the 2–3 most urgent signals. 5 minutes instead of 30. H2 version: Claude API call in the Monday digest Zap, automatically summarizing and surfacing signals. Qualitative signal at scale — the highest-value data in the pulse form, made usable.</td>
+</tr>
+
+<tr data-hz="h2" data-ef="med">
+<td><span class="hz-pill hz-2">H2</span></td>
+<td><div class="auto-name">Pacing mapper semi-automation</div><div class="auto-detail">Stage 3: replace manual mapper with smart template</div></td>
+<td class="current-text">Pacing mapper is a static Google Sheet template; teachers fill it manually</td>
+<td class="tool-text">Google Sheets (advanced formulas) or Chipp Bot</td>
+<td><span class="effort-pill ef-med">Med</span></td>
+<td class="benefit-text">Teacher inputs 3 fields (start date, sessions/week, session length); sheet auto-generates the full dated session calendar with risk flags (M3 non-consecutive, compressed timeline, showcase near end-of-year). In H2, Chipp Bot walks the teacher through this conversationally and logs the output to Airtable automatically. Build the formula-based version first; add bot layer after.</td>
+</tr>
+
+<tr data-hz="h2" data-ef="low">
+<td><span class="hz-pill hz-2">H2</span></td>
+<td><div class="auto-name">Tier auto-update via Airtable formula</div><div class="auto-detail">Stage 5: keeps Current Tier field current automatically</div></td>
+<td class="current-text">Tier is manually assessed by Ivan; can go stale between pulse submissions</td>
+<td class="tool-text">Airtable formula field</td>
+<td><span class="effort-pill ef-low">Low</span></td>
+<td class="benefit-text">Formula logic: if Latest Pulse Score ≤ 2 for 2 consecutive weeks → Yellow; if M2/M3 window + score ≤ 2 → Red; if entering M3 → auto Yellow. Tier stays current without Ivan updating manually. The formula requires looking at the two most recent Pulse Log records — needs rollup fields set up correctly first.</td>
+</tr>
+
+<tr data-hz="h2" data-ef="low">
+<td><span class="hz-pill hz-2">H2</span></td>
+<td><div class="auto-name">Pre-debrief form + post-mortem draft</div><div class="auto-detail">Stage 7: makes closeout conversations more productive</div></td>
+<td class="current-text">Client debrief starts cold; Ivan arrives without structured context</td>
+<td class="tool-text">Google Forms + Zapier + Claude (draft)</td>
+<td><span class="effort-pill ef-low">Low</span></td>
+<td class="benefit-text">Pre-conversation form auto-sends 48h before debrief. Ivan reviews responses before the call. In H2, Claude drafts the post-mortem fields from Airtable data + pulse history; Ivan edits and confirms rather than writing from scratch. Debrief calls become more focused and post-mortems become consistent.</td>
+</tr>
+
+<tr class="section-row"><td colspan="6">Horizon 3 — Long-term platform decisions</td></tr>
+
+<tr data-hz="h3" data-ef="high">
+<td><span class="hz-pill hz-3">H3</span></td>
+<td><div class="auto-name">Passive curriculum tracking</div><div class="auto-detail">Core platform decision: where does curriculum live?</div></td>
+<td class="current-text">Curriculum in Google Drive generates zero signal; no way to know if/when teachers open lesson plans</td>
+<td class="tool-text">A360 (as LMS) OR custom microsite OR Drive Activity API + Apps Script</td>
+<td><span class="effort-pill ef-high">High</span></td>
+<td class="benefit-text">True passive tracking — knowing when a teacher opened S6, how long they spent, whether they progressed. The platform decision gates all other H3 automations. Requires Steve's assessment of A360 authoring capability + a team decision on build vs. buy. Until decided, Drive + Chipp Bot is the best available signal (weaker, but not nothing).
+<div class="note-flag">[OPEN: Steve to assess A360 as curriculum delivery environment before this decision can be made]</div></td>
+</tr>
+
+<tr data-hz="h3" data-ef="high">
+<td><span class="hz-pill hz-3">H3</span></td>
+<td><div class="auto-name">Chipp Bot: Student work quality assessment</div><div class="auto-detail">Stage 5: bot reads portfolios against rubric library</div></td>
+<td class="current-text">Student work quality is invisible to Cambiar between module submissions</td>
+<td class="tool-text">Chipp.ai + Google Drive API + rubric library</td>
+<td><span class="effort-pill ef-high">High</span></td>
+<td class="benefit-text">Bot reads submitted student portfolio documents against per-activity rubric and flags: completeness issues, quality concerns (themes-not-insights in M3, ideas disconnected from research in M4). Ivan sees quality signals, not just completion signals. Requires: (1) rubric library built, (2) student data Legal/AI Lab clearance, (3) Drive API integration confirmed. This is the highest-leverage quality detection in the system — and the hardest to build.
+<div class="note-flag">Blocked by: rubric library (content gap), Legal sign-off on student data, Chipp.ai Drive API capability verification</div></td>
+</tr>
+
+<tr data-hz="h3" data-ef="high">
+<td><span class="hz-pill hz-3">H3</span></td>
+<td><div class="auto-name">AI-assisted SMS triage</div><div class="auto-detail">All stages: inbound teacher questions handled at scale</div></td>
+<td class="current-text">Ivan/Farah text teachers individually; can't scale past 20 schools</td>
+<td class="tool-text">Chipp.ai (if SMS supported) OR SMS tool + AI responder</td>
+<td><span class="effort-pill ef-high">High</span></td>
+<td class="benefit-text">AI bot handles predictable inbound teacher questions via text ("where's the M3 template?" "what do I do with students who haven't interviewed anyone?"); escalates to Ivan only when non-standard. Inbound load manageable at 70 schools. Requires: SMS channel in Chipp.ai confirmed OR separate SMS tool + AI integration.
+<div class="note-flag">[OPEN: Confirm if Chipp.ai supports native SMS channel — if yes, this may collapse into the H2 teacher bot, not a separate H3 build]</div></td>
+</tr>
+
+<tr data-hz="h3" data-ef="med">
+<td><span class="hz-pill hz-3">H3</span></td>
+<td><div class="auto-name">Rubric library build</div><div class="auto-detail">Content dependency for all quality-detection automations</div></td>
+<td class="current-text">No per-activity rubric library exists; quality detection impossible without it</td>
+<td class="tool-text">Content development (Ivan + curriculum team); not a tech build</td>
+<td><span class="effort-pill ef-med">Med</span></td>
+<td class="benefit-text">One rubric per key deliverable: M1 Brief Analysis Sheet, M2 Interview Submission, M3 Insight Statement (hardest — must distinguish genuine insight from theme summary), M4 Concept Maps, M5 Prototype v1+v2, M6 Final Presentation. Target: one rubric per module by December 2026. This is a content task, not a tech task — it can and should run in parallel with the H2 bot build.
+<div class="note-flag">Action item: Ivan and curriculum team to begin rubric development in fall. Start with M3 Insight Statement rubric — highest leverage, most difficult to calibrate.</div></td>
+</tr>
+
+</tbody>
+</table>
+
+<!-- SMS COMPARISON -->
+<div class="section-title">Texting tool comparison</div>
+<p style="font-size:11px;color:#666;margin-bottom:.75rem">Text messaging is the highest-signal channel for reaching teachers, confirmed by Farah. Before selecting a tool, answer the priority questions below. Recommendation: <strong>don't build SMS automation for fall</strong> — manually text teachers during the 5-school pilot and measure response rates vs. email first. Then choose a tool based on what you learn.</p>
+
+<table class="sms-table">
+<thead><tr>
+  <th style="width:100px">Tool</th>
+  <th style="width:80px">Zapier integration</th>
+  <th style="width:90px">Two-way messaging</th>
+  <th style="width:80px">Est. cost</th>
+  <th style="width:110px">Best for</th>
+  <th style="width:80px">Recommendation</th>
+  <th>Key questions to answer before choosing</th>
+</tr></thead>
+<tbody>
+<tr>
+  <td style="font-weight:500">Chipp.ai (SMS channel)</td>
+  <td>Via Chipp.ai platform</td>
+  <td>Yes (if supported)</td>
+  <td>Included if supported</td>
+  <td>One tool instead of two; bot handles replies intelligently</td>
+  <td><span class="rec-pill rec-check">Check first</span></td>
+  <td>Does Chipp.ai support a native SMS channel? If yes, this eliminates the need for a separate tool entirely — the teacher bot becomes the SMS channel. Confirm before evaluating other tools.</td>
+</tr>
+<tr>
+  <td style="font-weight:500">SimpleTexting</td>
+  <td>Native Zapier app</td>
+  <td>Yes — shared inbox</td>
+  <td>~$25–50/mo</td>
+  <td>Simple broadcast + reply; easiest setup; good for a pilot</td>
+  <td><span class="rec-pill rec-pilot">Good for pilot</span></td>
+  <td>Does it support individual teacher threads, or only broadcast lists? Can multiple team members monitor the shared inbox? Confirm before committing to a plan.</td>
+</tr>
+<tr>
+  <td style="font-weight:500">Twilio</td>
+  <td>Via Zapier webhook</td>
+  <td>Yes — fully programmable</td>
+  <td>~$0.0079/SMS (pay-per-message)</td>
+  <td>Full programmability; scales well; most Zapier-compatible</td>
+  <td><span class="rec-pill rec-best">Best if scaling</span></td>
+  <td>Requires more technical setup than SimpleTexting — is Steve available to configure? Does Cambiar have an existing Twilio account or relationship? Most powerful option but steepest setup curve.</td>
+</tr>
+<tr>
+  <td style="font-weight:500">OpenPhone</td>
+  <td>Limited Zapier support</td>
+  <td>Yes — team inbox + calls</td>
+  <td>~$13/user/mo</td>
+  <td>Shared team phone number; feels like a real phone line; good for mixed SMS + calling</td>
+  <td><span class="rec-pill rec-pilot">Worth evaluating</span></td>
+  <td>Can Ivan and Farah share one number for teacher replies? Is Zapier integration robust enough for automated sends, or primarily for logging received messages?</td>
+</tr>
+<tr>
+  <td style="font-weight:500">Textline</td>
+  <td>Native Zapier app</td>
+  <td>Yes — team inbox</td>
+  <td>~$59/mo base</td>
+  <td>Business-grade team SMS; built-in automation; HIPAA compliant</td>
+  <td><span class="rec-pill rec-defer">Defer — overkill for v1</span></td>
+  <td>More features than needed for a 5-school pilot. Reconsider if scaling to 40+ schools with multiple team members managing teacher texts simultaneously.</td>
+</tr>
+<tr>
+  <td style="font-weight:500">Manual texting (Ivan's phone)</td>
+  <td>N/A</td>
+  <td>Yes — personal</td>
+  <td>$0</td>
+  <td>Fall pilot (5 schools); relationship-building; maximum flexibility</td>
+  <td><span class="rec-pill rec-best">Recommended for fall</span></td>
+  <td>The right answer for 5 schools. Ivan texts teachers personally — this is also a relationship investment, not just a logistics channel. Measure response rates vs. email to build the case for a tool investment before spring.</td>
+</tr>
+</tbody>
+</table>
+
+<div style="background:#fff8e6;border:0.5px solid #f0d080;border-radius:6px;padding:10px 12px;margin-bottom:1.5rem;font-size:11px;color:#633806">
+<strong>District SMS policy note:</strong> Before building any SMS automation, confirm that your implementing districts (LAUSD, Green Dot, others) do not have policies restricting teachers from conducting official school-related communication via personal text. Some districts require all official communication to go through school email systems. Ivan's personal texts during the pilot fall in a gray area — automated SMS from a business number at scale may require district approval. Check with at least one LAUSD contact before committing to a tool.
+</div>
+
+<!-- CHIPP BOT DETAIL -->
+<div class="section-title">Chipp Bot — positioning and open questions</div>
+<div class="chipp-card">
+  <h2>Why Chipp Bot is Horizon 2 (mid-term), not Horizon 3 (long-term)</h2>
+  <p style="font-size:11px;color:#666;margin-bottom:12px">The original brief classified the bot as Horizon 2/long-term. Based on review of the Chipp Bot PRD v1, the teacher Q&A bot (Phase 1 — no Drive scraping, no student data, no cross-site access) is a 2–4 week build on Chipp.ai. It is not a multi-month engineering project. The barriers are: (1) answering the technical verification questions below, and (2) building the MI curriculum knowledge base that powers it. Both are doable during the fall pilot. Repositioning to mid-term is correct.</p>
+
+  <div class="chipp-row">
+    <div class="chipp-section">
+      <h3>What the teacher bot does in Phase 1</h3>
+      <ul>
+        <li>Answers curriculum and facilitation questions grounded in MI knowledge base (LPs, module wrappers, best practices)</li>
+        <li>Generates customized checklists adapted to the teacher's specific partner and pacing</li>
+        <li>Walks teacher through pacing mapper conversationally</li>
+        <li>Points teachers to the right resources without Ivan or Farah being in the loop</li>
+        <li>Does NOT: access student data, read Drive folders, or cross-reference other schools</li>
+      </ul>
+    </div>
+    <div class="chipp-section">
+      <h3>What the admin bot does in Phase 1</h3>
+      <ul>
+        <li>Answers Ivan's questions about implementation health in plain language: "How is Roosevelt High doing?"</li>
+        <li>Delivers daily digest from Airtable data without Ivan opening Airtable</li>
+        <li>Surfaces flags from pulse data and tier changes</li>
+        <li>Does NOT (in Phase 1): read Drive files, assess student work quality, or perform Drive monitoring</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="chipp-section" style="margin-bottom:12px">
+    <h3>What the bot doesn't solve (be honest with the team)</h3>
+    <p>The Chipp Bot sits in the weakest-signal tier of the platform options. Drive-based monitoring gives you document open/edit events — not time-on-task, reading depth, or whether a teacher engaged with content vs. skimmed it. The bot makes that limited signal more conversationally accessible; it doesn't increase underlying signal quality. The passive tracking problem (knowing when curriculum is opened and engaged with) is only truly solved by moving curriculum into a trackable platform — A360 or a custom microsite. That's Horizon 3. The bot is a meaningful step forward, not a complete solution.</p>
+  </div>
+
+  <div class="chipp-section">
+    <h3>Open technical questions — answer these before building</h3>
+    <div class="open-q">Can Chipp.ai natively perform continuous/scheduled Drive monitoring, or must that live in Apps Script/Zapier that Chipp then reads from? This is the most important question — it determines the entire infrastructure architecture.</div>
+    <div class="open-q">Can Chipp.ai deliver a proactive scheduled digest (without Ivan asking), or does something else need to assemble and push it?</div>
+    <div class="open-q">Does Chipp.ai support role-based access control within one bot instance, or is the two-bot architecture required at the platform level?</div>
+    <div class="open-q">What LLM does Chipp.ai run on, and does it reliably follow MI format rules (8th-grade reading level, no jargon)?</div>
+    <div class="open-q">Does Chipp.ai support a native SMS channel? If yes, the texting tool decision is resolved — use the bot.</div>
+    <div class="open-q">What are Chipp.ai's contractual data-retention terms with its LLM provider? Required for Cambiar Legal submission before any student data flows through the system.</div>
+    <div class="open-q">Who owns the Chipp.ai configuration and Airtable schema build — Ivan solo, Steve, or outside dev support?</div>
+  </div>
+</div>
+
+</div>
+<script>
+function fil(val, btn){
+  document.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('tbody tr:not(.section-row)').forEach(tr=>{
+    if(val==='all'){tr.classList.remove('hide');return}
+    const hz=tr.dataset.hz||'';
+    const ef=tr.dataset.ef||'';
+    if(['h1','h2','h3'].includes(val)){tr.classList.toggle('hide',hz!==val);return}
+    tr.classList.toggle('hide',ef!==val);
+  });
+  document.querySelectorAll('.section-row').forEach(sr=>{
+    if(val==='all'){sr.classList.remove('hide');return}
+    let next=sr.nextElementSibling;
+    let visible=false;
+    while(next&&!next.classList.contains('section-row')){
+      if(!next.classList.contains('hide'))visible=true;
+      next=next.nextElementSibling;
+    }
+    sr.classList.toggle('hide',!visible);
+  });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MI Airtable Structure Recommendation</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:2rem;color:#3d3d3a;font-size:12px}
+.page{max-width:1050px;margin:0 auto}
+h1{font-size:13px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.subtitle{font-size:11px;color:#aaa;margin-bottom:1.5rem;line-height:1.6}
+.arch-decision{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:14px 16px;margin-bottom:1.5rem}
+.arch-decision h2{font-size:11px;font-weight:600;color:#2c2c2a;margin-bottom:6px}
+.arch-decision p{font-size:11px;color:#666;line-height:1.6}
+.arch-decision .confirmed{font-size:10px;color:#2a6e1a;background:#eaf5e8;border:0.5px solid #8dc880;border-radius:4px;padding:3px 8px;display:inline-block;margin-top:6px;font-weight:600}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin-bottom:1.5rem}
+.card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:14px 16px}
+.card h2{font-size:12px;font-weight:600;color:#2c2c2a;margin-bottom:8px;padding-bottom:6px;border-bottom:0.5px solid #eee}
+.card h3{font-size:11px;font-weight:600;color:#555;margin:10px 0 4px}
+.card p,.card li{font-size:11px;color:#666;line-height:1.6}
+.card ul{padding-left:14px}
+.card li{margin-bottom:2px}
+.table-badge{font-size:9px;font-weight:600;padding:2px 7px;border-radius:4px;display:inline-block;margin-bottom:6px}
+.tb-main{background:#d6d3f8;color:#3c3489}
+.tb-new{background:#d4edbc;color:#27500a}
+.tb-exist{background:#b8e8d6;color:#085041}
+.tb-client{background:#fde5b5;color:#633806}
+.field-list{margin-top:6px}
+.field-item{font-size:10px;color:#555;padding:3px 0;display:flex;align-items:baseline;gap:6px;border-bottom:0.5px solid #f5f4f0}
+.field-item:last-child{border-bottom:none}
+.fi-name{font-family:monospace;font-size:10px;color:#2c2c2a;font-weight:500;flex-shrink:0}
+.fi-type{font-size:9px;color:#aaa;flex-shrink:0}
+.fi-note{font-size:10px;color:#888;flex:1}
+.fi-new{font-size:9px;font-weight:600;color:#a07010;flex-shrink:0}
+.fi-exists{font-size:9px;font-weight:600;color:#2a6e1a;flex-shrink:0}
+.fi-fix{font-size:9px;font-weight:600;color:#8a1a1a;flex-shrink:0}
+.view-card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:12px 14px;margin-bottom:8px}
+.view-name{font-size:12px;font-weight:600;color:#2c2c2a;margin-bottom:4px}
+.view-type{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block;margin-bottom:6px}
+.vt-grid{background:#e8f0fb;color:#1a4e8a}
+.vt-gallery{background:#f0e8fb;color:#5c2a9a}
+.vt-calendar{background:#eaf5e8;color:#2a6e1a}
+.vt-interface{background:#fde5b5;color:#633806}
+.view-desc{font-size:11px;color:#666;line-height:1.5;margin-bottom:6px}
+.view-filter{font-size:10px;color:#888;font-family:monospace;background:#f5f4f0;padding:4px 8px;border-radius:4px}
+.interface-card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:14px 16px;margin-bottom:1.5rem}
+.interface-card h2{font-size:12px;font-weight:600;color:#2c2c2a;margin-bottom:10px}
+.interface-section{margin-bottom:10px;padding-bottom:10px;border-bottom:0.5px solid #eee}
+.interface-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.is-title{font-size:11px;font-weight:600;color:#555;margin-bottom:4px}
+.is-desc{font-size:11px;color:#666;line-height:1.5}
+.is-elements{font-size:10px;color:#888;margin-top:4px;font-style:italic}
+.zapier-item{background:#fff;border:0.5px solid #e0ddd8;border-radius:6px;padding:10px 12px;margin-bottom:6px;display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start}
+.zi-num{width:22px;height:22px;border-radius:50%;background:#f0efe9;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#666;flex-shrink:0}
+.zi-body{}
+.zi-trigger{font-size:10px;font-weight:600;color:#2c2c2a;margin-bottom:2px}
+.zi-action{font-size:10px;color:#555;margin-bottom:2px}
+.zi-note{font-size:10px;color:#888;font-style:italic}
+.zi-effort{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;flex-shrink:0}
+.ze-low{background:#eaf5e8;color:#2a6e1a}
+.ze-med{background:#fff8e6;color:#a07010}
+.open-note{font-size:10px;color:#a07010;font-style:italic;margin-top:4px}
+.section-title{font-size:12px;font-weight:600;color:#2c2c2a;margin:1.5rem 0 .6rem;padding-bottom:.5rem;border-bottom:1px solid #e0ddd8}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Quest MI — Airtable Structure Recommendation</h1>
+<p class="subtitle">How the Quest Base should be organized: tables, views, relationships, and the Implementation Control Center interface.<br>Designed for the Horizon 1 fall build. Assumes Enterprise plan (confirmed).</p>
+
+<!-- ARCHITECTURE DECISION -->
+<div class="arch-decision">
+<h2>Architecture decision: one base, multiple tables, stage-organized views</h2>
+<p>The right answer for v1 is <strong>not</strong> separate bases per stage — that creates linking complexity and makes cross-stage reporting impossible. The right answer is one base (the existing Quest Base) with extended tables and purpose-built views that organize data by stage. The "massive Airtable" concern is a view design problem, not a structure problem. Views are free — use them aggressively to slice the same data for different purposes. Tables should only be added when data has a fundamentally different structure (e.g., one-record-per-week for pulse data vs. one-record-per-implementation).</p>
+<span class="confirmed">✓ Enterprise plan confirmed — Interfaces, unlimited automations, and advanced field types all available</span>
+</div>
+
+<!-- TABLE STRUCTURE -->
+<div class="section-title">Table structure</div>
+<div class="grid">
+<div class="card">
+  <span class="table-badge tb-main">Primary table — extend existing</span>
+  <h2>Program Implementation</h2>
+  <p style="margin-bottom:8px">The existing core table. Add 16 new fields from Deliverable 3. Do not restructure — extend.</p>
+  <h3>New fields to add (in order of build priority)</h3>
+  <div class="field-list">
+    <div class="field-item"><span class="fi-name">Implementation Status</span><span class="fi-type">Single select</span><span class="fi-note">Core lifecycle field</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Current Tier</span><span class="fi-type">Single select</span><span class="fi-note">Auto-updated from pulse formula</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Open Flag</span><span class="fi-type">Checkbox</span><span class="fi-note">Surfaces in dashboard alert section</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Site Coordinator Name</span><span class="fi-type">Text</span><span class="fi-note">Escalation contact</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Site Coordinator Email</span><span class="fi-type">Email</span><span class="fi-note">Escalation contact</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Network Decision-Maker</span><span class="fi-type">Text + Email</span><span class="fi-note">Renewal contact</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Client Kickoff Date</span><span class="fi-type">Date</span><span class="fi-note">Launch gate + automation trigger</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Midpoint Date</span><span class="fi-type">Date</span><span class="fi-note">T-14 employer check-in trigger</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Showcase Date</span><span class="fi-type">Date</span><span class="fi-note">Most important date in the system</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Part 1 Completion Date</span><span class="fi-type">Date</span><span class="fi-note">From Reach 360 webhook via Zapier</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Part 2 Window Selected</span><span class="fi-type">Date</span><span class="fi-note">From Calendly via Zapier</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Part 2 Attended</span><span class="fi-type">Checkbox</span><span class="fi-note">Ivan marks manually after session</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Readiness Checkpoint Score</span><span class="fi-type">Number (1–5)</span><span class="fi-note">From Google Form via Zapier; auto-flags ≤ 2</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Onboarding Call Completed</span><span class="fi-type">Checkbox</span><span class="fi-note">Ivan marks; gates Training Complete status</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Current Session</span><span class="fi-type">Rollup (number)</span><span class="fi-note">Max session from linked Pulse Log records</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Last Pulse Submission Date</span><span class="fi-type">Rollup (date)</span><span class="fi-note">Max date from linked Pulse Log records</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Latest Pulse Score</span><span class="fi-type">Rollup (number)</span><span class="fi-note">Score from most recent Pulse Log record</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Module Deliverable Status</span><span class="fi-type">Single select</span><span class="fi-note">On Track / Missing / Flagged</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Employer Brief Status</span><span class="fi-type">Single select</span><span class="fi-note">Tracks brief through creation → approval</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Client Kickoff Confirmed</span><span class="fi-type">Checkbox</span><span class="fi-note">Launch gate item</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Student Survey Completion Rate</span><span class="fi-type">Formula (%)</span><span class="fi-note">Responses ÷ Total Students Served</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Renewal Disposition</span><span class="fi-type">Single select</span><span class="fi-note">Yes / No / Maybe / Not Contacted</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Facilitator Strength</span><span class="fi-type">Single select</span><span class="fi-note">Fix "Stong" typo → "Strong"</span><span class="fi-fix">Fix</span></div>
+    <div class="field-item"><span class="fi-name">Launch Readiness Checklist</span><span class="fi-type">7x Checkbox</span><span class="fi-note">One checkbox per gate item; all-7-true triggers Ivan alert</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Weekly Pulse Log</span><span class="fi-type">Linked records</span><span class="fi-note">Links to new Pulse Log table</span><span class="fi-new">New</span></div>
+  </div>
+</div>
+
+<div class="card">
+  <span class="table-badge tb-new">New table</span>
+  <h2>Weekly Pulse Log</h2>
+  <p style="margin-bottom:8px">One record per weekly pulse submission per school. Created automatically by Zapier when a teacher submits the pulse form. Never edited manually.</p>
+  <h3>Fields</h3>
+  <div class="field-list">
+    <div class="field-item"><span class="fi-name">Implementation Key</span><span class="fi-type">Linked record</span><span class="fi-note">Links to Program Implementation</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Submission Date</span><span class="fi-type">Date/Time</span><span class="fi-note">Form submission timestamp; auto-populated</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Session Number</span><span class="fi-type">Number</span><span class="fi-note">Drives module transition detection</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Pulse Score</span><span class="fi-type">Number (1–5)</span><span class="fi-note">Teacher confidence rating</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Open Text Response</span><span class="fi-type">Long text</span><span class="fi-note">Teacher's free-text concern; Ivan reviews Monday</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Module Deliverable Submitted</span><span class="fi-type">Checkbox</span><span class="fi-note">Y/N at module-end sessions only</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Flag Triggered</span><span class="fi-type">Checkbox</span><span class="fi-note">Auto-set if score ≤ 2 or deliverable missing</span><span class="fi-new">New</span></div>
+  </div>
+  <h3 style="margin-top:12px">Why a separate table (not fields on the main record)?</h3>
+  <p>Storing all pulses in a separate linked table enables trend analysis — you can see whether a school's score dropped over 3 weeks, whether they recovered after an intervention, and exactly which sessions were submitted vs. missed. A single "Latest Pulse Score" field on the main record would overwrite history. History is what makes the system intelligent over time.</p>
+</div>
+</div>
+
+<div class="grid">
+<div class="card">
+  <span class="table-badge tb-exist">Existing table — extend in Sandbox Base</span>
+  <h2>MI Client Partner</h2>
+  <p style="margin-bottom:8px">Already exists in the Sandbox Base with 32 clients. Keep it — extend it with these additional fields.</p>
+  <h3>Fields to add to existing Client Partner table</h3>
+  <div class="field-list">
+    <div class="field-item"><span class="fi-name">Post-Showcase Satisfaction</span><span class="fi-type">Single select</span><span class="fi-note">Ivan's assessment after debrief: Strong / Neutral / Weak</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Renewal Interest</span><span class="fi-type">Single select</span><span class="fi-note">Client-level disposition (separate from implementation-level)</span><span class="fi-new">New</span></div>
+    <div class="field-item"><span class="fi-name">Client Contact Phone</span><span class="fi-type">Phone</span><span class="fi-note">For Ivan's T-14 personal call if needed</span><span class="fi-new">New</span></div>
+  </div>
+  <h3 style="margin-top:12px">Relationship to Program Implementation</h3>
+  <p>One client → many implementations (a client may participate across multiple cycles or schools). The linked record relationship already exists. Don't duplicate client info on the implementation record — link to it.</p>
+</div>
+
+<div class="card">
+  <span class="table-badge tb-exist">Existing tables — keep as-is</span>
+  <h2>Network Partners + Implementing Sites</h2>
+  <p style="margin-bottom:8px">Both already exist and are structured correctly. No changes needed for v1.</p>
+  <h3>Network Partners table</h3>
+  <p>One record per network organization (Green Dot, LAUSD, College Track, etc.). Links to multiple Program Implementation records. The network decision-maker contact field on the implementation record references this level — consider adding it to the Network Partners table as well so it doesn't need to be re-entered per implementation.</p>
+  <h3 style="margin-top:8px">Implementing Sites table</h3>
+  <p>One record per school building. Distinct from Network Partner — Green Dot is the network; Animo City of Champions is the site. This separation is already correct in the base and should be preserved.</p>
+</div>
+</div>
+
+<!-- VIEWS -->
+<div class="section-title">Recommended views — Program Implementation table</div>
+<p style="font-size:11px;color:#666;margin-bottom:1rem">Views are free — use them aggressively. Each view below is designed for a specific use case. The same record appears in multiple views; no data is duplicated.</p>
+
+<div class="view-card">
+  <div class="view-name">Ivan's Monday Dashboard</div>
+  <span class="view-type vt-grid">Grid view</span>
+  <div class="view-desc">Ivan's primary weekly triage view. Opens every Monday morning. Shows every active implementation grouped by Current Tier (Red first, then Yellow, then Green). Only shows what needs attention — not the full data set.</div>
+  <div class="view-filter">Filter: Implementation Status = Active OR Showcase Prep | Group by: Current Tier | Sort: Open Flag (true first), then Last Pulse Submission Date (oldest first) | Hidden fields: everything except School, Current Session, Current Tier, Last Pulse Date, Next Milestone, Open Flag, Latest Pulse Score</div>
+</div>
+
+<div class="view-card">
+  <div class="view-name">Training Queue</div>
+  <span class="view-type vt-grid">Grid view</span>
+  <div class="view-desc">Shows every implementation currently in training, sorted by days to launch. Ivan uses this to see who is at risk of missing the T-21 or T-14 deadlines and to prioritize direct outreach.</div>
+  <div class="view-filter">Filter: Implementation Status = Training In Progress | Sort: Start Date (ascending) | Key columns: School, Part 1 Completion Date, Part 2 Window Selected, Part 2 Attended, Readiness Checkpoint Score, Onboarding Call Completed, Days to Launch (formula field)</div>
+</div>
+
+<div class="view-card">
+  <div class="view-name">Launch Readiness Queue</div>
+  <span class="view-type vt-grid">Grid view</span>
+  <div class="view-desc">Shows every implementation at Launch Ready status, awaiting Ivan's go/no-go review. Displays the 7 launch gate checkboxes side by side so Ivan can see at a glance what's holding each school back.</div>
+  <div class="view-filter">Filter: Implementation Status = Launch Ready | Key columns: School, all 7 launch gate checkboxes, Showcase Date, Client Kickoff Date | Sort: Showcase Date (ascending)</div>
+</div>
+
+<div class="view-card">
+  <div class="view-name">Active by Module</div>
+  <span class="view-type vt-grid">Grid view</span>
+  <div class="view-desc">Shows all active implementations grouped by which module they're currently in (derived from Current Session). Ivan uses this to see how many schools are in M3 at any given time — the highest-risk module — and to spot patterns across the cohort.</div>
+  <div class="view-filter">Filter: Implementation Status = Active | Group by: Current Module (formula field: IF Session ≤ 5, "M1", IF Session ≤ 10, "M2", etc.) | Sort within group: Current Tier (Red first) | Key columns: School, Current Session, Latest Pulse Score, Module Deliverable Status, Current Tier</div>
+</div>
+
+<div class="view-card">
+  <div class="view-name">Showcase Pipeline</div>
+  <span class="view-type vt-calendar">Calendar view</span>
+  <div class="view-desc">Calendar view of all upcoming showcase dates. Ivan can see at a glance when showcases are clustered and plan T-10 calls accordingly. Also useful for identifying weeks where multiple Red/Yellow sites are showcasing simultaneously.</div>
+  <div class="view-filter">Date field: Showcase Date | Color by: Current Tier (Red = red, Yellow = yellow, Green = green) | Filter: Showcase Date is not empty AND Implementation Status ≠ Closed AND Implementation Status ≠ Renewed</div>
+</div>
+
+<div class="view-card">
+  <div class="view-name">Showcase Prep Checklist</div>
+  <span class="view-type vt-grid">Grid view</span>
+  <div class="view-desc">Shows all implementations in Showcase Prep status with their prep checklist items visible. Ivan uses this during the T-21 to T-1 window to track which sites have completed which prep steps.</div>
+  <div class="view-filter">Filter: Implementation Status = Showcase Prep | Sort: Showcase Date (ascending) | Key columns: School, Showcase Date, Client Availability Reconfirmed, T-10 Check-in Completed, Rubric Shared, Current Tier</div>
+</div>
+
+<div class="view-card">
+  <div class="view-name">Closeout Queue</div>
+  <span class="view-type vt-grid">Grid view</span>
+  <div class="view-desc">Shows all implementations where the showcase has passed but status is not yet Closed. Ivan uses this to track outstanding surveys, debrief calls, and post-mortem fields. If a record stays in this view for more than 14 days, something is falling through the cracks.</div>
+  <div class="view-filter">Filter: Showcase Date is in the past 30 days AND Implementation Status ≠ Closed AND Implementation Status ≠ Renewed | Key columns: School, Showcase Date, Student Survey Completion Rate, Client Debrief Completed, Post-mortem fields empty (formula: boolean), Renewal Disposition</div>
+</div>
+
+<div class="view-card">
+  <div class="view-name">Renewal Tracker</div>
+  <span class="view-type vt-grid">Grid view</span>
+  <div class="view-desc">All closed implementations with their renewal disposition, grouped by network. Farah uses this for recruitment conversations. Ivan uses it to spot networks with multiple "No" dispositions.</div>
+  <div class="view-filter">Filter: Implementation Status = Closed OR Renewed | Group by: Network Partner | Sort: Renewal Disposition (No first for attention, then Maybe, then Not Contacted, then Yes) | Key columns: School, Network Partner, Renewal Disposition, Implementation Outcome, Facilitator Strength</div>
+</div>
+
+<div class="view-card">
+  <div class="view-name">All Data (default)</div>
+  <span class="view-type vt-grid">Grid view</span>
+  <div class="view-desc">The existing "All Data" view — keep it as the base view. Group by Cycle as currently configured. This is for historical reference and data integrity checks, not day-to-day operational use.</div>
+  <div class="view-filter">No filter | Group by: Cycle | All fields visible | This is the view the team uses for reporting, not for implementation management</div>
+</div>
+
+<!-- INTERFACE -->
+<div class="section-title">Implementation Control Center — Airtable Interface</div>
+<div class="interface-card">
+  <h2>Ivan's Control Center (Airtable Interface page)</h2>
+  <p style="font-size:11px;color:#666;margin-bottom:12px">A single Airtable Interface page that Ivan opens every morning. Not a replacement for the views above — a summary layer on top of them. Built using Airtable's Interface Builder (available on Enterprise plan).</p>
+
+  <div class="interface-section">
+    <div class="is-title">Row 1 — Stat blocks (summary counts)</div>
+    <div class="is-desc">Five metric cards across the top of the page, each pulling a count from the implementation base.</div>
+    <div class="is-elements">Active implementations · Red sites this week · Yellow sites this week · Missing pulses this week (no submission in last 7 days) · Showcases in next 30 days</div>
+  </div>
+
+  <div class="interface-section">
+    <div class="is-title">Row 2 — Alert section (needs attention now)</div>
+    <div class="is-desc">A filtered grid showing only implementations with Open Flag = true, sorted by severity (Red tier first). This is the first thing Ivan looks at. If it's empty, nothing is on fire. Each row links directly to the full implementation record.</div>
+    <div class="is-elements">Fields shown: School, Current Tier, Current Session, Last Pulse Date, Open Flag reason (from a Notes field Ivan sets when flagging)</div>
+  </div>
+
+  <div class="interface-section">
+    <div class="is-title">Row 3 — Module risk section (entering high-risk windows)</div>
+    <div class="is-desc">A filtered grid showing implementations where Current Session = 6–10 (entering M2) or 11–15 (in M3). These are auto-elevated to Yellow even if their score is fine — Ivan sees them here as a proactive heads-up, not as a crisis.</div>
+    <div class="is-elements">Fields shown: School, Current Session, Current Module (formula), Current Tier, Latest Pulse Score, Module Deliverable Status</div>
+  </div>
+
+  <div class="interface-section">
+    <div class="is-title">Row 4 — Upcoming showcases (next 21 days)</div>
+    <div class="is-desc">A filtered grid of all implementations with Showcase Date in the next 21 days. Shows prep checklist completion status at a glance. Ivan uses this to confirm T-10 calls are scheduled.</div>
+    <div class="is-elements">Fields shown: School, Showcase Date, T-10 Check-in Completed, Client Availability Reconfirmed, Current Tier, Days to Showcase (formula)</div>
+  </div>
+
+  <div class="interface-section">
+    <div class="is-title">Row 5 — All clear list (greens on track)</div>
+    <div class="is-desc">A count or simple list of Green tier implementations with on-time pulse submissions this week. This section exists specifically to confirm the system is working — silence here is a warning sign, not a comfort.</div>
+    <div class="is-elements">Count of Green implementations with Last Pulse Submission Date in current week · Link to full green list view</div>
+  </div>
+</div>
+
+<!-- ZAPIER AUTOMATIONS -->
+<div class="section-title">Zapier automation specifications — Quick Wins (build for fall)</div>
+<p style="font-size:11px;color:#666;margin-bottom:1rem">Each automation below is a complete specification ready for a Zapier builder. Sorted by build priority. Total estimated build time: 20–25 hours for all 10.</p>
+
+<div class="zapier-item">
+  <div class="zi-num">1</div>
+  <div class="zi-body">
+    <div class="zi-trigger">Trigger: Airtable record created with Implementation Status = Committed</div>
+    <div class="zi-action">Actions: (1) Send welcome email to Instructor Email with onboarding intro + A360 Part 1 link. (2) Send stakeholder mapping form link to same email. (3) Create a Slack notification to Ivan: "New commitment: [School Name] — record created."</div>
+    <div class="zi-note">Build first — this is Stage 1's only automation and the starting point for the entire chain.</div>
+  </div>
+  <span class="zi-effort ze-low">Low effort</span>
+</div>
+
+<div class="zapier-item">
+  <div class="zi-num">2</div>
+  <div class="zi-body">
+    <div class="zi-trigger">Trigger: Reach 360 course.completed webhook fires for a teacher (course = Part 1)</div>
+    <div class="zi-action">Actions: (1) Find matching Airtable record by teacher email. (2) Update Part 1 Completion Date field with webhook timestamp. (3) Send email to teacher with Calendly link to select Part 2 window.</div>
+    <div class="zi-note">Reach 360 webhook is confirmed supported. The Zapier "Reach 360: Course Completed" trigger is the native integration — no custom webhook needed.</div>
+  </div>
+  <span class="zi-effort ze-low">Low effort</span>
+</div>
+
+<div class="zapier-item">
+  <div class="zi-num">3</div>
+  <div class="zi-body">
+    <div class="zi-trigger">Trigger: Calendly invitee created (teacher books Part 2 window)</div>
+    <div class="zi-action">Actions: (1) Find matching Airtable record by invitee email. (2) Update Part 2 Window Selected date field with the booked event date.</div>
+    <div class="zi-note">Calendly has a native Zapier integration. Map the invitee email to the Instructor Email field to find the right Airtable record.</div>
+  </div>
+  <span class="zi-effort ze-low">Low effort</span>
+</div>
+
+<div class="zapier-item">
+  <div class="zi-num">4</div>
+  <div class="zi-body">
+    <div class="zi-trigger">Trigger: Google Form submission (weekly pulse form)</div>
+    <div class="zi-action">Actions: (1) Create a new record in the Weekly Pulse Log table with: Implementation Key (matched from form "which school" dropdown), Submission Date (timestamp), Session Number, Pulse Score, Open Text Response, Module Deliverable Submitted. (2) Update the parent Program Implementation record: Current Session, Last Pulse Submission Date, Latest Pulse Score. (3) If score ≤ 2 AND session between 6–15: set Open Flag = true on parent record. (4) If Module Deliverable Submitted = false AND session is a module-end session: set Open Flag = true + Module Deliverable Status = Missing.</div>
+    <div class="zi-note">Most complex automation in the system — multiple actions in one Zap. Use Zapier's multi-step Zap. The "which school" dropdown on the form must use Implementation Keys (or exact school names that match Airtable records) to avoid matching errors.</div>
+  </div>
+  <span class="zi-effort ze-med">Med effort</span>
+</div>
+
+<div class="zapier-item">
+  <div class="zi-num">5</div>
+  <div class="zi-body">
+    <div class="zi-trigger">Trigger: Zapier Schedule — every Friday at 5pm</div>
+    <div class="zi-action">Actions: (1) Search Airtable for all active implementations where Last Pulse Submission Date is more than 6 days ago. (2) For each match: send reminder email or text to Instructor (or add to a reminder list sent to Ivan to follow up manually in v1). (3) Set Open Flag = true if second consecutive miss (check if previous Friday also had no submission).</div>
+    <div class="zi-note">This is the missed-submission detection automation. In v1, the "send text" may need to be handled manually by Ivan using the reminder list. SMS automation depends on texting tool decision (see Deliverable 5).</div>
+  </div>
+  <span class="zi-effort ze-med">Med effort</span>
+</div>
+
+<div class="zapier-item">
+  <div class="zi-num">6</div>
+  <div class="zi-body">
+    <div class="zi-trigger">Trigger: Airtable record updated — Current Session field changes to 6, 11, 16, or 20</div>
+    <div class="zi-action">Actions: (1) Identify which module is being entered (6=M2, 11=M3, 16=M4, 20=M5). (2) Send the corresponding JIT Loom kit email to Instructor Email. (3) Log kit send timestamp in Airtable.</div>
+    <div class="zi-note">Four separate Zaps (one per threshold) or one multi-path Zap using Zapier's Paths feature. The JIT Loom kit emails must be pre-written and linked before this Zap can be activated.</div>
+  </div>
+  <span class="zi-effort ze-med">Med effort</span>
+</div>
+
+<div class="zapier-item">
+  <div class="zi-num">7</div>
+  <div class="zi-body">
+    <div class="zi-trigger">Trigger: Airtable record updated — Showcase Date field is set AND today's date = Showcase Date minus 21 days</div>
+    <div class="zi-action">Actions: (1) Send client re-confirmation email to client contact (from MI Client Partner linked record). (2) Update Implementation Status to "Showcase Prep." (3) Send Ivan a digest: "Showcase prep begins today for [School] — showcase in 21 days."</div>
+    <div class="zi-note">Use Zapier's date filter or a Zapier Schedule that runs daily and checks which records have Showcase Date = today + 21. The daily-check pattern is more reliable than trying to trigger on a specific future date.</div>
+  </div>
+  <span class="zi-effort ze-low">Low effort</span>
+</div>
+
+<div class="zapier-item">
+  <div class="zi-num">8</div>
+  <div class="zi-body">
+    <div class="zi-trigger">Trigger: Zapier Schedule — daily check: Showcase Date = today</div>
+    <div class="zi-action">Actions: (1) Send student survey link to Instructor Email with instructions for in-class facilitation. (2) Send teacher feedback form link to Instructor Email. (3) Send client debrief scheduling link + pre-conversation form to client contact email. (4) Create calendar invite for Ivan: "Client debrief due by [Showcase Date + 5 days] — [School]."</div>
+    <div class="zi-note">Run daily; only fires when Showcase Date = today. Multiple emails send on showcase day — consider staggering by a few hours so they don't all arrive in the teacher's inbox simultaneously.</div>
+  </div>
+  <span class="zi-effort ze-low">Low effort</span>
+</div>
+
+<div class="zapier-item">
+  <div class="zi-num">9</div>
+  <div class="zi-body">
+    <div class="zi-trigger">Trigger: Zapier Schedule — Monday at 8am</div>
+    <div class="zi-action">Actions: (1) Pull all active implementations from Airtable (Status = Active or Showcase Prep). (2) Sort by Current Tier (Red first). (3) Format as a digest email showing: School | Session | Tier | Last Pulse Date | Open Flag | Next milestone. (4) Send to Ivan's email.</div>
+    <div class="zi-note">The digest email formatting is the hardest part of this automation — Zapier's email body supports basic HTML. Use a formatter step to build the table. In H2, the admin Chipp Bot delivers this digest in plain language with site-specific context.</div>
+  </div>
+  <span class="zi-effort ze-med">Med effort</span>
+</div>
+
+<div class="zapier-item">
+  <div class="zi-num">10</div>
+  <div class="zi-body">
+    <div class="zi-trigger">Trigger: Airtable record updated — Renewal Disposition = Yes OR Maybe</div>
+    <div class="zi-action">Actions: (1) Schedule a 30-day follow-up email reminder to Ivan: "Follow up on [School] renewal — disposition: [Yes/Maybe]." (2) Schedule a 60-day follow-up if the 30-day one goes unresolved (check if Renewal Disposition still = Maybe at day 30).</div>
+    <div class="zi-note">Use Zapier's Delay step to schedule the 30-day reminder. The 60-day conditional check requires a second Zap or a Zapier workflow with a decision branch.</div>
+  </div>
+  <span class="zi-effort ze-low">Low effort</span>
+</div>
+
+<div style="margin-top:1.5rem;background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:14px 16px">
+<div style="font-size:11px;font-weight:600;color:#2c2c2a;margin-bottom:8px">Build sequence recommendation</div>
+<p style="font-size:11px;color:#666;line-height:1.6">Build in this order: (1) Add new fields to Program Implementation table. (2) Create Weekly Pulse Log table with linking. (3) Build Zaps 1–3 (commitment and training sequence). (4) Build Zap 4 (pulse form routing — the most complex). (5) Build Zaps 5–6 (missed submission detection + JIT kits). (6) Build Zaps 7–8 (showcase triggers). (7) Build Zap 9 (Monday digest). (8) Build Zap 10 (renewal follow-ups). (9) Build Airtable Interface (Control Center). Test with 2 synthetic records before piloting with real schools.</p>
+<div class="open-note">Build sequencing assumes the pulse form, pacing mapper, JIT Loom kits, and Part 2 Calendly windows are all created before Zaps 3–6 can be activated. Content must precede automation.</div>
+</div>
+
+</div>
+</body>
+</html>

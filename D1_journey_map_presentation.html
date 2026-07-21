@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MI Journey Map — Presentation View</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:2rem;color:#3d3d3a}
+.page{max-width:1100px;margin:0 auto}
+h1{font-size:14px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:1.5rem}
+.grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
+.stage{border-radius:10px;padding:12px 10px;cursor:pointer;transition:opacity .15s;min-height:90px;display:flex;flex-direction:column;justify-content:space-between}
+.stage:hover{opacity:.85}
+.num{font-size:9px;font-weight:600;letter-spacing:.06em;opacity:.7;margin-bottom:4px;text-transform:uppercase}
+.name{font-size:12px;font-weight:600;line-height:1.3}
+.sub{font-size:10px;opacity:.75;margin-top:4px;line-height:1.35}
+.s1{background:#d4edbc;color:#27500a}.s2{background:#b8e8d6;color:#085041}.s3{background:#b8e8d6;color:#085041}
+.s4{background:#d6d3f8;color:#3c3489}.s5{background:#fde5b5;color:#633806}.s6{background:#fde5b5;color:#633806}
+.s7{background:#f8cdb8;color:#712b13}.s8{background:#f8cdb8;color:#712b13}
+.row-label{font-size:9px;font-weight:600;letter-spacing:.06em;color:#888;text-transform:uppercase;margin:10px 0 5px}
+.meta-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
+.meta{background:#fff;border:0.5px solid #ddd;border-radius:6px;padding:8px 9px;min-height:56px}
+.ml{font-size:8px;font-weight:600;color:#aaa;letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px}
+.mv{font-size:10px;color:#666;line-height:1.4}
+.auto-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
+.auto{border-radius:6px;padding:8px 9px;min-height:50px}
+.ah{background:#fff8e6;border:0.5px solid #f0d080}.aa{background:#eaf5e8;border:0.5px solid #8dc880}.ab{background:#e8f0fb;border:0.5px solid #8ab0e0}
+.at{font-size:8px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px}
+.ah .at{color:#a07010}.aa .at{color:#2a6e1a}.ab .at{color:#1a4e8a}
+.av{font-size:10px;color:#666;line-height:1.35}
+.legend{display:flex;gap:14px;margin-top:12px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:#666}
+.ld{width:10px;height:10px;border-radius:2px}
+.lh{background:#fff8e6;border:0.5px solid #f0d080}.la{background:#eaf5e8;border:0.5px solid #8dc880}.lb{background:#e8f0fb;border:0.5px solid #8ab0e0}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Quest Micro-Internship — Implementation Journey Map</h1>
+
+<div class="grid">
+<div class="stage s1"><div><div class="num">Stage 1</div><div class="name">Commitment</div><div class="sub">MOU signed, record created</div></div></div>
+<div class="stage s2"><div><div class="num">Stage 2</div><div class="name">Onboarding &amp; Training</div><div class="sub">A360 PD track + readiness check</div></div></div>
+<div class="stage s3"><div><div class="num">Stage 3</div><div class="name">Implementation Planning</div><div class="sub">Pacing map + client calendar</div></div></div>
+<div class="stage s4"><div><div class="num">Stage 4</div><div class="name">Project Launch</div><div class="sub">7-item gate, all green</div></div></div>
+<div class="stage s5"><div><div class="num">Stage 5</div><div class="name">Active Implementation</div><div class="sub">M1–M5, pulse + JIT kits</div></div></div>
+<div class="stage s6"><div><div class="num">Stage 6</div><div class="name">Showcase Prep</div><div class="sub">T-21 trigger, T-10 check-in</div></div></div>
+<div class="stage s7"><div><div class="num">Stage 7</div><div class="name">Closeout</div><div class="sub">Surveys, debrief, post-mortem</div></div></div>
+<div class="stage s8"><div><div class="num">Stage 8</div><div class="name">Renewal</div><div class="sub">Disposition logged, follow-ups</div></div></div>
+</div>
+
+<div class="row-label">Owner</div>
+<div class="meta-grid">
+<div class="meta"><div class="ml">Owner</div><div class="mv">Farah → Ivan</div></div>
+<div class="meta"><div class="ml">Owner</div><div class="mv">Ivan + A360</div></div>
+<div class="meta"><div class="ml">Owner</div><div class="mv">Ivan + Teacher</div></div>
+<div class="meta"><div class="ml">Owner</div><div class="mv">Ivan</div></div>
+<div class="meta"><div class="ml">Owner</div><div class="mv">Teacher + Ivan</div></div>
+<div class="meta"><div class="ml">Owner</div><div class="mv">Ivan</div></div>
+<div class="meta"><div class="ml">Owner</div><div class="mv">Ivan</div></div>
+<div class="meta"><div class="ml">Owner</div><div class="mv">Ivan + Farah</div></div>
+</div>
+
+<div class="row-label">Airtable status</div>
+<div class="meta-grid">
+<div class="meta"><div class="ml">Status</div><div class="mv">Committed</div></div>
+<div class="meta"><div class="ml">Status</div><div class="mv">Training Complete</div></div>
+<div class="meta"><div class="ml">Status</div><div class="mv">Launch Ready</div></div>
+<div class="meta"><div class="ml">Status</div><div class="mv">Active</div></div>
+<div class="meta"><div class="ml">Status</div><div class="mv">Active (current session)</div></div>
+<div class="meta"><div class="ml">Status</div><div class="mv">Showcase Prep</div></div>
+<div class="meta"><div class="ml">Status</div><div class="mv">Closed</div></div>
+<div class="meta"><div class="ml">Status</div><div class="mv">Renewed</div></div>
+</div>
+
+<div class="row-label">Key trigger</div>
+<div class="meta-grid">
+<div class="meta"><div class="ml">Trigger</div><div class="mv">MOU received</div></div>
+<div class="meta"><div class="ml">Trigger</div><div class="mv">Status = Committed</div></div>
+<div class="meta"><div class="ml">Trigger</div><div class="mv">Training Complete</div></div>
+<div class="meta"><div class="ml">Trigger</div><div class="mv">All 7 gates green</div></div>
+<div class="meta"><div class="ml">Trigger</div><div class="mv">Status = Active</div></div>
+<div class="meta"><div class="ml">Trigger</div><div class="mv">Showcase Date = T-21</div></div>
+<div class="meta"><div class="ml">Trigger</div><div class="mv">Showcase date passes</div></div>
+<div class="meta"><div class="ml">Trigger</div><div class="mv">Debrief complete</div></div>
+</div>
+
+<div class="row-label">Automation type</div>
+<div class="auto-grid">
+<div class="auto ab"><div class="at">Human + auto</div><div class="av">Ivan creates record; welcome email auto-fires</div></div>
+<div class="auto aa"><div class="at">Mostly automated</div><div class="av">A360 webhook → Zapier → Part 2 window email</div></div>
+<div class="auto ab"><div class="at">Human + auto</div><div class="av">Ivan reviews map; client calendar auto-sends</div></div>
+<div class="auto ah"><div class="at">Human gate</div><div class="av">Ivan reviews all 7; "go" text fires automatically</div></div>
+<div class="auto aa"><div class="at">Mostly automated</div><div class="av">Pulse → Airtable; JIT kits by module; tier flags</div></div>
+<div class="auto ab"><div class="at">Human + auto</div><div class="av">T-21/T-1 auto; Ivan owns T-10 call</div></div>
+<div class="auto ab"><div class="at">Human + auto</div><div class="av">Surveys auto-send; Ivan owns debrief call</div></div>
+<div class="auto ab"><div class="at">Human + auto</div><div class="av">Ivan asks renewal Q; 30/60-day auto follow-ups</div></div>
+</div>
+
+<div class="legend">
+<div class="li"><div class="ld lh"></div>Human-primary</div>
+<div class="li"><div class="ld la"></div>Automated (Zapier / A360)</div>
+<div class="li"><div class="ld lb"></div>Both — human judgment + automation</div>
+</div>
+</div>
+</body>
+</html>

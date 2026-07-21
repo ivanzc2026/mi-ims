@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MI Data Architecture Recommendation</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:2rem;color:#3d3d3a;font-size:12px}
+.page{max-width:1100px;margin:0 auto}
+h1{font-size:13px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.subtitle{font-size:11px;color:#aaa;margin-bottom:1.5rem;line-height:1.6}
+.summary-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+.stat{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:12px 14px}
+.stat-num{font-size:22px;font-weight:500;color:#2c2c2a;margin-bottom:2px}
+.stat-label{font-size:10px;color:#888}
+.controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.controls span{font-size:11px;color:#999}
+button{font-size:11px;padding:4px 11px;border-radius:20px;border:1px solid #ccc;background:#fff;color:#666;cursor:pointer;transition:all .15s}
+button.on,button:hover{background:#eee;color:#333;border-color:#999}
+.section{margin-bottom:1.5rem}
+.section-header{display:flex;align-items:center;gap:10px;margin-bottom:.6rem;padding-bottom:.5rem;border-bottom:1px solid #e0ddd8}
+.section-title{font-size:12px;font-weight:600;color:#2c2c2a}
+.section-count{font-size:10px;color:#aaa;background:#f0efe9;padding:2px 7px;border-radius:10px}
+.section-note{font-size:10px;color:#888;font-style:italic}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e0ddd8}
+th{padding:8px 10px;text-align:left;font-size:9px;font-weight:600;color:#888;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid #e0ddd8;background:#faf9f7;white-space:nowrap}
+td{padding:7px 10px;border-bottom:0.5px solid #f0efe9;vertical-align:top;line-height:1.5}
+tr:last-child td{border-bottom:none}
+tr.hide{display:none}
+tr:hover td{background:#faf9f7}
+.field-name{font-weight:500;color:#2c2c2a;font-size:12px;font-family:monospace}
+.field-desc{font-size:11px;color:#888;margin-top:2px}
+.type-pill{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
+.tp-text{background:#e8f0fb;color:#1a4e8a}
+.tp-select{background:#eaf5e8;color:#2a6e1a}
+.tp-bool{background:#f0e8fb;color:#5c2a9a}
+.tp-num{background:#fff8e6;color:#a07010}
+.tp-date{background:#fde8e8;color:#8a1a1a}
+.tp-link{background:#e8f5fb;color:#1a5c8a}
+.tp-pct{background:#f5e8fb;color:#6a1a8a}
+.tp-long{background:#f0efe9;color:#555}
+.status-pill{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
+.sp-exists{background:#eaf5e8;color:#2a6e1a}
+.sp-new{background:#fff8e6;color:#a07010}
+.sp-extend{background:#e8f0fb;color:#1a4e8a}
+.sp-fix{background:#fde8e8;color:#8a1a1a}
+.source-text{font-size:11px;color:#555}
+.priority-pill{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block}
+.pr-must{background:#f8cdb8;color:#712b13}
+.pr-should{background:#fde5b5;color:#633806}
+.pr-nice{background:#f0efe9;color:#666}
+.open-flag{font-size:10px;color:#a07010;font-style:italic}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Quest MI — Data Architecture Recommendation</h1>
+<p class="subtitle">Recommended field set for the Airtable Quest Base — Program Implementation table and supporting tables.<br>Designed for the Horizon 1 fall build. Fields marked Must-Have are required before the system can function. Fields marked Should-Have improve signal quality. Fields marked Nice-to-Have are deferrable.</p>
+
+<div class="summary-bar">
+  <div class="stat"><div class="stat-num" id="total-ct">34</div><div class="stat-label">Total recommended fields</div></div>
+  <div class="stat"><div class="stat-num" style="color:#2a6e1a">18</div><div class="stat-label">Already exist in Airtable</div></div>
+  <div class="stat"><div class="stat-num" style="color:#a07010">14</div><div class="stat-label">New fields to add</div></div>
+  <div class="stat"><div class="stat-num" style="color:#8a1a1a">2</div><div class="stat-label">Existing fields to fix / rename</div></div>
+</div>
+
+<div class="controls">
+  <span>Filter:</span>
+  <button class="on" onclick="fil('all',this)">All fields</button>
+  <button onclick="fil('exists',this)">Already exists</button>
+  <button onclick="fil('new',this)">New to build</button>
+  <button onclick="fil('must',this)">Must-have</button>
+  <button onclick="fil('should',this)">Should-have</button>
+  <button onclick="fil('cat-identity',this)">Identity</button>
+  <button onclick="fil('cat-status',this)">Status &amp; timeline</button>
+  <button onclick="fil('cat-training',this)">Training</button>
+  <button onclick="fil('cat-active',this)">Active impl.</button>
+  <button onclick="fil('cat-employer',this)">Employer</button>
+  <button onclick="fil('cat-closeout',this)">Closeout &amp; renewal</button>
+</div>
+
+<!-- CATEGORY 1: IDENTITY -->
+<div class="section" id="sec-identity">
+<div class="section-header">
+  <div class="section-title">Category 1 — Identity</div>
+  <span class="section-count">7 fields</span>
+  <span class="section-note">Who is this implementation? These fields anchor every downstream record and automation.</span>
+</div>
+<table>
+<thead><tr>
+  <th style="width:160px">Field name</th>
+  <th style="width:90px">Field type</th>
+  <th style="width:80px">Status</th>
+  <th style="width:60px">Priority</th>
+  <th style="width:180px">Source of data</th>
+  <th>Notes / builder guidance</th>
+</tr></thead>
+<tbody>
+<tr data-status="exists" data-priority="must" data-cat="cat-identity">
+  <td><div class="field-name">Implementation Key</div><div class="field-desc">Unique ID per implementation</div></td>
+  <td><span class="type-pill tp-text">Formula / Auto</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Auto-generated or Ivan-assigned at record creation</td>
+  <td>Already the primary key — keep as-is. Used as the linking field to the Weekly Pulse Log table. Format: Network abbreviation + cycle + number (e.g. GD-F26-01).</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-identity">
+  <td><div class="field-name">Network Partner</div><div class="field-desc">The network or organization that brought this school</div></td>
+  <td><span class="type-pill tp-link">Linked record</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Linked to Network Partners table</td>
+  <td>Keep as-is. This is the network-level entity (Green Dot, LAUSD). Distinct from Implementing Site which is the individual school.</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-identity">
+  <td><div class="field-name">Implementing Site</div><div class="field-desc">The specific school building</div></td>
+  <td><span class="type-pill tp-link">Linked record</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Linked to Implementing Sites table</td>
+  <td>Already distinct from Network Partner in the screenshots — keep this separation. Site = building; Network = district/org. Both are needed.</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-identity">
+  <td><div class="field-name">Instructor Name</div><div class="field-desc">Classroom teacher running the MI</div></td>
+  <td><span class="type-pill tp-text">Text</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Commitment form; stakeholder mapping form</td>
+  <td>Exists — ensure it's populated at commitment stage, not added later. This is the person Ivan texts and calls.</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-identity">
+  <td><div class="field-name">Instructor Email + Phone</div><div class="field-desc">Teacher's direct contact info</div></td>
+  <td><span class="type-pill tp-text">Email + Phone</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Commitment form; stakeholder mapping form</td>
+  <td>Both fields already exist. Phone is required — text is the highest-signal channel. If phone is blank, the automation can't text. Gate: phone must be populated before status can advance to Training In Progress.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-identity">
+  <td><div class="field-name">Site Coordinator Name + Email</div><div class="field-desc">School-side logistics contact (not the teacher, not the principal)</div></td>
+  <td><span class="type-pill tp-text">Text + Email</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Stakeholder mapping form (auto-fires at Stage 1)</td>
+  <td>This contact does not currently have a dedicated field. Site coordinator is who Ivan escalates to when the teacher is unresponsive. Two fields: Site Coordinator Name (text) + Site Coordinator Email (email). Add to commitment-stage mapping form.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-identity">
+  <td><div class="field-name">Network Decision-Maker Name + Contact</div><div class="field-desc">The person who owns contract and renewal decisions at the network level — not the teacher</div></td>
+  <td><span class="type-pill tp-text">Text + Email</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Farah provides at commitment stage; Ivan logs</td>
+  <td>Critical for Stage 8. Renewal decisions are made at the network level (Green Dot district office, LAUSD network lead), not by the classroom teacher. Without this field, Ivan has no one to call for renewal. <span class="open-flag">[OPEN: Farah to confirm who this is at each active network before fall]</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- CATEGORY 2: STATUS AND TIMELINE -->
+<div class="section" id="sec-status">
+<div class="section-header">
+  <div class="section-title">Category 2 — Status &amp; Timeline</div>
+  <span class="section-count">9 fields</span>
+  <span class="section-note">Where is this implementation in the lifecycle? These fields drive all automation triggers.</span>
+</div>
+<table>
+<thead><tr>
+  <th style="width:160px">Field name</th>
+  <th style="width:90px">Field type</th>
+  <th style="width:80px">Status</th>
+  <th style="width:60px">Priority</th>
+  <th style="width:180px">Source of data</th>
+  <th>Notes / builder guidance</th>
+</tr></thead>
+<tbody>
+<tr data-status="new" data-priority="must" data-cat="cat-status">
+  <td><div class="field-name">Implementation Status</div><div class="field-desc">The lifecycle stage this implementation is currently in</div></td>
+  <td><span class="type-pill tp-select">Single select</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan manually sets; some transitions auto-trigger via Zapier</td>
+  <td>Options (in order): Committed → Training In Progress → Training Complete → Launch Ready → Active → Showcase Prep → Closed → Renewed. This is distinct from the existing "Site Status" field which tracks partnership status (Confirmed + Launched, Stalled Before Launch, etc.). Both fields should coexist — Site Status tracks the partner relationship; Implementation Status tracks the operational lifecycle. Do not merge them.</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-status">
+  <td><div class="field-name">Site Status</div><div class="field-desc">Partnership relationship status (existing field)</div></td>
+  <td><span class="type-pill tp-select">Single select</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists — keep</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan / Farah maintain</td>
+  <td>Keep as-is. Current values (Confirmed + Launched, Stalled Before Launch, Confirmed - not started) are useful for partnership-level reporting. Add "Stalled After Launch" if not already present. Do not repurpose this field for the operational lifecycle — that's what Implementation Status is for.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-status">
+  <td><div class="field-name">Current Tier</div><div class="field-desc">Green / Yellow / Red — updates dynamically from pulse data</div></td>
+  <td><span class="type-pill tp-select">Single select</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Auto-calculated from Weekly Pulse Log via Airtable formula or Zapier</td>
+  <td>Options: Green / Yellow / Red. Logic: Green = on-time pulses + score ≥ 3 + deliverables on track. Yellow = 2 consecutive score ≤ 2, OR entering M3 (auto), OR 1 missed submission. Red = score ≤ 2 in M2/M3 window, OR module deliverable missing at module end, OR 2+ consecutive missed submissions. This field drives the Monday digest sort order (Red first).</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-status">
+  <td><div class="field-name">Open Flag</div><div class="field-desc">Boolean — set when a risk signal fires; cleared by Ivan when resolved</div></td>
+  <td><span class="type-pill tp-bool">Boolean</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Auto-set by Airtable automation or Zapier when risk threshold crossed; manually cleared by Ivan</td>
+  <td>This field powers the "needs attention" section of the Implementation Control Center dashboard. Any record with Open Flag = true surfaces at the top of Ivan's Monday view. Ivan clears the flag after resolving the issue. Can be a checkbox field in Airtable.</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-status">
+  <td><div class="field-name">Cycle</div><div class="field-desc">Which program cycle (Fall 2026, Summer 2026, etc.)</div></td>
+  <td><span class="type-pill tp-select">Single select</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan assigns at record creation</td>
+  <td>Keep as-is. Already used well for grouping and reporting. Ensure new cycles are added before the cycle begins.</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-status">
+  <td><div class="field-name">Start Date</div><div class="field-desc">First session date</div></td>
+  <td><span class="type-pill tp-date">Date</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Pacing mapper output; confirmed by teacher</td>
+  <td>Exists — ensure it's populated from the pacing mapper, not estimated manually. This field drives the T-minus countdown logic.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-status">
+  <td><div class="field-name">Client Kickoff Date</div><div class="field-desc">Date of the in-person or virtual client kickoff session with students</div></td>
+  <td><span class="type-pill tp-date">Date</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Pacing mapper → client confirmation → Ivan logs</td>
+  <td>Does not currently exist as a separate field. The SY25-26 data shows in-person client kickoff is one of the strongest positive predictors of implementation quality. This date must be confirmed before launch gate closes. Distinct from Start Date.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-status">
+  <td><div class="field-name">Midpoint Date</div><div class="field-desc">Date of the midpoint client feedback session (M5)</div></td>
+  <td><span class="type-pill tp-date">Date</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Pacing mapper → client confirmation → Ivan logs</td>
+  <td>Required for Stage 6 automation triggers (T-14 employer check-in fires based on this date). Must be confirmed at Stage 3 before launch gate can close.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-status">
+  <td><div class="field-name">Showcase Date</div><div class="field-desc">Date of the final student presentation to the client</div></td>
+  <td><span class="type-pill tp-date">Date</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Pacing mapper → client confirmation → Ivan logs</td>
+  <td>The most important date field in the system. Drives: T-21 showcase prep trigger, T-10 check-in, T-1 reminder, post-showcase survey automation, and client debrief scheduling. Must be confirmed at Stage 3.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- CATEGORY 3: TRAINING -->
+<div class="section" id="sec-training">
+<div class="section-header">
+  <div class="section-title">Category 3 — Training Tracking</div>
+  <span class="section-count">5 fields</span>
+  <span class="section-note">All new. These fields enable the training automation chain and the readiness checkpoint flagging.</span>
+</div>
+<table>
+<thead><tr>
+  <th style="width:160px">Field name</th>
+  <th style="width:90px">Field type</th>
+  <th style="width:80px">Status</th>
+  <th style="width:60px">Priority</th>
+  <th style="width:180px">Source of data</th>
+  <th>Notes / builder guidance</th>
+</tr></thead>
+<tbody>
+<tr data-status="new" data-priority="must" data-cat="cat-training">
+  <td><div class="field-name">Part 1 Completion Date</div><div class="field-desc">Timestamp when teacher completes Reach 360 Part 1</div></td>
+  <td><span class="type-pill tp-date">Date / Timestamp</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Reach 360 course.completed webhook → Zapier → Airtable (confirmed supported)</td>
+  <td>This field is the trigger for the Part 2 window selection email. If it's populated, Part 2 selection email has already fired. If it's empty at T-21, Ivan gets a risk alert. The webhook integration is confirmed — this field can be auto-populated with zero manual work.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-training">
+  <td><div class="field-name">Part 2 Window Selected</div><div class="field-desc">Date of the Part 2 live session the teacher has booked</div></td>
+  <td><span class="type-pill tp-date">Date</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Calendly booking → Zapier → Airtable</td>
+  <td>Auto-populated when teacher books via Calendly. If empty at T-18 after Part 1 completion, automated nudge fires. If still empty at T-16, Ivan text. The date here tells Ivan which window the teacher chose — useful for scheduling the onboarding call after Part 2.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-training">
+  <td><div class="field-name">Part 2 Attended</div><div class="field-desc">Confirms teacher completed the live PD session</div></td>
+  <td><span class="type-pill tp-bool">Boolean</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan manually checks after session; or sign-in form → Zapier</td>
+  <td>Simple checkbox. Cannot be automated as reliably as Part 1 (no native Calendly "attended" webhook). Ivan marks true after the session. If false and Part 2 Window date has passed, Zapier fires re-offer email automatically.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-training">
+  <td><div class="field-name">Readiness Checkpoint Score</div><div class="field-desc">Lowest score from the 5-question readiness self-check (1–5), weighted toward M2 and M3 facilitation confidence</div></td>
+  <td><span class="type-pill tp-num">Number (1–5)</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Google Form → Zapier → Airtable (auto-populated)</td>
+  <td>Store the lowest score from the two most critical questions (M2 interview coaching confidence, M3 synthesis facilitation confidence). If score ≤ 2, auto-flag fires to Ivan. This is the closest proxy for "teacher is likely to struggle" available before launch. Consider also storing the raw text from the optional open-field question for Ivan's Monday review.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-training">
+  <td><div class="field-name">Onboarding Call Completed</div><div class="field-desc">Ivan + teacher 30-min call done; status can advance to Training Complete</div></td>
+  <td><span class="type-pill tp-bool">Boolean</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan manually checks after call</td>
+  <td>Simple checkbox. Ivan checks this after the onboarding call, then manually flips Implementation Status to Training Complete. These two actions are intentionally linked — the status change should not happen before the call. Consider an Airtable automation that validates: Onboarding Call Completed must be true before Implementation Status can be set to Training Complete.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- CATEGORY 4: ACTIVE IMPLEMENTATION -->
+<div class="section" id="sec-active">
+<div class="section-header">
+  <div class="section-title">Category 4 — Active Implementation</div>
+  <span class="section-count">4 fields</span>
+  <span class="section-note">All new. These are the heartbeat of Stage 5 — the fields that make the pulse form, tier logic, and JIT triggers work.</span>
+</div>
+<table>
+<thead><tr>
+  <th style="width:160px">Field name</th>
+  <th style="width:90px">Field type</th>
+  <th style="width:80px">Status</th>
+  <th style="width:60px">Priority</th>
+  <th style="width:180px">Source of data</th>
+  <th>Notes / builder guidance</th>
+</tr></thead>
+<tbody>
+<tr data-status="new" data-priority="must" data-cat="cat-active">
+  <td><div class="field-name">Current Session</div><div class="field-desc">Which session (1–30) the teacher ran most recently</div></td>
+  <td><span class="type-pill tp-num">Number (1–30)</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Weekly pulse form → Zapier → Airtable (auto-populated); H2: Chipp Bot interaction</td>
+  <td>This field drives the module transition detection logic. When Current Session crosses 6, 11, 16, or 20, Zapier fires the corresponding JIT kit. The field also enables the "Active by Module" Airtable view — grouping schools by which module they're in. Rollup in the Program Implementation table from the linked Weekly Pulse Log (latest record's session number).</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-active">
+  <td><div class="field-name">Last Pulse Submission Date</div><div class="field-desc">Timestamp of the most recent weekly pulse form submission</div></td>
+  <td><span class="type-pill tp-date">Date / Timestamp</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Google Form → Zapier → Airtable (auto-populated from pulse form submission timestamp)</td>
+  <td>The missed-submission detection logic depends entirely on this field. If today is Saturday and Last Pulse Submission Date is more than 7 days ago, the Saturday reminder fires automatically. Rollup from the linked Weekly Pulse Log table (max date of linked records).</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-active">
+  <td><div class="field-name">Latest Pulse Score</div><div class="field-desc">The 1–5 confidence score from the most recent pulse submission</div></td>
+  <td><span class="type-pill tp-num">Number (1–5)</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Rollup from Weekly Pulse Log (most recent record's score field)</td>
+  <td>Used in tier logic formula. If Latest Pulse Score ≤ 2 AND Current Session is in range 6–15 (M2/M3 window), trigger Red tier automatically. This field alone is not enough — tier logic also requires looking at the previous week's score (to detect 2 consecutive low scores). Store last two scores in the Weekly Pulse Log and use a rollup formula here.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-active">
+  <td><div class="field-name">Module Deliverable Status</div><div class="field-desc">Whether the current module's required deliverable has been submitted on time</div></td>
+  <td><span class="type-pill tp-select">Single select</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Pulse form Y/N question at module end → Zapier → Airtable; H2: Chipp Bot Drive monitoring</td>
+  <td>Options: On Track / Missing / Flagged. "Missing" = deliverable not submitted by the end-of-module session. "Flagged" = submitted but quality concern noted by Ivan. This field triggers a Red flag automatically when set to Missing. It resets to On Track at the start of each new module. Consider whether to track per-module or just current status — for v1, current status is sufficient.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- CATEGORY 5: EMPLOYER -->
+<div class="section" id="sec-employer">
+<div class="section-header">
+  <div class="section-title">Category 5 — Employer / Partner</div>
+  <span class="section-count">4 fields</span>
+  <span class="section-note">Mix of existing and new. The MI Client Partner table already exists — these fields extend it rather than duplicate it.</span>
+</div>
+<table>
+<thead><tr>
+  <th style="width:160px">Field name</th>
+  <th style="width:90px">Field type</th>
+  <th style="width:80px">Status</th>
+  <th style="width:60px">Priority</th>
+  <th style="width:180px">Source of data</th>
+  <th>Notes / builder guidance</th>
+</tr></thead>
+<tbody>
+<tr data-status="exists" data-priority="must" data-cat="cat-employer">
+  <td><div class="field-name">MI Client Partner</div><div class="field-desc">Linked record to the MI Client Partner table</div></td>
+  <td><span class="type-pill tp-link">Linked record</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Linked to MI Client Partner table (separate table, already exists)</td>
+  <td>The MI Client Partner table already exists in the Sandbox Base with 32 clients tracked. Keep the linked record relationship. The client's contact information, industry, partner type, and client success factors already live there. Don't duplicate fields — extend the existing table instead.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-employer">
+  <td><div class="field-name">Employer Brief Status</div><div class="field-desc">Where is the client brief in the creation and approval process</div></td>
+  <td><span class="type-pill tp-select">Single select</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Farah updates as brief moves through creation → review → approval</td>
+  <td>Options: Not Started / Draft / Sent to Client / Approved. This field is one of the 7 launch gate items — launch cannot proceed until Employer Brief Status = Approved. Currently Farah creates briefs from a template; this field makes that process trackable without changing the process itself.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-employer">
+  <td><div class="field-name">Client Kickoff Confirmed</div><div class="field-desc">Boolean — client has confirmed they will attend the kickoff session</div></td>
+  <td><span class="type-pill tp-bool">Boolean</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan logs when client confirms; email confirmation is the evidence</td>
+  <td>Separate from Client Kickoff Date (which is when the kickoff is). This boolean confirms the client has agreed to attend. Required for the launch gate. SY25-26 data: in-person client kickoff is one of the strongest positive predictors of implementation quality — this field protects that condition.</td>
+</tr>
+<tr data-status="new" data-priority="should" data-cat="cat-employer">
+  <td><div class="field-name">Client Engagement Quality</div><div class="field-desc">Post-implementation assessment of how engaged and rigorous the client actually was</div></td>
+  <td><span class="type-pill tp-select">Single select</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-should">Should</span></td>
+  <td class="source-text">Ivan fills in at closeout based on observation and teacher debrief</td>
+  <td>The existing "Client Quality" field in the Sandbox Base uses values like "Highly Engaged and Rigorous" and "Showed Up / Low Rigor." Use those same values — this is just making that field available at the implementation level, not just the client level. The SY25-26 analysis found that "Showed Up / Low Rigor" clients appeared frequently in Average and Weak implementations. Tracking this at the implementation level (not just the client level) captures context-specific variance.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- CATEGORY 6: CLOSEOUT AND RENEWAL -->
+<div class="section" id="sec-closeout">
+<div class="section-header">
+  <div class="section-title">Category 6 — Closeout &amp; Renewal</div>
+  <span class="section-count">7 fields</span>
+  <span class="section-note">Mix of existing (already tracked, keep) and new (not tracked, add now).</span>
+</div>
+<table>
+<thead><tr>
+  <th style="width:160px">Field name</th>
+  <th style="width:90px">Field type</th>
+  <th style="width:80px">Status</th>
+  <th style="width:60px">Priority</th>
+  <th style="width:180px">Source of data</th>
+  <th>Notes / builder guidance</th>
+</tr></thead>
+<tbody>
+<tr data-status="new" data-priority="must" data-cat="cat-closeout">
+  <td><div class="field-name">Student Survey Completion Rate</div><div class="field-desc">Percentage of enrolled students who completed the end-of-program survey</div></td>
+  <td><span class="type-pill tp-pct">Percent / Formula</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Auto-calculated: survey response count (from form) ÷ Total # Students Served (existing field)</td>
+  <td>The existing "Total # Students Served" field already exists. Survey response count can be pulled from Google Forms via Zapier and logged in a linked field. Formula: responses ÷ students enrolled. Flag if below 70% at Day 7 post-showcase → Ivan text to teacher. This is one of the most important quality indicators in the system.</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-closeout">
+  <td><div class="field-name">Facilitator Strength</div><div class="field-desc">Post-implementation assessment of teacher's facilitation quality</div></td>
+  <td><span class="type-pill tp-select">Single select</span></td>
+  <td><span class="status-pill sp-fix">Fix: typo</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan fills in at closeout</td>
+  <td>Field exists and is actively used in the SY25-26 analysis — keep it. Fix the "Stong" typo to "Strong" in the select options. Values: Weak / Average / Strong / Cambiar Facilitated. This field has real predictive value when consistently populated — do not let it become optional.</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-closeout">
+  <td><div class="field-name">Implementation Outcome</div><div class="field-desc">Overall quality rating of the implementation (Strong / Average / Weak)</div></td>
+  <td><span class="type-pill tp-select">Single select</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan fills in at closeout based on full picture</td>
+  <td>Keep as-is. This is the primary outcome field used in the SY25-26 analysis. It should be populated for every implementation before status = Closed. Consider adding a validation rule: status cannot be set to Closed unless Implementation Outcome is populated.</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-closeout">
+  <td><div class="field-name">Implementation Barriers</div><div class="field-desc">Multi-select of barriers that affected this implementation</div></td>
+  <td><span class="type-pill tp-select">Multi-select</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan fills in at closeout</td>
+  <td>Keep as-is. Current values (New teacher to PBL, Scheduling difficulties, Low attendance, Low student buy-in, etc.) are well-calibrated from the SY25-26 analysis. These values directly predict outcome quality — the more of them present, the more likely a Weak outcome. Populate consistently for every implementation.</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-closeout">
+  <td><div class="field-name">MI Implementation Success Factors</div><div class="field-desc">Multi-select of conditions that supported this implementation</div></td>
+  <td><span class="type-pill tp-select">Multi-select</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan fills in at closeout</td>
+  <td>Keep as-is. Current values (Facilitator buy-in, Student opt-in, In person client kick off, School year activities mapped in advance, etc.) are directly validated by the SY25-26 survey analysis. These are the conditions to protect. Populate every implementation.</td>
+</tr>
+<tr data-status="exists" data-priority="must" data-cat="cat-closeout">
+  <td><div class="field-name">Key Implementation Notes</div><div class="field-desc">Free-text post-mortem narrative for this implementation</div></td>
+  <td><span class="type-pill tp-long">Long text</span></td>
+  <td><span class="status-pill sp-exists">✓ Exists</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan writes at closeout; may include client debrief notes</td>
+  <td>Keep as-is. The existing notes in the base are useful — several contain specific insights about what drove quality or failure. H2: Admin Chipp Bot drafts this field from pulse history and Drive signals; Ivan edits and confirms.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="cat-closeout">
+  <td><div class="field-name">Renewal Disposition</div><div class="field-desc">Whether the school / network wants to run MI again</div></td>
+  <td><span class="type-pill tp-select">Single select</span></td>
+  <td><span class="status-pill sp-new">New</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Ivan logs within 24h of client debrief call</td>
+  <td>Options: Yes / No / Maybe / Not Contacted. This field currently doesn't exist — there's no way to track renewal rates across cycles. Adding it enables: 30/60-day follow-up automations for Yes/Maybe; network-level renewal summary views; pattern detection (same network with 2+ No dispositions = systemic flag for Farah). Must be populated before status = Closed.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- SECONDARY TABLE: WEEKLY PULSE LOG -->
+<div class="section">
+<div class="section-header">
+  <div class="section-title">Secondary Table — Weekly Pulse Log</div>
+  <span class="section-count">New table · 6 fields</span>
+  <span class="section-note">One record per weekly pulse submission per school. Linked to Program Implementation. Enables trend analysis and tier history.</span>
+</div>
+<table>
+<thead><tr>
+  <th style="width:160px">Field name</th>
+  <th style="width:90px">Field type</th>
+  <th style="width:80px">Status</th>
+  <th style="width:60px">Priority</th>
+  <th style="width:180px">Source of data</th>
+  <th>Notes / builder guidance</th>
+</tr></thead>
+<tbody>
+<tr data-status="new" data-priority="must" data-cat="">
+  <td><div class="field-name">Implementation Key</div><div class="field-desc">Links this pulse record to the parent implementation</div></td>
+  <td><span class="type-pill tp-link">Linked record</span></td>
+  <td><span class="status-pill sp-new">New table</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Zapier auto-populates from Google Form "which school" dropdown</td>
+  <td>This linking field connects pulse records to the parent Program Implementation record. The "which school" field in the pulse form must use a value that Zapier can match to an existing Airtable record (Implementation Key or a standardized school name dropdown). Pre-populate the form dropdown from Airtable to prevent matching errors.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="">
+  <td><div class="field-name">Submission Date</div><div class="field-desc">When this pulse was submitted</div></td>
+  <td><span class="type-pill tp-date">Date / Timestamp</span></td>
+  <td><span class="status-pill sp-new">New table</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Google Form submission timestamp → Zapier → Airtable</td>
+  <td>Auto-populated. Used to detect missed submissions (if no record exists for a given week, the school missed). The Saturday reminder trigger checks: does this implementation have a pulse record with Submission Date in the current week? If not, fire reminder.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="">
+  <td><div class="field-name">Session Number</div><div class="field-desc">Which session (1–30) the teacher ran this week</div></td>
+  <td><span class="type-pill tp-num">Number</span></td>
+  <td><span class="status-pill sp-new">New table</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Pulse form dropdown → Zapier → Airtable</td>
+  <td>Drives module transition detection. When this value crosses 6, 11, 16, or 20 relative to the previous week's record, Zapier fires the corresponding JIT kit. Also populates the "Current Session" rollup field in the parent Program Implementation record.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="">
+  <td><div class="field-name">Pulse Score</div><div class="field-desc">Teacher's 1–5 confidence / quality rating for this week</div></td>
+  <td><span class="type-pill tp-num">Number (1–5)</span></td>
+  <td><span class="status-pill sp-new">New table</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Pulse form 1–5 scale → Zapier → Airtable</td>
+  <td>The tier logic formula looks at the two most recent pulse records' scores. If both are ≤ 2, Yellow tier. If score ≤ 2 AND session is in M2 or M3 range, Red tier. Rollup to Latest Pulse Score field in parent record.</td>
+</tr>
+<tr data-status="new" data-priority="should" data-cat="">
+  <td><div class="field-name">Open Text Response</div><div class="field-desc">Teacher's free-text answer to "what's your biggest question or concern?"</div></td>
+  <td><span class="type-pill tp-long">Long text</span></td>
+  <td><span class="status-pill sp-new">New table</span></td>
+  <td><span class="priority-pill pr-should">Should</span></td>
+  <td class="source-text">Pulse form optional text field → Zapier → Airtable</td>
+  <td>The highest-signal data in the entire pulse form — a teacher typing "students can't find anyone to interview" tells you more than a score of 2. Ivan reviews these manually in H1; pastes the week's responses into Claude for a 3-bullet summary each Monday. H2: Admin Chipp Bot surfaces these in the daily digest automatically.</td>
+</tr>
+<tr data-status="new" data-priority="must" data-cat="">
+  <td><div class="field-name">Module Deliverable Submitted</div><div class="field-desc">Y/N — did students complete the module deliverable? (Only appears on pulse form at module end sessions)</div></td>
+  <td><span class="type-pill tp-bool">Boolean</span></td>
+  <td><span class="status-pill sp-new">New table</span></td>
+  <td><span class="priority-pill pr-must">Must</span></td>
+  <td class="source-text">Pulse form conditional Y/N question → Zapier → Airtable</td>
+  <td>This field only appears on the pulse form when Session Number is at a module-end point (S5, S10, S15, S19, S24). If false at those sessions, Zapier triggers a Red flag regardless of the confidence score. Rollup populates the Module Deliverable Status field in the parent record.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<!-- FIELD TYPE LEGEND -->
+<div style="margin-top:1.5rem;background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:14px 16px">
+<div style="font-size:10px;font-weight:600;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px">Field type legend</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px">
+<span class="type-pill tp-text">Text</span><span style="font-size:11px;color:#666;margin-right:8px">Single-line or email/phone field</span>
+<span class="type-pill tp-select">Single/Multi select</span><span style="font-size:11px;color:#666;margin-right:8px">Dropdown or tag field</span>
+<span class="type-pill tp-bool">Boolean</span><span style="font-size:11px;color:#666;margin-right:8px">Checkbox (true/false)</span>
+<span class="type-pill tp-num">Number</span><span style="font-size:11px;color:#666;margin-right:8px">Integer or decimal</span>
+<span class="type-pill tp-date">Date</span><span style="font-size:11px;color:#666;margin-right:8px">Date or date+time</span>
+<span class="type-pill tp-link">Linked record</span><span style="font-size:11px;color:#666;margin-right:8px">Connects to another Airtable table</span>
+<span class="type-pill tp-pct">Percent / Formula</span><span style="font-size:11px;color:#666;margin-right:8px">Calculated from other fields</span>
+<span class="type-pill tp-long">Long text</span><span style="font-size:11px;color:#666;margin-right:8px">Multi-line narrative text</span>
+</div>
+<div style="margin-top:10px;font-size:10px;font-weight:600;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Priority legend</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<span><span class="priority-pill pr-must">Must</span> <span style="font-size:11px;color:#666">Required before system can function — build first</span></span>
+<span><span class="priority-pill pr-should">Should</span> <span style="font-size:11px;color:#666">Meaningfully improves signal quality — add in week 2</span></span>
+<span><span class="priority-pill pr-nice">Nice</span> <span style="font-size:11px;color:#666">Deferrable to after fall pilot</span></span>
+</div>
+</div>
+</div>
+
+<script>
+function fil(val, btn){
+  document.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('tbody tr').forEach(tr=>{
+    if(val==='all'){tr.classList.remove('hide');return}
+    const s=tr.dataset.status||'';
+    const p=tr.dataset.priority||'';
+    const c=tr.dataset.cat||'';
+    if(val==='exists'){tr.classList.toggle('hide',s!=='exists');return}
+    if(val==='new'){tr.classList.toggle('hide',s!=='new');return}
+    if(val==='must'){tr.classList.toggle('hide',p!=='must');return}
+    if(val==='should'){tr.classList.toggle('hide',p!=='should');return}
+    tr.classList.toggle('hide',c!==val);
+  });
+}
+</script>
+</body>
+</html>

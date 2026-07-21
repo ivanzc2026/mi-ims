@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MI IMS — Content & Build Inventory</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:2rem;color:#3d3d3a;font-size:12px}
+.page{max-width:1150px;margin:0 auto}
+h1{font-size:13px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.4rem}
+.subtitle{font-size:11px;color:#aaa;margin-bottom:1.25rem;line-height:1.6}
+.summary-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:1.25rem}
+.stat{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:11px 13px}
+.stat-num{font-size:20px;font-weight:500;color:#2c2c2a;margin-bottom:2px}
+.stat-label{font-size:10px;color:#888}
+.controls{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.controls span{font-size:11px;color:#999}
+button{font-size:11px;padding:4px 11px;border-radius:20px;border:1px solid #ccc;background:#fff;color:#666;cursor:pointer;transition:all .15s}
+button.on,button:hover{background:#eee;color:#333;border-color:#999}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:8px;overflow:hidden;border:1px solid #e0ddd8}
+th{padding:8px 10px;text-align:left;font-size:9px;font-weight:600;color:#888;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid #e0ddd8;background:#faf9f7;white-space:nowrap}
+td{padding:7px 10px;border-bottom:0.5px solid #f0efe9;vertical-align:top;line-height:1.5}
+tr:last-child td{border-bottom:none}
+tr.hide{display:none}
+tr:hover td{background:#faf9f7}
+tr.section-row td{background:#f5f4f0;font-size:10px;font-weight:600;color:#888;letter-spacing:.05em;text-transform:uppercase;padding:6px 10px;border-bottom:1px solid #e0ddd8}
+.item-name{font-weight:500;color:#2c2c2a;font-size:12px}
+.item-desc{font-size:11px;color:#888;margin-top:2px;line-height:1.4}
+
+/* TYPE PILLS */
+.type-pill{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
+.tp-content{background:#e8f0fb;color:#1a4e8a}
+.tp-form{background:#eaf5e8;color:#2a6e1a}
+.tp-tool{background:#fff8e6;color:#a07010}
+.tp-loom{background:#e8eaf6;color:#1a237e}
+.tp-template{background:#fde8e8;color:#8a1a1a}
+.tp-email{background:#f0e8fb;color:#5c2a9a}
+.tp-rubric{background:#fce4ec;color:#880e4f}
+
+/* PRIORITY PILLS */
+.pr-pill{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
+.pr-must{background:#f8cdb8;color:#712b13}
+.pr-should{background:#fde5b5;color:#633806}
+.pr-h2{background:#f0efe9;color:#666}
+
+/* OWNER PILLS */
+.ow-pill{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap;background:#f0efe9;color:#555}
+
+.effort-text{font-size:11px;color:#555}
+.blocker-text{font-size:10px;color:#a07010;font-style:italic;margin-top:2px}
+
+/* LEGEND */
+.legend-section{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:14px 16px;margin-top:1.25rem;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.legend-block h3{font-size:10px;font-weight:600;color:#888;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+.legend-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:11px;color:#555}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Quest MI IMS — Content &amp; Build Inventory</h1>
+<p class="subtitle">Every new artifact, form, tool, or piece of content that must be created before the H1 system can function.<br>Sorted by stage. "Must-have before fall" items block one or more Zapier automations from activating if missing.</p>
+
+<div class="summary-bar">
+  <div class="stat"><div class="stat-num" id="total-count">28</div><div class="stat-label">Total items to build</div></div>
+  <div class="stat"><div class="stat-num" style="color:#712b13">16</div><div class="stat-label">Must-have before fall</div></div>
+  <div class="stat"><div class="stat-num" style="color:#633806">7</div><div class="stat-label">Should-have (post-launch ok)</div></div>
+  <div class="stat"><div class="stat-num" style="color:#666">5</div><div class="stat-label">Horizon 2 (parallel track)</div></div>
+  <div class="stat"><div class="stat-num" style="color:#2a6e1a">Ivan</div><div class="stat-label">Primary owner for most items</div></div>
+</div>
+
+<div class="controls">
+  <span>Filter by:</span>
+  <button class="on" onclick="fil('all',this)">All</button>
+  <button onclick="fil('must',this)">Must-have (fall)</button>
+  <button onclick="fil('should',this)">Should-have</button>
+  <button onclick="fil('h2',this)">Horizon 2</button>
+  <button onclick="fil('content',this)">Content</button>
+  <button onclick="fil('form',this)">Form</button>
+  <button onclick="fil('tool',this)">Tool / Template</button>
+  <button onclick="fil('loom',this)">Loom kit</button>
+  <button onclick="fil('email',this)">Email copy</button>
+  <button onclick="fil('rubric',this)">Rubric</button>
+  <button onclick="fil('ivan',this)">Ivan owns</button>
+  <button onclick="fil('farah',this)">Farah owns</button>
+  <button onclick="fil('steve',this)">Steve owns</button>
+</div>
+
+<table>
+<thead><tr>
+  <th style="width:55px">Stage</th>
+  <th style="width:175px">Item to build</th>
+  <th style="width:75px">Type</th>
+  <th style="width:65px">Priority</th>
+  <th style="width:65px">Owner</th>
+  <th style="width:90px">Est. effort</th>
+  <th>What it requires + what it unblocks</th>
+</tr></thead>
+<tbody>
+
+<!-- STAGE 1 -->
+<tr class="section-row"><td colspan="7">Stage 1 — Commitment</td></tr>
+
+<tr data-pr="must" data-type="email" data-owner="ivan">
+  <td>S1</td>
+  <td><div class="item-name">Welcome email</div><div class="item-desc">Sent automatically when status = Committed</div></td>
+  <td><span class="type-pill tp-email">Email copy</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">30 min</td>
+  <td>Write once, Zapier delivers. Needs: warm tone, Part 1 A360 link, what to expect next. Unblocks: Zap 1 (first automation in the entire chain — nothing fires without this copy existing).</td>
+</tr>
+
+<tr data-pr="must" data-type="form" data-owner="ivan">
+  <td>S1</td>
+  <td><div class="item-name">Stakeholder mapping form</div><div class="item-desc">Collects teacher, site coordinator, and network decision-maker contacts at commitment</div></td>
+  <td><span class="type-pill tp-form">Form</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">30 min</td>
+  <td>Google Form. Fields: teacher name/email/phone, site coordinator name/email, network decision-maker name/contact, start date window. Auto-sends with welcome email. Unblocks: stakeholder map in Airtable populating automatically.</td>
+</tr>
+
+<!-- STAGE 2 -->
+<tr class="section-row"><td colspan="7">Stage 2 — Onboarding &amp; Training</td></tr>
+
+<tr data-pr="must" data-type="form" data-owner="ivan">
+  <td>S2</td>
+  <td><div class="item-name">Readiness checkpoint form</div><div class="item-desc">5-question post-Part-2 structured reflection; scores M2 and M3 facilitation confidence</div></td>
+  <td><span class="type-pill tp-form">Form</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">1 hr</td>
+  <td>Google Form. 5 questions, 1–5 scale. Two critical questions: M2 interview coaching confidence, M3 synthesis facilitation confidence. Auto-sends after Part 2. Score ≤ 2 on either → Airtable flag → Ivan review. Unblocks: Zap connecting form to Airtable readiness field.</td>
+</tr>
+
+<tr data-pr="must" data-type="content" data-owner="ivan">
+  <td>S2</td>
+  <td><div class="item-name">Part 2 live PD session</div><div class="item-desc">Live facilitation training focused on coaching student thinking, M2 interview quality, M3 synthesis</div></td>
+  <td><span class="type-pill tp-content">Content</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">3–4 hrs prep + delivery</td>
+  <td>Not just a curriculum walkthrough — must build facilitation muscle: how to coach vs. tell, how to push M3 rigor, how to prep students for client interactions. Must be built before Calendly windows can be opened. Unblocks: entire training automation chain (Zaps 2–3).<div class="blocker-text">Note: can be recorded as a Loom and offered async if live scheduling is difficult at scale.</div></td>
+</tr>
+
+<tr data-pr="must" data-type="tool" data-owner="steve">
+  <td>S2</td>
+  <td><div class="item-name">Calendly Part 2 windows</div><div class="item-desc">3–4 bookable event slots for teachers to select their Part 2 PD session time</div></td>
+  <td><span class="type-pill tp-tool">Tool setup</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Steve / Ivan</span></td>
+  <td class="effort-text">1 hr</td>
+  <td>Calendly account setup (or use existing). 3–4 event types, one per Part 2 window. Must be live before Zap 2 (A360 webhook → Part 2 window email) can fire. Unblocks: entire Part 2 scheduling automation.</td>
+</tr>
+
+<tr data-pr="must" data-type="email" data-owner="ivan">
+  <td>S2</td>
+  <td><div class="item-name">Materials packet email</div><div class="item-desc">Sent after onboarding call: pacing mapper link, facilitator checklist, module overview, portfolio links</div></td>
+  <td><span class="type-pill tp-email">Email copy</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">30 min</td>
+  <td>Auto-sends when status flips to Training Complete. Must include working links to all materials. Unblocks: Zapier Training Complete → materials delivery automation.</td>
+</tr>
+
+<!-- STAGE 3 -->
+<tr class="section-row"><td colspan="7">Stage 3 — Implementation Planning</td></tr>
+
+<tr data-pr="must" data-type="tool" data-owner="ivan">
+  <td>S3</td>
+  <td><div class="item-name">Pacing mapper (Google Sheet)</div><div class="item-desc">Teacher inputs 3 fields → sheet auto-generates full dated M1–M7 session calendar with risk flags</div></td>
+  <td><span class="type-pill tp-tool">Tool / Template</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">3–4 hrs</td>
+  <td>Google Sheets formula build. Inputs: start date, sessions/week, session length. Outputs: dated session calendar, 3 client interaction windows, risk flags (M3 non-consecutive, &lt;25 sessions, showcase near end-of-year). This is Farah's biggest manual pain point — building it eliminates her most time-consuming task. Unblocks: client calendar confirmation automation (Zap 3).<div class="blocker-text">Highest-leverage single artifact in H1. Build this first in Week 2.</div></td>
+</tr>
+
+<tr data-pr="must" data-type="content" data-owner="farah">
+  <td>S3</td>
+  <td><div class="item-name">Client Success Guide</div><div class="item-desc">One-page document preparing the client to show up well across the full implementation arc</div></td>
+  <td><span class="type-pill tp-content">Content</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Farah / Ivan</span></td>
+  <td class="effort-text">2 hrs</td>
+  <td>Covers: what students are doing, how to give useful feedback, timeline expectations, final presentation role, what makes a strong project. Sent with proposed calendar dates at Stage 3. Named explicitly in Taryn's SY25-26 analysis as a top-5 SY26-27 program change. [OPEN: owned by Farah (partner onboarding) or Ivan (curriculum artifact)?]</td>
+</tr>
+
+<tr data-pr="must" data-type="email" data-owner="ivan">
+  <td>S3</td>
+  <td><div class="item-name">Client calendar confirmation email</div><div class="item-desc">Auto-sends to client with proposed kickoff, midpoint, and showcase dates for confirmation</div></td>
+  <td><span class="type-pill tp-email">Email copy</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">20 min</td>
+  <td>Simple professional email. Includes the three dates, a brief context sentence, and a clear ask for confirmation. Auto-sends when Ivan logs dates in Airtable. Unblocks: Zapier date confirmation automation.</td>
+</tr>
+
+<!-- STAGE 4 -->
+<tr class="section-row"><td colspan="7">Stage 4 — Project Launch</td></tr>
+
+<tr data-pr="must" data-type="email" data-owner="ivan">
+  <td>S4</td>
+  <td><div class="item-name">"You're ready to launch" text/email</div><div class="item-desc">Sent to teacher when Ivan flips status to Active after all 7 gate items are green</div></td>
+  <td><span class="type-pill tp-email">Email / SMS copy</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">15 min</td>
+  <td>Short, energizing. Confirms launch, links to M1 JIT kit, reminds teacher of kickoff date. Auto-sends via Zapier. Unblocks: Zap 4 (launch confirmation automation).</td>
+</tr>
+
+<tr data-pr="must" data-type="template" data-owner="ivan">
+  <td>S4</td>
+  <td><div class="item-name">Student portfolio folder template</div><div class="item-desc">Google Drive folder structure for student and team work across M1–M6</div></td>
+  <td><span class="type-pill tp-template">Template</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">1 hr</td>
+  <td>Pre-built Drive folder structure teachers copy and share with students. One folder per module, named consistently so bot can navigate in H2. Must exist before launch gate item 6 (student materials accessible) can be checked. Unblocks: H2 Drive monitoring and rubric assessment.</td>
+</tr>
+
+<!-- STAGE 5 -->
+<tr class="section-row"><td colspan="7">Stage 5 — Active Implementation (M1–M5)</td></tr>
+
+<tr data-pr="must" data-type="form" data-owner="ivan">
+  <td>S5</td>
+  <td><div class="item-name">Weekly pulse form</div><div class="item-desc">Mobile-optimized Google Form; 2 min; conditional logic for module deliverable question</div></td>
+  <td><span class="type-pill tp-form">Form</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">2 hrs</td>
+  <td>Google Form. Fields: school (dropdown — pre-populated from Airtable Implementation Keys), session # (dropdown 1–30), score 1–5, open text (optional), module deliverable Y/N (conditional — appears only at sessions 5, 10, 15, 19, 24). Must be mobile-first. Unblocks: Zap 4 (pulse → Airtable), the most critical automation in the system. Build in Week 1.<div class="blocker-text">Most important form in the system. Test on mobile before pilot launches.</div></td>
+</tr>
+
+<tr data-pr="must" data-type="loom" data-owner="ivan">
+  <td>S5</td>
+  <td><div class="item-name">M1 JIT Loom kit</div><div class="item-desc">~3 min video: client kickoff coaching moves, how to run S1 effectively</div></td>
+  <td><span class="type-pill tp-loom">Loom kit</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">1 hr (prep + record)</td>
+  <td>Auto-delivers on launch day. Content: what strong client kickoff engagement looks like, how to help students interrogate the brief, common M1 facilitation mistakes. Unblocks: Zap 5 (launch day M1 kit auto-send).</td>
+</tr>
+
+<tr data-pr="must" data-type="loom" data-owner="ivan">
+  <td>S5</td>
+  <td><div class="item-name">M2 JIT Loom kit</div><div class="item-desc">~3 min video: coaching interview quality in real time; what strong vs. weak interview data looks like</div></td>
+  <td><span class="type-pill tp-loom">Loom kit</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">1 hr</td>
+  <td>Auto-delivers when session # crosses S6. SY25-26 data: weak interviews are Failure Moment #1 — everything downstream depends on interview quality. Content: question coaching, how to push on follow-ups, what rich data looks like vs. surface-level responses. Unblocks: Zap 6 (M2 module transition → kit auto-send).<div class="blocker-text">Second-highest priority Loom kit. Build before fall launch.</div></td>
+</tr>
+
+<tr data-pr="must" data-type="loom" data-owner="ivan">
+  <td>S5</td>
+  <td><div class="item-name">M3 JIT Loom kit</div><div class="item-desc">~3 min video: the quotes → themes → insights distinction; coaching moves for pushing deeper thinking</div></td>
+  <td><span class="type-pill tp-loom">Loom kit</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">2 hrs (hardest to get right — may need two takes)</td>
+  <td>Auto-delivers when session # crosses S11. Most important kit in the system. M3 is the hardest facilitation moment and the one most likely to cascade into a weak showcase. Content: genuine insight vs. theme summary (show examples), 3 coaching questions to use in class, what to do when teams are stuck in summary mode. Unblocks: Zap 6 (M3 transition → kit auto-send).<div class="blocker-text">Highest-priority Loom kit. Build this one first.</div></td>
+</tr>
+
+<tr data-pr="should" data-type="loom" data-owner="ivan">
+  <td>S5</td>
+  <td><div class="item-name">M4 JIT Loom kit</div><div class="item-desc">~3 min video: enforcing the insights-to-ideas link; what to do when brainstorming disconnects from research</div></td>
+  <td><span class="type-pill tp-loom">Loom kit</span></td>
+  <td><span class="pr-pill pr-should">Should</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">1 hr</td>
+  <td>Auto-delivers when session # crosses S16. Can be recorded after fall launch — M3 is the higher risk window. Content: how to enforce the "insight first, idea second" rule; what to do when concept maps are disconnected from student research. Post-launch acceptable.</td>
+</tr>
+
+<tr data-pr="should" data-type="loom" data-owner="ivan">
+  <td>S5</td>
+  <td><div class="item-name">M5 JIT Loom kit</div><div class="item-desc">~3 min video: preparing students to receive and use client feedback; what iteration actually looks like</div></td>
+  <td><span class="type-pill tp-loom">Loom kit</span></td>
+  <td><span class="pr-pill pr-should">Should</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">1 hr</td>
+  <td>Auto-delivers when session # crosses S20. Can be recorded after fall launch. Content: how to debrief client feedback with students, frameworks for interpreting ambiguous feedback, what measurable iteration looks like in Prototype v2. Post-launch acceptable.</td>
+</tr>
+
+<!-- STAGE 6 -->
+<tr class="section-row"><td colspan="7">Stage 6 — Showcase Preparation</td></tr>
+
+<tr data-pr="must" data-type="rubric" data-owner="ivan">
+  <td>S6</td>
+  <td><div class="item-name">Client presentation rubric</div><div class="item-desc">Generic rubric for all teachers showing what a strong final presentation looks like across dimensions</div></td>
+  <td><span class="type-pill tp-rubric">Rubric</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">3 hrs</td>
+  <td>Build from: client presentation guide (Ivan's Drive) + Module 6 wrapper. Covers: research → insight → solution narrative coherence, evidence quality, presentation clarity, client-readiness. Must exist before T-7 rubric delivery automation can fire. Unblocks: Zap 7 (T-7 trigger → rubric auto-sends to teacher and client).<div class="blocker-text">Source: Contreras Sp26, Sylmar Sp26, Alliance Su25 are the strongest exemplar implementations to draw from.</div></td>
+</tr>
+
+<tr data-pr="must" data-type="content" data-owner="ivan">
+  <td>S6</td>
+  <td><div class="item-name">Presentation exemplar summaries (2–3)</div><div class="item-desc">Brief summaries of what strong SY25-26 final presentations looked like, for teacher reference</div></td>
+  <td><span class="type-pill tp-content">Content</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">2 hrs</td>
+  <td>Short written summaries (not video) of what made Contreras Sp26, Sylmar Sp26, and/or Alliance Su25 showcases strong. Sent with rubric at T-7. Teachers need to see what "strong" looks like, not just read a rubric. Can be adapted from Taryn's ISA notes on those implementations.</td>
+</tr>
+
+<tr data-pr="must" data-type="form" data-owner="ivan">
+  <td>S6</td>
+  <td><div class="item-name">T-10 check-in form (Green sites)</div><div class="item-desc">Structured form sent automatically to Green tier sites at T-10; replaces Ivan call for low-risk schools</div></td>
+  <td><span class="type-pill tp-form">Form</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">45 min</td>
+  <td>Google Form. Questions: are teams on track? do presentations tell a research → insight → solution story? what's the biggest risk right now? responses go to Airtable. Ivan reviews; if responses reveal narrative gaps, escalates to a call. Unblocks: T-10 automation (Zap — auto-sends to Green sites, Ivan calls Red/Yellow).</td>
+</tr>
+
+<tr data-pr="should" data-type="email" data-owner="ivan">
+  <td>S6</td>
+  <td><div class="item-name">T-21 / T-14 / T-1 email templates</div><div class="item-desc">Client re-confirmation, logistics check, and day-before reminder emails</div></td>
+  <td><span class="type-pill tp-email">Email copy (3)</span></td>
+  <td><span class="pr-pill pr-should">Should</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">1 hr (all 3)</td>
+  <td>Three short emails: T-21 client re-confirm, T-14 logistics check (location, tech, guest count), T-1 day-before reminder. All auto-send via Zapier. Low effort, high professionalism signal. Can be drafted post-launch if needed but worth doing in week 4.</td>
+</tr>
+
+<!-- STAGE 7 -->
+<tr class="section-row"><td colspan="7">Stage 7 — Closeout</td></tr>
+
+<tr data-pr="must" data-type="form" data-owner="ivan">
+  <td>S7</td>
+  <td><div class="item-name">Student end-of-program survey</div><div class="item-desc">The existing student survey — confirm it exists and is linked to automation</div></td>
+  <td><span class="type-pill tp-form">Form</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Taryn / Ivan</span></td>
+  <td class="effort-text">30 min (confirm + link)</td>
+  <td>Survey likely already exists from Taryn's SY25-26 analysis. Confirm the form is live, the link is shareable, and it's connected to Zapier so completion rates auto-populate in Airtable. Unblocks: post-showcase survey delivery automation (Zap 8).</td>
+</tr>
+
+<tr data-pr="must" data-type="form" data-owner="ivan">
+  <td>S7</td>
+  <td><div class="item-name">Teacher feedback form</div><div class="item-desc">Post-showcase teacher reflection on what worked, what was harder than expected</div></td>
+  <td><span class="type-pill tp-form">Form</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">45 min</td>
+  <td>Google Form. Short — 5 questions max. Auto-sends within 24h of showcase. Feeds Ivan's post-mortem. Unblocks: Zap 8 (post-showcase auto-send to teacher).</td>
+</tr>
+
+<tr data-pr="must" data-type="form" data-owner="ivan">
+  <td>S7</td>
+  <td><div class="item-name">Pre-debrief form (teacher + client)</div><div class="item-desc">Short form sent 48h before client debrief call to focus the conversation before it starts</div></td>
+  <td><span class="type-pill tp-form">Form</span></td>
+  <td><span class="pr-pill pr-must">Must</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">45 min</td>
+  <td>Google Form (same form sent to both teacher and client, or two versions). Questions: what went well, what was harder than expected, one thing you'd change, renewal interest. Ivan reviews responses before the call. Auto-sends Day 1 post-showcase. Unblocks: Zap 8 (debrief scheduling + pre-debrief form auto-send).</td>
+</tr>
+
+<tr data-pr="should" data-type="tool" data-owner="ivan">
+  <td>S7</td>
+  <td><div class="item-name">Client debrief Calendly page</div><div class="item-desc">Scheduling link Ivan sends to clients to book the post-showcase debrief call</div></td>
+  <td><span class="type-pill tp-tool">Tool setup</span></td>
+  <td><span class="pr-pill pr-should">Should</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">20 min</td>
+  <td>Simple Calendly event type. 30–45 min slot. Auto-sends with pre-debrief form. Ivan can also just email a link manually for the pilot — Calendly is a polish step, not a blocker. Post-launch acceptable.</td>
+</tr>
+
+<!-- STAGE 8 -->
+<tr class="section-row"><td colspan="7">Stage 8 — Renewal</td></tr>
+
+<tr data-pr="should" data-type="email" data-owner="ivan">
+  <td>S8</td>
+  <td><div class="item-name">30-day follow-up email template</div><div class="item-desc">Auto-sends to Ivan as a reminder when renewal disposition = Yes or Maybe</div></td>
+  <td><span class="type-pill tp-email">Email copy</span></td>
+  <td><span class="pr-pill pr-should">Should</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">15 min</td>
+  <td>Not a teacher-facing email — this is a reminder to Ivan himself: "Follow up on [School] renewal — disposition: Maybe — 30 days since closeout." Zapier sends it automatically. Low effort. Unblocks: Zap 10 (renewal follow-up reminders).</td>
+</tr>
+
+<tr data-pr="should" data-type="email" data-owner="ivan">
+  <td>S8</td>
+  <td><div class="item-name">60-day follow-up email template</div><div class="item-desc">Second auto-reminder to Ivan if renewal not resolved at 30 days</div></td>
+  <td><span class="type-pill tp-email">Email copy</span></td>
+  <td><span class="pr-pill pr-should">Should</span></td>
+  <td><span class="ow-pill">Ivan</span></td>
+  <td class="effort-text">10 min</td>
+  <td>Same as 30-day but with urgency note: "Final follow-up — [School] renewal still unresolved. Notify Farah if no decision by end of week." Unblocks: Zap 10 60-day branch.</td>
+</tr>
+
+<!-- H2 -->
+<tr class="section-row"><td colspan="7">Horizon 2 — Parallel track (build during fall pilot, not before launch)</td></tr>
+
+<tr data-pr="h2" data-type="rubric" data-owner="ivan">
+  <td>H2</td>
+  <td><div class="item-name">M3 Insight Statement rubric</div><div class="item-desc">First rubric to build — distinguishes genuine insight from theme summary; the hardest calibration in the system</div></td>
+  <td><span class="type-pill tp-rubric">Rubric</span></td>
+  <td><span class="pr-pill pr-h2">H2 / Oct 2026</span></td>
+  <td><span class="ow-pill">Ivan + curriculum team</span></td>
+  <td class="effort-text">3–4 hrs</td>
+  <td>Content task, not tech task. Must be built before Chipp Bot can assess M3 student work. Most important rubric in the library because M3 is the hardest facilitation moment and the one most invisible to admin without quality detection. Start here before building other rubrics.</td>
+</tr>
+
+<tr data-pr="h2" data-type="rubric" data-owner="ivan">
+  <td>H2</td>
+  <td><div class="item-name">Full rubric library (M1–M6)</div><div class="item-desc">One rubric per key deliverable across all six modules</div></td>
+  <td><span class="type-pill tp-rubric">Rubric</span></td>
+  <td><span class="pr-pill pr-h2">H2 / Dec 2026</span></td>
+  <td><span class="ow-pill">Ivan + curriculum team</span></td>
+  <td class="effort-text">12–16 hrs total</td>
+  <td>Deliverables to rubric: M1 Brief Analysis Sheet, M2 Interview Submission, M3 Insight Statement, M4 Concept Maps, M5 Prototype v1+v2, M6 Final Presentation. Without this library, the Chipp Bot's quality detection function cannot activate. Build M3 first, then M2, then the rest in module order.</td>
+</tr>
+
+<tr data-pr="h2" data-type="content" data-owner="ivan">
+  <td>H2</td>
+  <td><div class="item-name">MI curriculum knowledge base</div><div class="item-desc">All MI curriculum content loaded into Chipp.ai as the bot's knowledge foundation</div></td>
+  <td><span class="type-pill tp-content">Content / Config</span></td>
+  <td><span class="pr-pill pr-h2">H2 / Nov 2026</span></td>
+  <td><span class="ow-pill">Ivan + Steve</span></td>
+  <td class="effort-text">4–6 hrs (curation + upload)</td>
+  <td>All LPs, module wrappers, facilitator guides, best practices docs loaded into Chipp.ai. This is what makes the teacher bot knowledgeable rather than generic. Must include guardrails: bot answers from the knowledge base, flags when a question exceeds its scope. Required before teacher bot Phase 1 can be tested.</td>
+</tr>
+
+<tr data-pr="h2" data-type="tool" data-owner="ivan">
+  <td>H2</td>
+  <td><div class="item-name">Chipp Bot — teacher instance config</div><div class="item-desc">Configure teacher-facing bot: knowledge base, guardrails, tone, access scope</div></td>
+  <td><span class="type-pill tp-tool">Tool setup</span></td>
+  <td><span class="pr-pill pr-h2">H2 / Nov 2026</span></td>
+  <td><span class="ow-pill">Ivan + Steve</span></td>
+  <td class="effort-text">2–4 wks (after tech verification)</td>
+  <td>Depends on: Chipp.ai technical verification (Oct 2026), curriculum knowledge base loaded, Legal/AI Lab sign-off. Test against synthetic teacher questions before any real school uses it. No student data until Legal clearance received.</td>
+</tr>
+
+<tr data-pr="h2" data-type="tool" data-owner="ivan">
+  <td>H2</td>
+  <td><div class="item-name">Chipp Bot — admin instance config</div><div class="item-desc">Configure Ivan-facing admin bot: Airtable API access, daily digest, cross-site query capability</div></td>
+  <td><span class="type-pill tp-tool">Tool setup</span></td>
+  <td><span class="pr-pill pr-h2">H2 / Dec 2026</span></td>
+  <td><span class="ow-pill">Ivan + Steve</span></td>
+  <td class="effort-text">4–8 wks (after teacher bot is live)</td>
+  <td>Depends on: H1 Airtable pipeline live and populated with real data, teacher bot tested, Airtable API integration confirmed. Admin bot has nothing useful to say until Airtable is populated from a real pilot cycle. Build second, not first.</td>
+</tr>
+
+</tbody>
+</table>
+
+<!-- LEGEND -->
+<div class="legend-section">
+  <div>
+    <h3>Build type</h3>
+    <div class="legend-row"><span class="type-pill tp-content">Content</span> Written artifact — guide, exemplar, PD session, narrative</div>
+    <div class="legend-row"><span class="type-pill tp-form">Form</span> Google Form — collects data, feeds Airtable via Zapier</div>
+    <div class="legend-row"><span class="type-pill tp-tool">Tool / Template</span> Google Sheet, Calendly, Chipp.ai config — requires setup, not just writing</div>
+    <div class="legend-row"><span class="type-pill tp-loom">Loom kit</span> Short recorded video — Ivan on camera, curriculum-specific coaching content</div>
+    <div class="legend-row"><span class="type-pill tp-email">Email copy</span> Written email template — Zapier delivers, must be written first</div>
+    <div class="legend-row"><span class="type-pill tp-rubric">Rubric</span> Assessment framework — content task, enables bot quality detection in H2</div>
+    <div class="legend-row"><span class="type-pill tp-template">Template</span> Reusable structure (Drive folder, doc) teachers copy for their implementation</div>
+  </div>
+  <div>
+    <h3>Priority</h3>
+    <div class="legend-row"><span class="pr-pill pr-must">Must</span> Blocks one or more Zapier automations — system cannot function without it before fall launch</div>
+    <div class="legend-row"><span class="pr-pill pr-should">Should</span> Improves quality or completeness — can be built in the first 2 weeks of the pilot</div>
+    <div class="legend-row"><span class="pr-pill pr-h2">H2</span> Horizon 2 — build during fall pilot, not before launch. Targets noted.</div>
+    <br>
+    <h3>Key rule</h3>
+    <div style="font-size:11px;color:#555;line-height:1.6">Content must exist before automation can deliver it. No email copy = Zap fires but sends a blank. No Loom kit = module transition trigger fires but links to nothing. Build the content first, wire the automation second.</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function fil(val, btn){
+  document.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('tbody tr:not(.section-row)').forEach(tr=>{
+    if(val==='all'){tr.classList.remove('hide');return}
+    const pr=tr.dataset.pr||'';
+    const type=tr.dataset.type||'';
+    const owner=tr.dataset.owner||'';
+    if(val==='must'){tr.classList.toggle('hide',pr!=='must');return}
+    if(val==='should'){tr.classList.toggle('hide',pr!=='should');return}
+    if(val==='h2'){tr.classList.toggle('hide',pr!=='h2');return}
+    if(['content','form','tool','loom','email','rubric'].includes(val)){tr.classList.toggle('hide',type!==val);return}
+    if(val==='ivan'){tr.classList.toggle('hide',!owner.toLowerCase().includes('ivan'));return}
+    if(val==='farah'){tr.classList.toggle('hide',!owner.toLowerCase().includes('farah'));return}
+    if(val==='steve'){tr.classList.toggle('hide',!owner.toLowerCase().includes('steve'));return}
+  });
+  document.querySelectorAll('.section-row').forEach(sr=>{
+    if(val==='all'){sr.classList.remove('hide');return}
+    let next=sr.nextElementSibling;
+    let visible=false;
+    while(next&&!next.classList.contains('section-row')){
+      if(!next.classList.contains('hide'))visible=true;
+      next=next.nextElementSibling;
+    }
+    sr.classList.toggle('hide',!visible);
+  });
+}
+</script>
+</body>
+</html>

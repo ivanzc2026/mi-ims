@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MI Operational Milestone Framework</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:2rem;color:#3d3d3a;font-size:12px}
+.page{max-width:1300px;margin:0 auto}
+h1{font-size:13px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem}
+.subtitle{font-size:11px;color:#aaa;margin-bottom:1.25rem}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.controls span{font-size:11px;color:#999}
+button{font-size:11px;padding:4px 11px;border-radius:20px;border:1px solid #ccc;background:#fff;color:#666;cursor:pointer;transition:all .15s}
+button.on,button:hover{background:#eee;color:#333;border-color:#999}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;border:1px solid #e0ddd8}
+thead{background:#faf9f7}
+th{padding:9px 10px;text-align:left;font-size:9px;font-weight:600;color:#888;letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid #e0ddd8;white-space:nowrap}
+td{padding:8px 10px;border-bottom:0.5px solid #eee;vertical-align:top;line-height:1.5;color:#555}
+tr:last-child td{border-bottom:none}
+tr.hide{display:none}
+tr:hover td{background:#faf9f7}
+.stage-cell{font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;white-space:nowrap;display:inline-block}
+.s1{background:#d4edbc;color:#27500a}.s2{background:#b8e8d6;color:#085041}.s3{background:#b8e8d6;color:#085041}
+.s4{background:#d6d3f8;color:#3c3489}.s5{background:#fde5b5;color:#633806}.s6{background:#fde5b5;color:#633806}
+.s7{background:#f8cdb8;color:#712b13}.s8{background:#f8cdb8;color:#712b13}
+.owner{font-size:11px;color:#555}
+.auto-pill{font-size:9px;font-weight:600;padding:2px 6px;border-radius:3px;display:inline-block;white-space:nowrap}
+.ap-auto{background:#eaf5e8;color:#2a6e1a}
+.ap-human{background:#fff8e6;color:#a07010}
+.ap-both{background:#e8f0fb;color:#1a4e8a}
+.ap-zapier{background:#f0e8fb;color:#5c2a9a}
+.risk-text{color:#c07010}
+.flag{font-size:10px;color:#aaa;font-style:italic}
+.milestone-name{font-weight:500;color:#2c2c2a;font-size:12px}
+.milestone-detail{font-size:11px;color:#888;margin-top:2px}
+td.evidence{font-size:11px}
+td.intervention{font-size:11px}
+td.automation{font-size:11px}
+.section-row td{background:#f5f4f0;font-size:10px;font-weight:600;color:#888;letter-spacing:.05em;text-transform:uppercase;padding:6px 10px;border-bottom:1px solid #e0ddd8}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>Quest MI — Operational Milestone Framework</h1>
+<p class="subtitle">All 8 stages · ~38 milestones · Complete column set for each</p>
+
+<div class="controls">
+  <span>Filter by stage:</span>
+  <button class="on" onclick="fil('all',this)">All</button>
+  <button onclick="fil('1',this)">Stage 1</button>
+  <button onclick="fil('2',this)">Stage 2</button>
+  <button onclick="fil('3',this)">Stage 3</button>
+  <button onclick="fil('4',this)">Stage 4</button>
+  <button onclick="fil('5',this)">Stage 5</button>
+  <button onclick="fil('6',this)">Stage 6</button>
+  <button onclick="fil('7',this)">Stage 7</button>
+  <button onclick="fil('8',this)">Stage 8</button>
+  <span style="margin-left:8px">Filter by type:</span>
+  <button onclick="fil('human',this)">Human-primary</button>
+  <button onclick="fil('auto',this)">Automated</button>
+  <button onclick="fil('open',this)">Has open question</button>
+</div>
+
+<table>
+<thead>
+<tr>
+  <th style="width:80px">Stage</th>
+  <th style="width:160px">Milestone</th>
+  <th style="width:90px">Owner</th>
+  <th style="width:130px">Trigger</th>
+  <th style="width:150px">Evidence of completion</th>
+  <th style="width:150px">Risk signal</th>
+  <th style="width:150px">Intervention if off track</th>
+  <th style="width:160px">Automation / Chipp Bot</th>
+</tr>
+</thead>
+<tbody>
+
+<!-- STAGE 1 -->
+<tr class="section-row"><td colspan="8">Stage 1 — Commitment</td></tr>
+
+<tr data-s="1" data-t="human">
+<td><span class="stage-cell s1">Stage 1</span></td>
+<td><div class="milestone-name">MOU / commitment form signed</div><div class="milestone-detail">School formally commits to the program</div></td>
+<td class="owner">Farah</td>
+<td>School says yes after Farah's recruitment conversation</td>
+<td class="evidence">Signed MOU in Drive; Farah confirms receipt</td>
+<td class="risk-text">Verbal commitment only — no signed form after 7 days</td>
+<td class="intervention">Farah follows up directly; confirms timeline for signing</td>
+<td><span class="auto-pill ap-human">Manual</span> No automation at this step; human relationship owns it</td>
+</tr>
+
+<tr data-s="1" data-t="both">
+<td><span class="stage-cell s1">Stage 1</span></td>
+<td><div class="milestone-name">Airtable record created</div><div class="milestone-detail">Implementation Key assigned; status = Committed</div></td>
+<td class="owner">Ivan</td>
+<td>Signed MOU received by Farah → Ivan notified</td>
+<td class="evidence">Record exists in Airtable with Implementation Key; status = Committed; timestamp logged</td>
+<td class="risk-text">MOU received but no record after 48h</td>
+<td class="intervention">Ivan self-reminder; Airtable missing-record alert</td>
+<td><span class="auto-pill ap-auto">Auto</span> Status = Committed fires welcome email + stakeholder mapping form (Zapier)</td>
+</tr>
+
+<tr data-s="1" data-t="both">
+<td><span class="stage-cell s1">Stage 1</span></td>
+<td><div class="milestone-name">Stakeholder map complete</div><div class="milestone-detail">Teacher, site coordinator, and network decision-maker all identified and logged</div></td>
+<td class="owner">Ivan</td>
+<td>Welcome email + mapping form sent; teacher/school responds</td>
+<td class="evidence">3 contact fields populated in Airtable: Instructor (teacher), Site Coordinator, Network Decision-Maker</td>
+<td class="risk-text">Any of 3 contacts missing 48h after form sent</td>
+<td class="intervention">Automated "missing fields" alert to Ivan; Ivan texts school contact directly</td>
+<td><span class="auto-pill ap-auto">Auto</span> Missing-fields Airtable alert fires 48h after record creation</td>
+</tr>
+
+<tr data-s="1" data-t="human">
+<td><span class="stage-cell s1">Stage 1</span></td>
+<td><div class="milestone-name">Start date window confirmed</div><div class="milestone-detail">Concrete semester or month identified (not "sometime in fall")</div></td>
+<td class="owner">Ivan</td>
+<td>Stakeholder map complete; Ivan reviews record for completeness</td>
+<td class="evidence">Start Date field in Airtable populated with a specific date or narrow window (within 2 weeks)</td>
+<td class="risk-text">Start date still vague at Day 7 post-commitment</td>
+<td class="intervention">Ivan texts site coordinator directly; if no response, flags to Farah to hold the commitment slot</td>
+<td><span class="auto-pill ap-human">Manual</span> Ivan reviews; no automation until pacing mapper (Stage 3)</td>
+</tr>
+
+<!-- STAGE 2 -->
+<tr class="section-row"><td colspan="8">Stage 2 — Onboarding &amp; Training</td></tr>
+
+<tr data-s="2" data-t="auto">
+<td><span class="stage-cell s2">Stage 2</span></td>
+<td><div class="milestone-name">Part 1 async PD started</div><div class="milestone-detail">Teacher opens and begins A360 / Reach 360 Part 1 module</div></td>
+<td class="owner">Teacher</td>
+<td>Welcome email sent with Part 1 link (Day 0, automated)</td>
+<td class="evidence">Reach 360 shows "In Progress" for teacher's account; timestamp logged</td>
+<td class="risk-text">Not started by T-28 (one week before deadline)</td>
+<td class="intervention">Automated email reminder at T-28; Ivan text at T-24 if still not started</td>
+<td><span class="auto-pill ap-auto">Auto</span> Reach 360 activity tracked natively; Zapier polls or webhook fires on first open</td>
+</tr>
+
+<tr data-s="2" data-t="auto">
+<td><span class="stage-cell s2">Stage 2</span></td>
+<td><div class="milestone-name">Part 1 async PD complete</div><div class="milestone-detail">Teacher finishes all required Reach 360 Part 1 modules</div></td>
+<td class="owner">Teacher</td>
+<td>Part 1 link sent at Day 0; deadline T-21 before launch</td>
+<td class="evidence">Reach 360 course.completed event logged with timestamp; Part 1 Completion Date field in Airtable populated</td>
+<td class="risk-text">Not complete by T-21</td>
+<td class="intervention">Ivan direct call to teacher + site coordinator alert; evaluate launch delay</td>
+<td><span class="auto-pill ap-auto">Auto</span> Reach 360 course.completed webhook → Zapier → Airtable field update + Part 2 window selection email fires automatically (confirmed supported)</td>
+</tr>
+
+<tr data-s="2" data-t="auto">
+<td><span class="stage-cell s2">Stage 2</span></td>
+<td><div class="milestone-name">Part 2 window selected</div><div class="milestone-detail">Teacher chooses one of 3–4 available live PD windows via Calendly</div></td>
+<td class="owner">Teacher</td>
+<td>Part 1 completion webhook fires → Part 2 window selection email auto-sends</td>
+<td class="evidence">Calendly booking confirmed; Part 2 Window Selected date field in Airtable populated (via Zapier)</td>
+<td class="risk-text">Window not selected within 3 days of Part 1 completion (by T-18)</td>
+<td class="intervention">Automated nudge email at T-18; Ivan text at T-16</td>
+<td><span class="auto-pill ap-auto">Auto</span> Calendly booking → Zapier → Airtable field update; confirmation email to teacher auto-sends</td>
+</tr>
+
+<tr data-s="2" data-t="both">
+<td><span class="stage-cell s2">Stage 2</span></td>
+<td><div class="milestone-name">Part 2 live PD attended</div><div class="milestone-detail">Teacher completes live facilitation training session</div></td>
+<td class="owner">Ivan (facilitates or confirms); Teacher</td>
+<td>Calendly booking confirmed; session date arrives</td>
+<td class="evidence">Part 2 Attended = true in Airtable; logged with date; sign-in form or Ivan manual confirmation</td>
+<td class="risk-text">Missed with no rescheduled date by T-14</td>
+<td class="intervention">Automated re-offer of next available window (48h); if no response, escalate to site coordinator; flag as Yellow tier pending resolution</td>
+<td><span class="auto-pill ap-both">Both</span> Missed session triggers automated re-offer email (Zapier); Ivan manually logs attendance</td>
+</tr>
+
+<tr data-s="2" data-t="both">
+<td><span class="stage-cell s2">Stage 2</span></td>
+<td><div class="milestone-name">Readiness checkpoint submitted</div><div class="milestone-detail">Teacher completes structured 5-question reflection focused on facilitation confidence for M2 and M3</div></td>
+<td class="owner">Teacher (submits); Ivan (reviews flags)</td>
+<td>Part 2 attendance confirmed → readiness form link auto-sends; 48h deadline</td>
+<td class="evidence">Google Form submission timestamped; Readiness Checkpoint Score field in Airtable populated</td>
+<td class="risk-text">Not submitted within 48h of Part 2; OR score ≤ 2 on M2 or M3 confidence questions</td>
+<td class="intervention">Auto-reminder at 48h if not submitted; score ≤ 2 triggers Ivan review — possible second onboarding call focused on facilitation</td>
+<td><span class="auto-pill ap-auto">Auto</span> Google Form → Airtable via Zapier; auto-flag to Ivan if score ≤ 2 on either critical question</td>
+</tr>
+
+<tr data-s="2" data-t="both">
+<td><span class="stage-cell s2">Stage 2</span></td>
+<td><div class="milestone-name">Onboarding call completed</div><div class="milestone-detail">Ivan + teacher 30-min call: pacing map walkthrough, first 3 sessions previewed, open questions answered</div></td>
+<td class="owner">Ivan</td>
+<td>Part 2 attended + readiness checkpoint submitted → Ivan schedules call</td>
+<td class="evidence">Call logged in Airtable with date; Onboarding Call Completed = true; status flips to Training Complete</td>
+<td class="risk-text">Not scheduled within 72h of Part 2 completion; teacher unresponsive</td>
+<td class="intervention">Ivan proactive outreach (text preferred); if no response, proceed to materials release but flag for extra monitoring at launch</td>
+<td><span class="auto-pill ap-both">Both</span> Status = Training Complete auto-fires materials packet and pacing mapper link (Zapier); Ivan manually flips status after call</td>
+</tr>
+
+<!-- STAGE 3 -->
+<tr class="section-row"><td colspan="8">Stage 3 — Implementation Planning</td></tr>
+
+<tr data-s="3" data-t="auto">
+<td><span class="stage-cell s3">Stage 3</span></td>
+<td><div class="milestone-name">Pacing mapper link sent</div><div class="milestone-detail">Teacher receives Google Sheet pacing mapper template with instructions</div></td>
+<td class="owner">Automated (Zapier)</td>
+<td>Status flips to Training Complete</td>
+<td class="evidence">Zapier automation log confirms delivery; pacing mapper link sent timestamp in Airtable</td>
+<td class="risk-text">Delivery failure (email bounce); teacher reports not receiving it</td>
+<td class="intervention">Ivan resends manually; checks email field for typos; confirms teacher's preferred contact method</td>
+<td><span class="auto-pill ap-auto">Auto</span> Training Complete status → pacing mapper link auto-sends (Zapier). H2: Chipp Bot walks teacher through mapper conversationally.</td>
+</tr>
+
+<tr data-s="3" data-t="both">
+<td><span class="stage-cell s3">Stage 3</span></td>
+<td><div class="milestone-name">Pacing mapper completed by teacher</div><div class="milestone-detail">Teacher inputs start date, sessions/week, session length; mapper generates full session calendar</div></td>
+<td class="owner">Teacher (completes); Ivan (reviews within 48h)</td>
+<td>Mapper link sent; 72h completion window</td>
+<td class="evidence">Google Sheet "Last Edited" timestamp within 72h; or teacher submits completion form; all 4 date fields (Start, Kickoff, Midpoint, Showcase) inferable from mapper</td>
+<td class="risk-text">Not started within 72h of being sent</td>
+<td class="intervention">Ivan text to teacher (not email); if no response in 24h, Ivan calls site coordinator</td>
+<td><span class="auto-pill ap-both">Both</span> Ivan reviews mapper for risk flags (M3 non-consecutive, &lt;25 sessions, showcase near end-of-year); alerts are manual for now; H2: bot auto-detects risk conditions</td>
+</tr>
+
+<tr data-s="3" data-t="both">
+<td><span class="stage-cell s3">Stage 3</span></td>
+<td><div class="milestone-name">Proposed dates sent to client</div><div class="milestone-detail">Ivan sends client the pacing-derived kickoff, midpoint, and showcase dates for confirmation</div></td>
+<td class="owner">Ivan</td>
+<td>Ivan reviews pacing map; confirms no conflicts; sends to client</td>
+<td class="evidence">Email sent to client contact logged; proposed dates recorded in Airtable (Client Kickoff Date, Midpoint Date, Showcase Date — status: Proposed)</td>
+<td class="risk-text">Client unresponsive after 5 days</td>
+<td class="intervention">Ivan direct call to client contact; if still unresponsive, Farah personal outreach</td>
+<td><span class="auto-pill ap-both">Both</span> Client confirmation email auto-sends when Ivan logs dates as "Confirmed" in Airtable (Zapier); initial outreach is manual</td>
+</tr>
+
+<tr data-s="3" data-t="auto">
+<td><span class="stage-cell s3">Stage 3</span></td>
+<td><div class="milestone-name">All 4 milestone dates confirmed</div><div class="milestone-detail">Start Date, Client Kickoff, Midpoint, and Showcase all confirmed and logged in Airtable</div></td>
+<td class="owner">Client (confirms); Ivan (logs)</td>
+<td>Client responds to proposed dates with confirmation</td>
+<td class="evidence">All 4 date fields populated in Airtable; status = Launch Ready</td>
+<td class="risk-text">One or more dates still unconfirmed at T-10 before planned launch; showcase date conflicts with school calendar</td>
+<td class="intervention">Ivan direct call to resolve; if showcase must shift, Ivan and teacher rebuild pacing map; Farah alerted if client relationship at risk</td>
+<td><span class="auto-pill ap-auto">Auto</span> All 4 dates populated → Ivan launch approval queue alert fires (Airtable automation); status auto-updates to Launch Ready</td>
+</tr>
+
+<!-- STAGE 4 -->
+<tr class="section-row"><td colspan="8">Stage 4 — Project Launch</td></tr>
+
+<tr data-s="4" data-t="both">
+<td><span class="stage-cell s4">Stage 4</span></td>
+<td><div class="milestone-name">All 7 launch gate items green</div><div class="milestone-detail">Part 1 done · Part 2 done · Pacing map final · Brief approved · Kickoff confirmed · Portfolios accessible · Midpoint + showcase dates confirmed</div></td>
+<td class="owner">Ivan (reviews and approves)</td>
+<td>All 7 boolean fields = true in Airtable</td>
+<td class="evidence">7/7 Airtable checklist fields checked; Ivan manually confirms and flips status to Active</td>
+<td class="risk-text">Any item red within 3 days of planned launch; Ivan may delay launch</td>
+<td class="intervention">Ivan contacts responsible party for each red item directly; no launch without team discussion if any item unresolved at T-0</td>
+<td><span class="auto-pill ap-auto">Auto</span> All-7-green Airtable alert to Ivan; launch approval queue notification</td>
+</tr>
+
+<tr data-s="4" data-t="human">
+<td><span class="stage-cell s4">Stage 4</span></td>
+<td><div class="milestone-name">Employer brief finalized and approved</div><div class="milestone-detail">Client signs off on the project brief students will work from</div></td>
+<td class="owner">Farah (creates brief); Client (approves); Ivan (logs)</td>
+<td>Pacing map complete → brief creation initiated</td>
+<td class="evidence">Client Brief Final field = true in Airtable (already exists); email confirmation from client logged</td>
+<td class="risk-text">Brief unsigned after 5 days of being sent to client</td>
+<td class="intervention">Ivan personal call to client contact; if still unresolved, Farah outreach</td>
+<td><span class="auto-pill ap-human">Manual</span> Brief creation is Farah-from-template; approval is client email. Future H2: brief generator bot via questionnaire reduces Farah's time.</td>
+</tr>
+
+<tr data-s="4" data-t="auto">
+<td><span class="stage-cell s4">Stage 4</span></td>
+<td><div class="milestone-name">Launch confirmed + "go" sent to teacher</div><div class="milestone-detail">Ivan approves launch; teacher receives confirmation and first JIT kit</div></td>
+<td class="owner">Ivan (approves); Automated (sends)</td>
+<td>Ivan manually flips status to Active in Airtable</td>
+<td class="evidence">Teacher receives "you're ready to launch" text; M1 JIT Loom kit email sent; timestamp logged</td>
+<td class="risk-text">Teacher hasn't run S1 within 5 days of receiving "go" confirmation</td>
+<td class="intervention">Ivan text check-in: "Did you run S1? Any blockers?" — not a form, a human text</td>
+<td><span class="auto-pill ap-auto">Auto</span> Status = Active → "go" text to teacher auto-sends + M1 JIT Loom kit email fires (Zapier)</td>
+</tr>
+
+<!-- STAGE 5 -->
+<tr class="section-row"><td colspan="8">Stage 5 — Active Implementation (M1–M5)</td></tr>
+
+<tr data-s="5" data-t="auto">
+<td><span class="stage-cell s5">Stage 5</span></td>
+<td><div class="milestone-name">Weekly pulse submitted</div><div class="milestone-detail">Teacher submits 2-min pulse form each week: current session, score 1–5, open text, module deliverable Y/N</div></td>
+<td class="owner">Teacher (submits); Automated (routes + flags)</td>
+<td>Monday of each implementation week; form open all week; deadline Friday 5pm</td>
+<td class="evidence">Google Form submission timestamped; Airtable Weekly Pulse Log record created; Last Pulse Submission Date field updated</td>
+<td class="risk-text">No submission by Friday 5pm</td>
+<td class="intervention">Automated Saturday morning reminder (text or email); second consecutive miss → Ivan direct call</td>
+<td><span class="auto-pill ap-auto">Auto</span> Form → Airtable via Zapier; Saturday reminder fires if no submission by Friday 5pm. H2: Chipp Bot replaces form with organic teacher interaction.</td>
+</tr>
+
+<tr data-s="5" data-t="auto">
+<td><span class="stage-cell s5">Stage 5</span></td>
+<td><div class="milestone-name">Module transition detected + JIT kit sent</div><div class="milestone-detail">System detects session number entering M2, M3, M4, or M5 and sends relevant Loom kit automatically</div></td>
+<td class="owner">Automated (Zapier)</td>
+<td>Current Session field crosses S6 (M2), S11 (M3), S16 (M4), or S20 (M5)</td>
+<td class="evidence">JIT kit email sent (Zapier log); email open rate tracked via Mailchimp or Gmail link tracking</td>
+<td class="risk-text">JIT kit sent but not opened within 48h; teacher enters module without apparent preparation</td>
+<td class="intervention">Ivan text follow-up: "Did you get the M3 kit? Any questions before you start synthesis?" — conversion of automated to human if signal shows non-engagement</td>
+<td><span class="auto-pill ap-auto">Auto</span> Zapier trigger on session number field change → relevant Loom kit email auto-sends</td>
+</tr>
+
+<tr data-s="5" data-t="auto">
+<td><span class="stage-cell s5">Stage 5</span></td>
+<td><div class="milestone-name">Tier status current and accurate</div><div class="milestone-detail">Green / Yellow / Red tier updated based on latest pulse data; not static from launch</div></td>
+<td class="owner">Automated (Airtable formula)</td>
+<td>New pulse record created in Weekly Pulse Log</td>
+<td class="evidence">Current Tier field in Airtable reflects latest pulse data; all M3 entries show at least Yellow automatically</td>
+<td class="risk-text">Tier not updating (formula error); Red school showing Green</td>
+<td class="intervention">Ivan manual override with Open Flag; debug Airtable formula</td>
+<td><span class="auto-pill ap-auto">Auto</span> Airtable formula: score ≤ 2 for 2 consecutive weeks → Yellow; M2/M3 + score ≤ 2 → Red; entering M3 → auto Yellow</td>
+</tr>
+
+<tr data-s="5" data-t="human">
+<td><span class="stage-cell s5">Stage 5</span></td>
+<td><div class="milestone-name">M2 interview submission complete</div><div class="milestone-detail">Team submits 3+ completed interviews with notes/transcripts and key takeaways by end of M2 (S10)</div></td>
+<td class="owner">Teacher (facilitates); Ivan (monitors via pulse + deliverable flag)</td>
+<td>System detects session = S10; module deliverable Y/N field checked on pulse form</td>
+<td class="evidence">Module Deliverable Status = On Track at end of M2; interview submission logged in student portfolio folder</td>
+<td class="risk-text">Deliverable not submitted by S10; OR interviews completed but data quality clearly weak (teacher flags or Ivan observes)</td>
+<td class="intervention">Red flag + Ivan direct call: "Walk me through what interviews your students did. What did they find?" — quality conversation, not just a check</td>
+<td><span class="auto-pill ap-both">Both</span> Module deliverable field → Zapier flag if missing at S10. H2: Chipp Bot reads interview submissions against rubric; flags quality issues, not just completion.</td>
+</tr>
+
+<tr data-s="5" data-t="human">
+<td><span class="stage-cell s5">Stage 5</span></td>
+<td><div class="milestone-name">M3 entered with healthy upstream data</div><div class="milestone-detail">School enters M3 synthesis with M2 interview submission complete and pulse score ≥ 3</div></td>
+<td class="owner">Ivan (monitors + intervenes)</td>
+<td>Session number crosses S11; M2 deliverable status checked</td>
+<td class="evidence">M2 deliverable complete + Latest Pulse Score ≥ 3 at time of M3 entry; Current Tier = Green or Yellow (not Red)</td>
+<td class="risk-text">School enters M3 with missing M2 deliverable OR pulse score ≤ 2 — highest-risk combination in the entire program</td>
+<td class="intervention">Ivan direct call within 24h — not text. Discuss whether to pause M3 and shore up interview data first, or proceed with extra scaffolding. M3 JIT kit escalated to include Ivan's direct coaching recommendations.</td>
+<td><span class="auto-pill ap-both">Both</span> M3 entry → auto Yellow regardless; M3 entry + Red conditions → Ivan alert fires immediately (Zapier + Airtable). H2: Admin bot surfaces this in daily digest with specific student work context.</td>
+</tr>
+
+<tr data-s="5" data-t="human">
+<td><span class="stage-cell s5">Stage 5</span></td>
+<td><div class="milestone-name">M3 insight statement complete</div><div class="milestone-detail">Teams submit genuine insight statements (quotes → themes → insights + HMW) by end of M3 (S15)</div></td>
+<td class="owner">Teacher (facilitates); Ivan (monitors)</td>
+<td>System detects session = S15; module deliverable Y/N checked on pulse form</td>
+<td class="evidence">Module Deliverable Status = On Track at end of M3; insight statements in student portfolio folder; statements show genuine insight (not just theme summaries)</td>
+<td class="risk-text">Deliverable not submitted by S15; OR submitted but clearly themes-not-insights (teacher or Ivan identifies)</td>
+<td class="intervention">Red flag + Ivan call: review one team's insight statement together on the call — specific coaching, not general encouragement. May extend M3 by 1–2 sessions before moving to M4.</td>
+<td><span class="auto-pill ap-both">Both</span> Module deliverable field → flag if missing at S15. H2: Chipp Bot assesses insight quality against rubric (this is the most valuable quality check in the system).</td>
+</tr>
+
+<tr data-s="5" data-t="auto">
+<td><span class="stage-cell s5">Stage 5</span></td>
+<td><div class="milestone-name">Monday digest delivered to Ivan</div><div class="milestone-detail">Weekly automated summary: all schools, current session, tier, open flags, missing pulses</div></td>
+<td class="owner">Automated (Zapier)</td>
+<td>Monday 8am, weekly</td>
+<td class="evidence">Digest email received by Ivan; includes all active schools sorted by tier (Red first)</td>
+<td class="risk-text">Digest fails to send; data stale (pulse not updated)</td>
+<td class="intervention">Ivan checks Airtable dashboard directly; debug Zapier automation</td>
+<td><span class="auto-pill ap-auto">Auto</span> Zapier scheduled trigger → formatted digest email. H2: Admin Chipp Bot delivers digest in plain language with specific site-level context and flags.</td>
+</tr>
+
+<!-- STAGE 6 -->
+<tr class="section-row"><td colspan="8">Stage 6 — Showcase Preparation</td></tr>
+
+<tr data-s="6" data-t="auto">
+<td><span class="stage-cell s6">Stage 6</span></td>
+<td><div class="milestone-name">T-21 sequence triggered</div><div class="milestone-detail">Showcase Prep phase begins: client re-confirmation email fires, prep checklist activates in Airtable</div></td>
+<td class="owner">Automated (Zapier)</td>
+<td>Showcase Date field = today + 21 days</td>
+<td class="evidence">Client re-confirmation email sent (Zapier log); Showcase Prep checklist fields activated in Airtable; status = Showcase Prep</td>
+<td class="risk-text">Teacher still in M5 at T-21 (sessions running behind pacing map)</td>
+<td class="intervention">Ivan and teacher assess whether showcase date needs to shift; Farah alerted if client relationship requires renegotiation</td>
+<td><span class="auto-pill ap-auto">Auto</span> Zapier date-based trigger on Showcase Date field; fires client re-confirmation email + activates prep checklist</td>
+</tr>
+
+<tr data-s="6" data-t="both">
+<td><span class="stage-cell s6">Stage 6</span></td>
+<td><div class="milestone-name">Client availability reconfirmed</div><div class="milestone-detail">Client confirms they can attend the showcase at the scheduled date and time</div></td>
+<td class="owner">Ivan (follows up); Client (confirms)</td>
+<td>T-21 re-confirmation email auto-sends; client deadline to respond = T-14</td>
+<td class="evidence">Client confirmation logged in Airtable; Showcase Prep checklist item = confirmed</td>
+<td class="risk-text">No client response by T-14</td>
+<td class="intervention">Ivan personal call to client contact — not another automated email; if client drops out, escalate to Farah immediately for backup plan</td>
+<td><span class="auto-pill ap-both">Both</span> Initial re-confirmation email automated (Zapier); follow-up at T-14 is Ivan personal call (manual)</td>
+</tr>
+
+<tr data-s="6" data-t="both">
+<td><span class="stage-cell s6">Stage 6</span></td>
+<td><div class="milestone-name">T-10 check-in completed</div><div class="milestone-detail">Ivan or bot assesses whether teams have a coherent research → insight → solution narrative</div></td>
+<td class="owner">Ivan (Red/Yellow); Automated form (Green)</td>
+<td>10 days before showcase date</td>
+<td class="evidence">T-10 call logged in Airtable (Red/Yellow) OR structured check-in form submitted (Green); narrative status noted</td>
+<td class="risk-text">T-10 reveals teams do not have a coherent narrative; teacher cancels or avoids the call</td>
+<td class="intervention">Ivan sends M6 narrative structure guide; offers to co-facilitate a practice session (Red sites only); for teacher avoidance, Ivan reaches out directly — avoidance is a Red flag signal</td>
+<td><span class="auto-pill ap-both">Both</span> Automated structured form to Green tier at T-10 (Zapier); Ivan manual call for Red/Yellow. H2: Chipp Bot conducts T-10 conversationally; routes only Red to Ivan call.</td>
+</tr>
+
+<tr data-s="6" data-t="auto">
+<td><span class="stage-cell s6">Stage 6</span></td>
+<td><div class="milestone-name">Presentation rubric and structure guide shared</div><div class="milestone-detail">Teacher and client both receive the rubric and know what "strong" looks like before showcase day</div></td>
+<td class="owner">Automated (Zapier); Ivan (owns content creation)</td>
+<td>T-7 before showcase date</td>
+<td class="evidence">Rubric email sent to teacher and client contact (Zapier log); teacher confirms receipt</td>
+<td class="risk-text">Rubric doesn't exist yet (action item for Ivan before fall launch)</td>
+<td class="intervention"><span style="color:#c07010">⚑ Action item: Ivan to build presentation rubric + 2–3 exemplars from Contreras Spring 2026, Sylmar Spring 2026, Alliance Summer 2025 before fall launch</span></td>
+<td><span class="auto-pill ap-auto">Auto</span> T-7 trigger auto-sends rubric email once rubric document exists and is linked in Airtable</td>
+</tr>
+
+<tr data-s="6" data-t="auto">
+<td><span class="stage-cell s6">Stage 6</span></td>
+<td><div class="milestone-name">T-1 reminder sent</div><div class="milestone-detail">Teacher and client receive a day-before reminder with logistics confirmation</div></td>
+<td class="owner">Automated (Zapier)</td>
+<td>1 day before showcase date</td>
+<td class="evidence">Reminder email sent (Zapier log); no response required</td>
+<td class="risk-text">Last-minute client cancellation; teacher not prepared</td>
+<td class="intervention">Ivan personal call if either party doesn't confirm receipt; backup plan discussion with Farah if client cancels at T-1</td>
+<td><span class="auto-pill ap-auto">Auto</span> Zapier date-based trigger; short branded reminder email with logistics details</td>
+</tr>
+
+<!-- STAGE 7 -->
+<tr class="section-row"><td colspan="8">Stage 7 — Closeout</td></tr>
+
+<tr data-s="7" data-t="auto">
+<td><span class="stage-cell s7">Stage 7</span></td>
+<td><div class="milestone-name">Student and teacher surveys sent</div><div class="milestone-detail">Both survey links auto-send within 24h of showcase date</div></td>
+<td class="owner">Automated (Zapier); Teacher (facilitates student survey in class)</td>
+<td>Showcase Date = today (Zapier date trigger)</td>
+<td class="evidence">Survey links sent (Zapier log); teacher confirms planned in-class time for student survey</td>
+<td class="risk-text">Survey not completed within 7 days; completion rate &lt; 70%</td>
+<td class="intervention">Ivan text to teacher: "Can you give students 10 minutes in class to finish this?" — personal ask, not another automated email</td>
+<td><span class="auto-pill ap-auto">Auto</span> Zapier date trigger → student survey link to teacher + teacher feedback form both send within 24h of showcase date</td>
+</tr>
+
+<tr data-s="7" data-t="human">
+<td><span class="stage-cell s7">Stage 7</span></td>
+<td><div class="milestone-name">Pre-debrief form sent to teacher and client</div><div class="milestone-detail">Short form captures what went well, what was harder than expected, and renewal interest — Ivan reviews before the debrief call</div></td>
+<td class="owner">Automated (Zapier sends); Ivan (reviews before call)</td>
+<td>Showcase date passes → scheduling link + pre-debrief form auto-send Day 1</td>
+<td class="evidence">Form responses received from teacher and client; Ivan has reviewed both before debrief call</td>
+<td class="risk-text">Client doesn't complete form before the debrief call</td>
+<td class="intervention">Ivan proceeds with call anyway; uses standard debrief questions; notes form gap for future cycles</td>
+<td><span class="auto-pill ap-both">Both</span> Form auto-sends (Zapier); Ivan reviews manually before call</td>
+</tr>
+
+<tr data-s="7" data-t="human">
+<td><span class="stage-cell s7">Stage 7</span></td>
+<td><div class="milestone-name">Client debrief call completed</div><div class="milestone-detail">Ivan conducts live debrief with client contact — never replaced by a survey</div></td>
+<td class="owner">Ivan</td>
+<td>Pre-debrief form received; Ivan schedules within 5 days of showcase</td>
+<td class="evidence">Call logged in Airtable with date + notes; Client Debrief Completed = true</td>
+<td class="risk-text">No call within 10 days of showcase; client unresponsive</td>
+<td class="intervention">One follow-up email; then log as "Declined debrief" with note — don't chase. Ivan notes in record for Farah's awareness.</td>
+<td><span class="auto-pill ap-human">Manual</span> Call is always Ivan-led. 10-day no-debrief flag: Airtable automation alerts Ivan if field not populated. H2: Admin bot generates debrief summary draft from Airtable data for Ivan to edit.</td>
+</tr>
+
+<tr data-s="7" data-t="human">
+<td><span class="stage-cell s7">Stage 7</span></td>
+<td><div class="milestone-name">Implementation post-mortem logged</div><div class="milestone-detail">Ivan fills in all post-mortem fields in Airtable: Facilitator Strength, Outcome, Barriers, Key Notes, Survey Completion Rate</div></td>
+<td class="owner">Ivan</td>
+<td>Client debrief completed; Ivan logs within 48h</td>
+<td class="evidence">Post-mortem fields populated in Airtable; status = Closed</td>
+<td class="risk-text">Fields empty at Day 10 post-showcase (Ivan forgot or deprioritized)</td>
+<td class="intervention">Airtable automation sends Ivan a self-reminder at Day 10 if fields still empty</td>
+<td><span class="auto-pill ap-human">Manual</span> Ivan fills in manually. Airtable Day 10 reminder is the only automation here. H2: Admin bot drafts post-mortem from pulse history + Drive signals; Ivan confirms.</td>
+</tr>
+
+<!-- STAGE 8 -->
+<tr class="section-row"><td colspan="8">Stage 8 — Renewal</td></tr>
+
+<tr data-s="8" data-t="human">
+<td><span class="stage-cell s8">Stage 8</span></td>
+<td><div class="milestone-name">Renewal question asked in client debrief</div><div class="milestone-detail">Ivan directly asks the renewal question in every debrief call — not assumed, not skipped</div></td>
+<td class="owner">Ivan</td>
+<td>Client debrief call (Stage 7) — renewal question is a required agenda item</td>
+<td class="evidence">Renewal Disposition field populated in Airtable within 24h of debrief: Yes / No / Maybe / Not Contacted</td>
+<td class="risk-text">Debrief happens but renewal question not asked; disposition not logged</td>
+<td class="intervention">Ivan self-discipline — disposition must be logged before the debrief record is marked complete. Airtable validation: debrief = true but disposition = empty → alert to Ivan.</td>
+<td><span class="auto-pill ap-human">Manual</span> Ivan asks the question; logs the answer. Validation alert auto-fires if debrief logged but disposition is empty (Airtable automation).</td>
+</tr>
+
+<tr data-s="8" data-t="auto">
+<td><span class="stage-cell s8">Stage 8</span></td>
+<td><div class="milestone-name">30-day and 60-day follow-up reminders set</div><div class="milestone-detail">For "Yes" and "Maybe" dispositions: Ivan receives automated reminders to follow up at 30 and 60 days</div></td>
+<td class="owner">Automated (Zapier)</td>
+<td>Renewal Disposition = Yes or Maybe → reminders auto-scheduled</td>
+<td class="evidence">Zapier automation log shows scheduled reminders; Ivan receives them at correct intervals</td>
+<td class="risk-text">Maybe goes to 60 days with no follow-up; renewal opportunity lost</td>
+<td class="intervention">30-day reminder is the automated catch; 60-day is the final flag. If Ivan still hasn't acted by 60 days, Farah is notified.</td>
+<td><span class="auto-pill ap-auto">Auto</span> Zapier: disposition = Yes/Maybe → schedule 30-day and 60-day reminder emails to Ivan</td>
+</tr>
+
+<tr data-s="8" data-t="human">
+<td><span class="stage-cell s8">Stage 8</span></td>
+<td><div class="milestone-name">Network-level renewal summary generated</div><div class="milestone-detail">For networks with 3+ implementations in a cycle, a summary of renewal dispositions is generated for Farah's use in recruitment</div></td>
+<td class="owner">Ivan (triggers); Farah (uses)</td>
+<td>All implementations in a network cycle reach Closed status</td>
+<td class="evidence">Network-level Airtable grouped view shows renewal disposition summary; Farah confirms receipt for use in recruitment pipeline</td>
+<td class="risk-text">Same network has 2+ "No" renewals — signals a systemic issue beyond individual teacher performance</td>
+<td class="intervention">Ivan flags to Farah with implementation notes; Farah decides whether to pursue network-level conversation or hold the slot for a stronger-fit partner</td>
+<td><span class="auto-pill ap-both">Both</span> Airtable grouped view auto-updates as dispositions are logged; Ivan manually sends summary to Farah. Future H2: network summary auto-generates as formatted digest.</td>
+</tr>
+
+<tr data-s="8" data-t="open">
+<td><span class="stage-cell s8">Stage 8</span></td>
+<td><div class="milestone-name">Network decision-maker contacted for renewal</div><div class="milestone-detail">Ivan connects with the network admin or school principal — not just the teacher — for the formal renewal conversation</div></td>
+<td class="owner">Ivan (initiates)</td>
+<td>Renewal disposition = Yes or Maybe + 30-day follow-up reminder fires</td>
+<td class="evidence">Contact logged in Airtable with date and outcome; renewal decision documented</td>
+<td class="risk-text">Ivan contacts teacher who is enthusiastic but principal decides no — signals misaligned stakeholder management</td>
+<td class="intervention">Ivan escalates to Farah for network-level relationship conversation; Farah and Ivan align on who talks to whom at each network</td>
+<td><span class="auto-pill ap-human">Manual</span> <span class="flag">[OPEN: Farah to confirm who initiates renewal conversations at network level and what the typical timeline looks like across Green Dot, LAUSD, and other network partners]</span></td>
+</tr>
+
+</tbody>
+</table>
+</div>
+
+<script>
+function fil(val, btn){
+  document.querySelectorAll('button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('tbody tr:not(.section-row)').forEach(tr=>{
+    if(val==='all'){tr.classList.remove('hide');return}
+    if(val==='open'){tr.classList.toggle('hide',tr.dataset.t!=='open');return}
+    if(['1','2','3','4','5','6','7','8'].includes(val)){tr.classList.toggle('hide',tr.dataset.s!==val);return}
+    tr.classList.toggle('hide',tr.dataset.t!==val);
+  });
+  document.querySelectorAll('.section-row').forEach(sr=>{
+    if(val==='all'){sr.classList.remove('hide');return}
+    let next=sr.nextElementSibling;
+    let visible=false;
+    while(next&&!next.classList.contains('section-row')){
+      if(!next.classList.contains('hide'))visible=true;
+      next=next.nextElementSibling;
+    }
+    sr.classList.toggle('hide',!visible);
+  });
+}
+</script>
+</body>
+</html>

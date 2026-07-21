@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MI Journey Map — Reference View</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:2rem;color:#3d3d3a}
+.page{max-width:900px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:8px}
+h1{font-size:13px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+button{font-size:11px;padding:4px 11px;border-radius:20px;border:1px solid #ccc;background:#fff;color:#666;cursor:pointer;transition:all .15s}
+button.on,button:hover{background:#eee;color:#333;border-color:#999}
+.card{border:1px solid #e0ddd8;border-radius:10px;margin-bottom:8px;overflow:hidden;background:#fff}
+.card.hide{display:none}
+.card-top{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:12px 14px;cursor:pointer;background:#faf9f7;border-bottom:1px solid #eee}
+.card-top:hover{background:#f0efe9}
+.badge{font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;white-space:nowrap}
+.b1{background:#d4edbc;color:#27500a}.b2{background:#b8e8d6;color:#085041}.b3{background:#b8e8d6;color:#085041}
+.b4{background:#d6d3f8;color:#3c3489}.b5{background:#fde5b5;color:#633806}.b6{background:#fde5b5;color:#633806}
+.b7{background:#f8cdb8;color:#712b13}.b8{background:#f8cdb8;color:#712b13}
+.card-title{font-size:13px;font-weight:600;color:#2c2c2a}
+.card-sub{font-size:11px;color:#888;margin-top:1px}
+.chev{font-size:14px;color:#aaa;transition:transform .2s;user-select:none}
+.chev.o{transform:rotate(180deg)}
+.body{display:none;padding:12px 14px;background:#fff}
+.body.o{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cell{background:#faf9f7;border:0.5px solid #e0ddd8;border-radius:6px;padding:9px 10px}
+.cell.wide{grid-column:1/-1}
+.lbl{font-size:9px;font-weight:600;color:#aaa;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.val{font-size:11px;color:#666;line-height:1.5}
+.pill{display:inline-block;font-size:9px;padding:2px 6px;border-radius:3px;font-weight:600;margin-top:3px}
+.p-auto{background:#eaf5e8;color:#2a6e1a}.p-human{background:#fff8e6;color:#a07010}.p-both{background:#e8f0fb;color:#1a4e8a}.p-h2{background:#f0e8fb;color:#5c2a9a}
+.rl{font-size:11px;color:#666;padding:2px 0;display:flex;gap:5px;line-height:1.4}
+.rl::before{content:'⚠';font-size:9px;color:#c07010;flex-shrink:0;margin-top:2px}
+.al{font-size:11px;color:#666;padding:2px 0;display:flex;gap:5px;line-height:1.4}
+.al::before{content:'⚡';font-size:9px;color:#2a6e1a;flex-shrink:0;margin-top:2px}
+.h2note{font-size:11px;color:#5c2a9a;background:#f0e8fb;border:0.5px solid #c4a0e8;border-radius:4px;padding:6px 8px;margin-top:4px}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="top">
+  <h1>MI Implementation Journey — Reference View</h1>
+  <div class="filters">
+    <button class="on" onclick="fil('all',this)">All stages</button>
+    <button onclick="fil('h',this)">Human-primary</button>
+    <button onclick="fil('a',this)">Automated</button>
+    <button onclick="fil('b',this)">Both</button>
+    <button onclick="fil('h2',this)">Has Chipp Bot (H2)</button>
+  </div>
+</div>
+
+<!-- Stage 1 -->
+<div class="card" data-t="b">
+<div class="card-top" onclick="tog(this)"><span class="badge b1">Stage 1</span><div><div class="card-title">Commitment</div><div class="card-sub">MOU signed → Airtable record created → welcome sequence fires</div></div><span class="chev">▾</span></div>
+<div class="body">
+  <div class="cell"><div class="lbl">Owner</div><div class="val">Farah (relationship) → Ivan (record + trigger)</div></div>
+  <div class="cell"><div class="lbl">Airtable status</div><div class="val">Committed<br><span class="pill p-both">Human + auto</span></div></div>
+  <div class="cell"><div class="lbl">System trigger</div><div class="val">Signed MOU/commitment form received by Farah</div></div>
+  <div class="cell"><div class="lbl">Evidence of completion</div><div class="val">All identity fields populated; 3 stakeholder contacts logged (teacher, site coordinator, network decision-maker); welcome email confirmed sent</div></div>
+  <div class="cell wide"><div class="lbl">Risk signals</div>
+    <div class="rl">No site coordinator named within 5 days of MOU</div>
+    <div class="rl">Start date window still vague ("sometime in fall") at Day 7</div>
+    <div class="rl">Network commitment without individual teacher assigned yet</div>
+    <div class="rl">No school admin or network contact on record</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Automation — H1 (Zapier + Airtable)</div>
+    <div class="al">Welcome email + stakeholder mapping form auto-fires on status = Committed</div>
+    <div class="al">Missing fields alert to Ivan 48h after record creation (Airtable automation)</div>
+  </div>
+</div>
+</div>
+
+<!-- Stage 2 -->
+<div class="card" data-t="a">
+<div class="card-top" onclick="tog(this)"><span class="badge b2">Stage 2</span><div><div class="card-title">Onboarding &amp; Training</div><div class="card-sub">Fixed PD track: Part 1 async → Part 2 live → readiness checkpoint → onboarding call</div></div><span class="chev">▾</span></div>
+<div class="body">
+  <div class="cell"><div class="lbl">Owner</div><div class="val">Ivan (onboarding call + readiness review); A360/Reach 360 (Part 1 delivery + tracking); Zapier (sequencing)</div></div>
+  <div class="cell"><div class="lbl">Airtable status</div><div class="val">Training Complete<br><span class="pill p-auto">Mostly automated</span></div></div>
+  <div class="cell"><div class="lbl">Key gate dates</div><div class="val">Part 1 deadline: T-21 before launch<br>Part 2 deadline: T-14 before launch<br>Readiness checkpoint: 48h after Part 2</div></div>
+  <div class="cell"><div class="lbl">Readiness checkpoint focus</div><div class="val">5-question structured reflection — specifically tests M2 interview coaching confidence and M3 synthesis facilitation confidence. Score ≤ 2 on either = flag.</div></div>
+  <div class="cell wide"><div class="lbl">Risk signals</div>
+    <div class="rl">Part 1 not started by T-28; not complete by T-21</div>
+    <div class="rl">Part 2 window not selected by T-18</div>
+    <div class="rl">Part 2 missed with no rescheduled date → auto Yellow tier</div>
+    <div class="rl">Readiness checkpoint score ≤ 2 on M2 or M3 confidence → possible second onboarding call</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Automation — H1</div>
+    <div class="al">Reach 360 course.completed webhook → Zapier → Part 2 Calendly window selection email (confirmed: Reach 360 supports this trigger natively)</div>
+    <div class="al">Missed Part 2 → automated re-offer of next available window (48h; then escalate to site coordinator)</div>
+    <div class="al">Readiness form → Google Form → Airtable via Zapier; auto-flag if score ≤ 2</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Chipp Bot — H2</div>
+    <div class="h2note">Bot introduced at Part 2 completion as part of materials packet. First conversation walks teacher through pacing mapper. Ivan's onboarding call shifts to facilitation coaching only — bot handles logistics and Q&A.</div>
+  </div>
+</div>
+</div>
+
+<!-- Stage 3 -->
+<div class="card" data-t="b">
+<div class="card-top" onclick="tog(this)"><span class="badge b3">Stage 3</span><div><div class="card-title">Implementation Planning</div><div class="card-sub">Pacing mapper completed → client dates confirmed → all 4 milestone dates logged in Airtable</div></div><span class="chev">▾</span></div>
+<div class="body">
+  <div class="cell"><div class="lbl">Owner</div><div class="val">Teacher (completes mapper); Ivan (reviews + sends to client); Client contact (confirms dates)</div></div>
+  <div class="cell"><div class="lbl">Airtable status</div><div class="val">Launch Ready (set only when all 4 dates populated)<br><span class="pill p-both">Human + auto</span></div></div>
+  <div class="cell wide"><div class="lbl">Pacing mapper (highest-leverage H1 artifact)</div>
+    <div class="val">Teacher inputs: start date + sessions per week + session length → auto-generates dated M1–M7 session calendar with 3 required client interaction windows flagged. Auto-flags: M3 non-consecutive session scheduling (known failure cascade), fewer than 25 total sessions, showcase date within 2 weeks of end-of-year.</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Risk signals</div>
+    <div class="rl">Mapper not started 72h after being sent → Ivan text (not email)</div>
+    <div class="rl">Client unresponsive to proposed dates within 5 days → Ivan direct call to client</div>
+    <div class="rl">M3 sessions not mapped as consecutive blocks</div>
+    <div class="rl">Fewer than 25 total sessions in available window → discuss scope adjustment</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Automation — H1</div>
+    <div class="al">Pacing mapper link auto-sends when status flips to Training Complete (Zapier)</div>
+    <div class="al">Ivan alert when all 4 date fields populated → launch approval queue</div>
+    <div class="al">Client calendar confirmation email auto-sends when dates logged (Zapier)</div>
+  </div>
+</div>
+</div>
+
+<!-- Stage 4 -->
+<div class="card" data-t="h">
+<div class="card-top" onclick="tog(this)"><span class="badge b4">Stage 4</span><div><div class="card-title">Project Launch</div><div class="card-sub">7-item gate — all green required. Ivan reviews manually. No soft launches, no exceptions without team discussion.</div></div><span class="chev">▾</span></div>
+<div class="body">
+  <div class="cell"><div class="lbl">Owner</div><div class="val">Ivan (gate review and go/no-go); Teacher (student setup); Client (brief sign-off)</div></div>
+  <div class="cell"><div class="lbl">Airtable status</div><div class="val">Active (set by Ivan after gate review)<br><span class="pill p-human">Human gate</span></div></div>
+  <div class="cell wide"><div class="lbl">7-item launch gate checklist (all must be green)</div>
+    <div class="val" style="margin-top:4px;line-height:1.8">
+      ☑ Part 1 async training complete (A360 timestamp)<br>
+      ☑ Part 2 live training attended<br>
+      ☑ Pacing map finalized and teacher-confirmed<br>
+      ☑ Employer brief finalized and approved by client<br>
+      ☑ Client kickoff date confirmed<br>
+      ☑ Student-facing materials accessible (portfolios shared, classroom links distributed)<br>
+      ☑ Midpoint and showcase dates tentatively confirmed
+    </div>
+  </div>
+  <div class="cell wide"><div class="lbl">Risk signals</div>
+    <div class="rl">Any gate item still red within 3 days of planned launch date</div>
+    <div class="rl">Client brief unsigned after 5 days → Ivan personal call to client</div>
+    <div class="rl">Teacher hasn't run S1 within 5 days of receiving "go" confirmation</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Automation — H1</div>
+    <div class="al">All-green Airtable alert → launch approval queue notification to Ivan</div>
+    <div class="al">"You're ready to launch" text to teacher auto-sends after Ivan flips status to Active (Zapier)</div>
+    <div class="al">M1 JIT Loom kit auto-emails on launch day</div>
+  </div>
+</div>
+</div>
+
+<!-- Stage 5 -->
+<div class="card" data-t="a">
+<div class="card-top" onclick="tog(this)"><span class="badge b5">Stage 5</span><div><div class="card-title">Active Implementation</div><div class="card-sub">M1–M5 · weekly pulse · module-aware JIT kits · dynamic tier logic · Monday digest to Ivan</div></div><span class="chev">▾</span></div>
+<div class="body">
+  <div class="cell"><div class="lbl">Owner</div><div class="val">Teacher (weekly pulse); Ivan (Red-site direct intervention + Monday triage)</div></div>
+  <div class="cell"><div class="lbl">Airtable status</div><div class="val">Active (current session field updated weekly via pulse)<br><span class="pill p-auto">Mostly automated</span></div></div>
+  <div class="cell wide"><div class="lbl">Module-specific risk windows (curriculum-aware detection)</div>
+    <div class="val" style="line-height:1.7;margin-top:4px">
+      <strong>M1 (S1–S5):</strong> Student commitment to brief. Flag if Brief Analysis Sheet not submitted by S5.<br>
+      <strong>M2 (S6–S10):</strong> Interview quality — weak interviews cascade to all downstream modules. Flag if interviews not scheduled by S7. Deliverable: Interview Submission (3+ interviews + notes + takeaways).<br>
+      <strong>M3 (S11–S15) — HIGHEST RISK:</strong> Synthesis leap. All M3 entries auto-elevated to Yellow. Score ≤ 2 = Red, Ivan direct call within 24h. Deliverable: Insight Statement (quotes → themes → insights + HMW).<br>
+      <strong>M4 (S16–S19):</strong> Ideas must connect to insights. Flag if concept maps not grounded in M3 deliverable. Deliverable: Top 3 Concept Maps.<br>
+      <strong>M5 (S20–S24):</strong> Client feedback iteration. Flag if Prototype v2 not measurably different from v1. Deliverable: Prototype v1 + v2.
+    </div>
+  </div>
+  <div class="cell wide"><div class="lbl">Tier logic (dynamic — updates automatically)</div>
+    <div class="val" style="line-height:1.7;margin-top:4px">
+      🟢 <strong>Green:</strong> On-time pulses, scores ≥ 3, deliverables submitted on pace<br>
+      🟡 <strong>Yellow:</strong> 2 consecutive score ≤ 2, OR entering M3 (auto-elevated), OR 1 missed submission<br>
+      🔴 <strong>Red:</strong> Score ≤ 2 in M2/M3 window, OR module deliverable missing at module end, OR 2+ consecutive missed submissions
+    </div>
+  </div>
+  <div class="cell wide"><div class="lbl">Risk signals</div>
+    <div class="rl">Pulse score ≤ 2 for 2 consecutive weeks → Yellow tier auto-update</div>
+    <div class="rl">Pulse score ≤ 2 in M2 (S6–S10) or M3 (S11–S15) → Red; Ivan direct call within 24h</div>
+    <div class="rl">Module deliverable not submitted at module end → Red regardless of confidence score</div>
+    <div class="rl">No pulse submission by Friday 5pm → Saturday morning auto-reminder text</div>
+    <div class="rl">Two consecutive missed submissions → Ivan direct call (not text)</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Automation — H1</div>
+    <div class="al">Pulse form → Airtable Weekly Pulse Log via Zapier (zero manual data entry)</div>
+    <div class="al">Current session crosses S6, S11, S16, S20 → relevant JIT Loom kit auto-emails to teacher</div>
+    <div class="al">Missed pulse by Friday 5pm → Saturday morning reminder (text or email TBD based on pilot)</div>
+    <div class="al">Tier field auto-updates from pulse data via Airtable formula</div>
+    <div class="al">Monday 8am weekly digest: all schools, current session, tier, open flags → Ivan email (Zapier)</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Chipp Bot — H2</div>
+    <div class="h2note">Bot replaces pulse form with organic daily teacher interaction. Bot reads student portfolio documents against rubric library and flags quality issues — not just completion. Admin bot delivers daily plain-language digest: "Roosevelt High is in M3, Insight Statements show themes not genuine insights — flagged." Ivan only calls Red sites; bot mediates everything else.</div>
+  </div>
+</div>
+</div>
+
+<!-- Stage 6 -->
+<div class="card" data-t="b">
+<div class="card-top" onclick="tog(this)"><span class="badge b6">Stage 6</span><div><div class="card-title">Showcase Preparation</div><div class="card-sub">T-21 auto-trigger · T-10 check-in · T-1 reminder. Showcase is a non-negotiable program milestone.</div></div><span class="chev">▾</span></div>
+<div class="body">
+  <div class="cell"><div class="lbl">Owner</div><div class="val">Ivan (T-10 call + client re-confirmation); Teacher (student prep); Client (logistics confirmation)</div></div>
+  <div class="cell"><div class="lbl">Airtable status</div><div class="val">Showcase Prep (auto-triggered at T-21)<br><span class="pill p-both">Human + auto</span></div></div>
+  <div class="cell wide"><div class="lbl">T-10 check-in design</div>
+    <div class="val">Green tier sites: automated structured form sent to teacher (Are teams on track? Do presentations tell a research → insight → solution story? What's the biggest risk?). Red/Yellow tier sites: Ivan direct call — not form. In H2, bot conducts T-10 conversationally and routes only Red sites to Ivan call.</div>
+  </div>
+  <div class="cell wide"><div class="lbl">⚑ Action item (before fall launch)</div>
+    <div class="val" style="color:#a07010">Ivan to build client presentation rubric and 2–3 exemplars from strong SY25-26 implementations. Source material: client presentation guide (Ivan's Drive) + Module 6 wrapper. Example strong implementations: Contreras Spring 2026, Sylmar Spring 2026, Alliance Summer 2025.</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Risk signals</div>
+    <div class="rl">Teacher still in M5 at T-21 — sessions running behind pacing map; showcase date may need to shift</div>
+    <div class="rl">Client hasn't reconfirmed availability by T-14 → Ivan personal call to client</div>
+    <div class="rl">T-10 check-in reveals teams don't have a coherent research → insight → solution narrative</div>
+    <div class="rl">Teacher reschedules or cancels T-10 call → Ivan proactively reaches out</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Automation — H1</div>
+    <div class="al">Showcase Date = T-21 → client re-confirmation email + prep checklist activates in Airtable (Zapier date-based trigger)</div>
+    <div class="al">T-10 structured check-in form auto-sends to Green tier sites (Zapier)</div>
+    <div class="al">T-1 automated reminder sends to teacher and client</div>
+    <div class="al">Showcase date passes → student + teacher survey links auto-send within 24h (Zapier)</div>
+  </div>
+</div>
+</div>
+
+<!-- Stage 7 -->
+<div class="card" data-t="b">
+<div class="card-top" onclick="tog(this)"><span class="badge b7">Stage 7</span><div><div class="card-title">Closeout</div><div class="card-sub">Surveys auto-send · client debrief is never replaced by a form · post-mortem logged in Airtable</div></div><span class="chev">▾</span></div>
+<div class="body">
+  <div class="cell"><div class="lbl">Owner</div><div class="val">Ivan (client debrief + post-mortem fields); Automated system (survey delivery + scheduling link)</div></div>
+  <div class="cell"><div class="lbl">Airtable status</div><div class="val">Closed (set by Ivan after post-mortem complete)<br><span class="pill p-both">Human + auto</span></div></div>
+  <div class="cell wide"><div class="lbl">Client debrief (never automate this call)</div>
+    <div class="val">Pre-conversation form sent to teacher and client 48h before the call — captures what went well, what was harder than expected, and renewal interest. Ivan reviews before the call so the conversation is focused, not from scratch. Ivan asks: What did you observe? What surprised you? Would you do this again? What would you change? This is where renewal interest surfaces.</div>
+  </div>
+  <div class="cell"><div class="lbl">Post-mortem fields to log</div><div class="val">Facilitator Strength · Implementation Outcome · Implementation Barriers · Key Implementation Notes · Student Survey Completion Rate</div></div>
+  <div class="cell"><div class="lbl">Survey completion note</div><div class="val">Teacher facilitates student survey in class. Completion rate auto-calculated in Airtable (form response count vs. student count field).</div></div>
+  <div class="cell wide"><div class="lbl">Risk signals</div>
+    <div class="rl">Student survey completion &lt; 70% within 7 days → Ivan text to teacher ("10 minutes in class?")</div>
+    <div class="rl">Client debrief not scheduled within 5 days of showcase → follow-up email; then log as declined</div>
+    <div class="rl">Post-mortem fields empty at Day 10 → Airtable self-reminder to Ivan</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Automation — H1</div>
+    <div class="al">Student + teacher survey links auto-send within 24h of showcase date (Zapier date trigger)</div>
+    <div class="al">Client debrief scheduling link + pre-conversation form auto-send Day 1 post-showcase</div>
+    <div class="al">Survey completion rate auto-calculated in Airtable</div>
+    <div class="al">10-day no-debrief flag: Airtable alerts Ivan if debrief not logged</div>
+  </div>
+</div>
+</div>
+
+<!-- Stage 8 -->
+<div class="card" data-t="b">
+<div class="card-top" onclick="tog(this)"><span class="badge b8">Stage 8</span><div><div class="card-title">Renewal</div><div class="card-sub">Disposition logged after every debrief · 30/60-day follow-ups automated · network contact owns contract</div></div><span class="chev">▾</span></div>
+<div class="body">
+  <div class="cell"><div class="lbl">Owner</div><div class="val">Ivan (renewal conversation + disposition logging); Farah (uses renewal data for network-level recruitment)</div></div>
+  <div class="cell"><div class="lbl">Airtable status</div><div class="val">Renewed (or Closed with disposition logged)<br><span class="pill p-both">Human + auto</span></div></div>
+  <div class="cell wide"><div class="lbl">Decision-maker distinction</div>
+    <div class="val">Teacher interest is an input, not the decision. Network admin or school principal owns the contract renewal. Ivan's renewal conversation may need to be with a district contact, not the classroom teacher — especially for Green Dot, LAUSD, and other network implementations. <em>[OPEN: Farah to confirm typical renewal process and decision-maker at network level]</em></div>
+  </div>
+  <div class="cell"><div class="lbl">Renewal disposition options</div><div class="val">Yes / No / Maybe / Not Contacted — logged in Airtable within 24h of client debrief</div></div>
+  <div class="cell"><div class="lbl">Assumption for fall</div><div class="val">Based on SY25-26 data (generally positive feedback and renewal rate), assume schools want to renew. Focus is on documentation and follow-through, not conversion.</div></div>
+  <div class="cell wide"><div class="lbl">Risk signals</div>
+    <div class="rl">No renewal disposition logged within 5 days of closeout</div>
+    <div class="rl">"Maybe" with no Ivan follow-up at 30 days → auto-reminder fires</div>
+    <div class="rl">Same network has 2+ "No" renewals in a cycle → Farah alert (signals systemic issue)</div>
+  </div>
+  <div class="cell wide"><div class="lbl">Automation — H1</div>
+    <div class="al">30-day and 60-day follow-up reminders auto-fire from Airtable date field (Zapier)</div>
+    <div class="al">Network-level renewal summary auto-view in Airtable when 3+ schools from same network (grouped view)</div>
+  </div>
+</div>
+</div>
+
+</div>
+<script>
+function tog(top){const b=top.nextElementSibling,c=top.querySelector('.chev');const o=b.classList.toggle('o');c.classList.toggle('o',o)}
+function fil(t,btn){document.querySelectorAll('button').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.querySelectorAll('.card').forEach(c=>{if(t==='all'){c.classList.remove('hide');return}if(t==='h2'){c.classList.toggle('hide',!c.querySelector('.h2note'));return}c.classList.toggle('hide',c.dataset.t!==t)})}
+</script>
+</body>
+</html>
