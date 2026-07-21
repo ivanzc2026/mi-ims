@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MI IMS — Information Flow (Horizon 2)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:2rem;color:#3d3d3a}
+.page{max-width:1100px;margin:0 auto}
+h1{font-size:13px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem}
+.horizon-label{font-size:11px;color:#aaa;margin-bottom:1.5rem}
+.diagram{display:flex;flex-direction:column;gap:0}
+.layer{display:grid;grid-template-columns:120px 1fr;gap:0;min-height:80px}
+.layer-label{display:flex;align-items:center;justify-content:flex-end;padding-right:16px;font-size:10px;font-weight:600;color:#888;letter-spacing:.05em;text-transform:uppercase;border-right:2px solid #c5b9e8}
+.layer-content{display:flex;align-items:center;padding:12px 16px;gap:12px;flex-wrap:wrap}
+.node{border-radius:8px;padding:10px 14px;min-width:130px;max-width:210px}
+.node-title{font-size:12px;font-weight:600;color:#2c2c2a;margin-bottom:3px}
+.node-desc{font-size:10px;color:#666;line-height:1.4}
+.node-tag{font-size:9px;font-weight:600;padding:2px 5px;border-radius:3px;display:inline-block;margin-top:4px}
+.tool-airtable{background:#fce4ec;border:0.5px solid #f48fb1}
+.tool-zapier{background:#fff3e0;border:0.5px solid #ffcc80}
+.tool-claude{background:#f3e5f5;border:0.5px solid #ce93d8}
+.tool-teacher{background:#e0f7fa;border:0.5px solid #80deea}
+.tool-ivan{background:#fff8e1;border:0.5px solid #ffe082}
+.tool-drive{background:#e8f5e9;border:0.5px solid #66bb6a}
+.tag-airtable{background:#f8bbd9;color:#880e4f}
+.tag-zapier{background:#ffe0b2;color:#bf360c}
+.tag-chipp{background:#d1c4e9;color:#311b92}
+.tag-claude{background:#e1bee7;color:#4a148c}
+.tag-drive{background:#c8e6c9;color:#1b5e20}
+.arrow-row{display:grid;grid-template-columns:120px 1fr;min-height:28px}
+.arrow-spacer{border-right:2px solid #c5b9e8}
+.arrows{display:flex;align-items:center;padding:0 16px;gap:8px;flex-wrap:wrap}
+.arrow{display:flex;align-items:center;gap:4px;font-size:10px;color:#999}
+.arrow-line{width:28px;height:1px;background:#bbb;position:relative}
+.arrow-line::after{content:'&#9658;';position:absolute;right:-6px;top:-5px;font-size:8px;color:#bbb}
+.arrow-label{font-size:9px;color:#aaa;font-style:italic}
+.flow-note{background:#f5f0ff;border:0.5px solid #c5b9e8;border-radius:6px;padding:8px 10px;font-size:10px;color:#555;line-height:1.5;max-width:280px}
+.flow-note strong{color:#2c2c2a}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:1.5rem;padding-top:1rem;border-top:0.5px solid #e0ddd8}
+.leg{display:flex;align-items:center;gap:5px;font-size:10px;color:#666}
+.leg-dot{width:10px;height:10px;border-radius:2px}
+.chipp-box{border:2px solid #7c4dff;border-radius:10px;padding:12px;background:#f5f0ff;display:flex;flex-direction:column;gap:8px;min-width:280px}
+.chipp-box-label{font-size:9px;font-weight:600;color:#7c4dff;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.chipp-inner{display:flex;gap:8px;flex-wrap:wrap}
+.chipp-sub{border-radius:6px;padding:8px 10px;background:#ede7f6;border:0.5px solid #b39ddb;min-width:120px}
+.chipp-sub-title{font-size:11px;font-weight:600;color:#311b92;margin-bottom:2px}
+.chipp-sub-desc{font-size:10px;color:#666;line-height:1.35}
+.upgrade-note{font-size:9px;background:#e8f5e9;color:#1b5e20;padding:2px 5px;border-radius:3px;display:inline-block;margin-top:3px}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>MI IMS — Information Flow: Horizon 2</h1>
+<p class="horizon-label">SY26-27 Q1 · Adds: Chipp Bot (teacher + admin layers), Drive Activity API, rubric library, Claude API. Built on top of H1 infrastructure — H1 must be live first.</p>
+<div class="diagram">
+<div class="layer">
+  <div class="layer-label">Teacher interactions</div>
+  <div class="layer-content">
+    <div class="chipp-box">
+      <div class="chipp-box-label">Chipp Bot — Teacher-Facing</div>
+      <div class="chipp-inner">
+        <div class="chipp-sub"><div class="chipp-sub-title">Curriculum Q&amp;A</div><div class="chipp-sub-desc">Teacher asks facilitation questions. Bot responds grounded in MI knowledge base. Ivan never gets the call.</div><span class="upgrade-note">Replaces: Farah/Ivan inbound</span></div>
+        <div class="chipp-sub"><div class="chipp-sub-title">Pacing Mapper</div><div class="chipp-sub-desc">Bot walks teacher through scheduling conversationally. Auto-logs to Airtable. Ivan reviews, not builds.</div><span class="upgrade-note">Replaces: manual mapper</span></div>
+        <div class="chipp-sub"><div class="chipp-sub-title">JIT Support (in-chat)</div><div class="chipp-sub-desc">Module coaching moves delivered in conversation as teacher needs them — not batch email.</div><span class="upgrade-note">Replaces: Loom kit emails</span></div>
+        <div class="chipp-sub"><div class="chipp-sub-title">T-10 Check-In</div><div class="chipp-sub-desc">Bot conducts showcase prep check-in for Green sites. Flags narrative gaps. Routes Red to Ivan.</div><span class="upgrade-note">Replaces: Ivan form + most calls</span></div>
+      </div>
+    </div>
+    <div class="node tool-drive"><div class="node-title">Student Portfolio Folders</div><div class="node-desc">Google Drive. Bot reads portfolio docs on demand. Drive Activity API logs open/edit events.</div><span class="node-tag tag-drive">Google Drive</span></div>
+  </div>
+</div>
+<div class="arrow-row"><div class="arrow-spacer"></div><div class="arrows"><div class="arrow"><div class="arrow-line"></div><span class="arrow-label">Bot interactions + Drive activity signals flow into Airtable via Zapier/Apps Script</span></div></div></div>
+<div class="layer">
+  <div class="layer-label">Tracking layer</div>
+  <div class="layer-content">
+    <div class="node tool-drive"><div class="node-title">Drive Activity API</div><div class="node-desc">Logs document open/edit events with timestamps. Apps Script writes signals to Airtable. Detects events, not reading depth.</div><span class="node-tag tag-drive">Google Drive API</span></div>
+    <div class="node tool-zapier"><div class="node-title">Apps Script / Zapier</div><div class="node-desc">Translates Drive events and bot interactions into Airtable fields. Fires threshold-based flags.</div><span class="node-tag tag-zapier">Zapier + Apps Script</span></div>
+    <div class="node tool-claude"><div class="node-title">Claude (API)</div><div class="node-desc">Reads student portfolio documents. Scores against rubric library. Returns quality assessment. Writes result to Airtable.</div><span class="node-tag tag-claude">Claude API</span></div>
+    <div class="flow-note"><strong>Signal quality note:</strong> Drive Activity API measures events (opened, edited) with timestamps — not continuous time-on-task. Duration is inferred, not directly measured. Stronger than no signal; weaker than an LMS with SCORM tracking.</div>
+  </div>
+</div>
+<div class="arrow-row"><div class="arrow-spacer"></div><div class="arrows"><div class="arrow"><div class="arrow-line"></div><span class="arrow-label">All signals converge in Airtable — same base structure as H1, richer and more passive data</span></div></div></div>
+<div class="layer">
+  <div class="layer-label">Data layer</div>
+  <div class="layer-content">
+    <div class="node tool-airtable" style="max-width:240px"><div class="node-title">Airtable (same base, richer)</div><div class="node-desc">H1 fields + Drive activity timestamps, bot interaction logs, rubric scores, portfolio completeness flags. Tier formula now includes passive behavioral signals.</div><span class="node-tag tag-airtable">Airtable</span></div>
+    <div class="node tool-airtable"><div class="node-title">Rubric Library</div><div class="node-desc">One rubric per key deliverable (M1–M6). Claude scores student work against these. Results stored per implementation.</div><span class="node-tag tag-airtable">Airtable + Claude</span></div>
+    <div class="flow-note"><strong>H2 advantage:</strong> Tier logic now includes behavioral signals, not just self-reported pulse. Ivan can trust Green ratings more — they're based on observed behavior.</div>
+  </div>
+</div>
+<div class="arrow-row"><div class="arrow-spacer"></div><div class="arrows"><div class="arrow"><div class="arrow-line"></div><span class="arrow-label">Admin Chipp Bot queries Airtable in real time; delivers plain-language digest to Ivan daily</span></div></div></div>
+<div class="layer">
+  <div class="layer-label">Admin layer</div>
+  <div class="layer-content">
+    <div class="chipp-box">
+      <div class="chipp-box-label">Chipp Bot — Admin-Facing (Ivan)</div>
+      <div class="chipp-inner">
+        <div class="chipp-sub"><div class="chipp-sub-title">Daily Digest</div><div class="chipp-sub-desc">"Three schools need attention. Roosevelt High entered M3, confidence dropped to 2, M2 deliverable thin. Recommend a call." Delivered without Ivan asking.</div><span class="upgrade-note">Replaces: Monday digest email</span></div>
+        <div class="chipp-sub"><div class="chipp-sub-title">On-Demand Queries</div><div class="chipp-sub-desc">"How is Contreras doing?" "Show me all M3 schools." "What's Roosevelt's Insight Statement rubric score?"</div><span class="upgrade-note">Replaces: manual Airtable searches</span></div>
+        <div class="chipp-sub"><div class="chipp-sub-title">Post-Mortem Draft</div><div class="chipp-sub-desc">Bot drafts post-mortem from pulse history + Drive signals. Ivan reviews, edits, confirms.</div><span class="upgrade-note">Replaces: Ivan writes from scratch</span></div>
+      </div>
+    </div>
+    <div class="flow-note"><strong>Ivan's daily routine (H2):</strong> Opens admin bot. Reads digest (5 min). Makes 1-2 targeted calls. Everything else bot-mediated. Weekly time per Green school: near zero.</div>
+  </div>
+</div>
+<div class="arrow-row"><div class="arrow-spacer"></div><div class="arrows"><div class="arrow"><div class="arrow-line"></div><span class="arrow-label">Ivan's remaining manual actions: direct calls to Red/Yellow sites; client debrief; renewal conversations</span></div></div></div>
+<div class="layer">
+  <div class="layer-label">Outputs to field</div>
+  <div class="layer-content">
+    <div class="node tool-teacher"><div class="node-title">Red/Yellow: Ivan direct call</div><div class="node-desc">Bot routes only genuinely high-risk situations to Ivan. Everything else resolved in-bot or automatically.</div><span class="node-tag tag-chipp">Manual (targeted)</span></div>
+    <div class="node tool-teacher"><div class="node-title">Green: fully automated</div><div class="node-desc">JIT support, reminders, showcase prep — all bot or Zapier. Ivan receives summary only.</div><span class="node-tag tag-chipp">Chipp + Zapier</span></div>
+    <div class="node tool-ivan"><div class="node-title">Client debrief (always manual)</div><div class="node-desc">The one touchpoint that never gets automated. Ivan owns this every cycle, every school.</div><span class="node-tag tag-airtable">Manual — Ivan</span></div>
+  </div>
+</div>
+</div>
+<div style="background:#f5f0ff;border:0.5px solid #c5b9e8;border-radius:8px;padding:12px 14px;margin-top:1.5rem;font-size:11px;color:#555;line-height:1.6"><strong style="color:#311b92">What H2 changes vs. H1:</strong> Pulse form is no longer the primary signal — teacher behavior generates signal passively. Admin bot replaces Monday email digest with daily conversational interface. Ivan only calls Red sites. Claude assesses student work quality against rubrics — the first time Cambiar has quality visibility between showcase submissions.</div>
+<div style="background:#fffbf0;border:0.5px solid #e8d88a;border-radius:8px;padding:12px 14px;margin-top:8px;font-size:11px;color:#555;line-height:1.6"><strong style="color:#5d4037">H2 depends on H1:</strong> The admin bot has nothing to say until Airtable is populated with real data. H1 must be live first. Begin Chipp.ai verification during fall pilot (Oct 2026). Target: teacher bot Winter 2026, admin bot at scale Spring 2027.</div>
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:#e8f5e9;border:0.5px solid #a5d6a7"></div>Google (Drive, Apps Script)</div>
+  <div class="leg"><div class="leg-dot" style="background:#fce4ec;border:0.5px solid #f48fb1"></div>Airtable</div>
+  <div class="leg"><div class="leg-dot" style="background:#fff3e0;border:0.5px solid #ffcc80"></div>Zapier</div>
+  <div class="leg"><div class="leg-dot" style="background:#ede7f6;border:0.5px solid #b39ddb"></div>Chipp Bot</div>
+  <div class="leg"><div class="leg-dot" style="background:#f3e5f5;border:0.5px solid #ce93d8"></div>Claude API</div>
+  <div class="leg"><div class="leg-dot" style="background:#e0f7fa;border:0.5px solid #80deea"></div>Teacher</div>
+  <div class="leg"><div class="leg-dot" style="background:#fff8e1;border:0.5px solid #ffe082"></div>Ivan / admin</div>
+</div>
+</div>
+</body>
+</html>

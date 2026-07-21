@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>MI IMS — Information Flow (Horizon 1)</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:2rem;color:#3d3d3a}
+.page{max-width:1100px;margin:0 auto}
+h1{font-size:13px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem}
+.horizon-label{font-size:11px;color:#aaa;margin-bottom:1.5rem}
+.diagram{display:flex;flex-direction:column;gap:0}
+.layer{display:grid;grid-template-columns:120px 1fr;gap:0;min-height:80px}
+.layer-label{display:flex;align-items:center;justify-content:flex-end;padding-right:16px;font-size:10px;font-weight:600;color:#888;letter-spacing:.05em;text-transform:uppercase;border-right:2px solid #ddd}
+.layer-content{display:flex;align-items:center;padding:12px 16px;gap:12px;flex-wrap:wrap}
+.node{border-radius:8px;padding:10px 14px;min-width:130px;max-width:200px}
+.node-title{font-size:12px;font-weight:600;color:#2c2c2a;margin-bottom:3px}
+.node-desc{font-size:10px;color:#666;line-height:1.4}
+.node-tag{font-size:9px;font-weight:600;padding:2px 5px;border-radius:3px;display:inline-block;margin-top:4px}
+.tool-google{background:#e8f5e9;border:0.5px solid #a5d6a7}
+.tool-airtable{background:#fce4ec;border:0.5px solid #f48fb1}
+.tool-zapier{background:#fff3e0;border:0.5px solid #ffcc80}
+.tool-loom{background:#e8eaf6;border:0.5px solid #9fa8da}
+.tool-claude{background:#f3e5f5;border:0.5px solid #ce93d8}
+.tool-teacher{background:#e0f7fa;border:0.5px solid #80deea}
+.tool-ivan{background:#fff8e1;border:0.5px solid #ffe082}
+.tool-a360{background:#fbe9e7;border:0.5px solid #ffab91}
+.tag-google{background:#c8e6c9;color:#1b5e20}
+.tag-airtable{background:#f8bbd9;color:#880e4f}
+.tag-zapier{background:#ffe0b2;color:#bf360c}
+.tag-loom{background:#c5cae9;color:#1a237e}
+.tag-claude{background:#e1bee7;color:#4a148c}
+.tag-a360{background:#ffccbc;color:#bf360c}
+.arrow-row{display:grid;grid-template-columns:120px 1fr;min-height:28px}
+.arrow-spacer{border-right:2px solid #ddd}
+.arrows{display:flex;align-items:center;padding:0 16px;gap:8px;flex-wrap:wrap}
+.arrow{display:flex;align-items:center;gap:4px;font-size:10px;color:#999}
+.arrow-line{width:28px;height:1px;background:#bbb;position:relative}
+.arrow-line::after{content:'&#9658;';position:absolute;right:-6px;top:-5px;font-size:8px;color:#bbb}
+.arrow-label{font-size:9px;color:#aaa;font-style:italic}
+.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:1.5rem;padding-top:1rem;border-top:0.5px solid #e0ddd8}
+.leg{display:flex;align-items:center;gap:5px;font-size:10px;color:#666}
+.leg-dot{width:10px;height:10px;border-radius:2px}
+.flow-note{background:#fffbf0;border:0.5px solid #e8d88a;border-radius:6px;padding:8px 10px;font-size:10px;color:#666;line-height:1.5;max-width:260px}
+.flow-note strong{color:#2c2c2a}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>MI IMS — Information Flow: Horizon 1</h1>
+<p class="horizon-label">Fall 2026 · Tools: Google (Forms/Sheets/Drive), A360/Reach 360, Calendly, Airtable, Zapier, Loom, Claude</p>
+<div class="diagram">
+<div class="layer">
+  <div class="layer-label">Teacher inputs</div>
+  <div class="layer-content">
+    <div class="node tool-teacher"><div class="node-title">Weekly Pulse Form</div><div class="node-desc">Google Form, 2 min. School, session #, score 1-5, open text, deliverable Y/N</div><span class="node-tag tag-google">Google Forms</span></div>
+    <div class="node tool-teacher"><div class="node-title">Readiness Checkpoint</div><div class="node-desc">5-question reflection after Part 2 PD. M2 + M3 facilitation confidence scored.</div><span class="node-tag tag-google">Google Forms</span></div>
+    <div class="node tool-teacher"><div class="node-title">Pacing Mapper</div><div class="node-desc">Teacher inputs start date, sessions/week, length. Sheet auto-generates full session calendar.</div><span class="node-tag tag-google">Google Sheets</span></div>
+    <div class="node tool-a360"><div class="node-title">A360 Part 1 PD</div><div class="node-desc">Async training. Reach 360 logs completion timestamp, fires webhook.</div><span class="node-tag tag-a360">Reach 360</span></div>
+    <div class="node tool-teacher"><div class="node-title">Part 2 Window Selection</div><div class="node-desc">Teacher books live PD session via Calendly link (auto-sent on Part 1 completion).</div><span class="node-tag tag-google">Calendly</span></div>
+  </div>
+</div>
+<div class="arrow-row"><div class="arrow-spacer"></div><div class="arrows"><div class="arrow"><div class="arrow-line"></div><span class="arrow-label">Zapier routes all form submissions and completion events to Airtable automatically — zero manual data entry</span></div></div></div>
+<div class="layer">
+  <div class="layer-label">Automation layer</div>
+  <div class="layer-content">
+    <div class="node tool-zapier"><div class="node-title">Pulse Form → Airtable</div><div class="node-desc">Creates Weekly Pulse Log record; updates parent implementation record fields</div><span class="node-tag tag-zapier">Zapier</span></div>
+    <div class="node tool-zapier"><div class="node-title">A360 Webhook → Part 2 Email</div><div class="node-desc">Part 1 completion fires Calendly window selection email to teacher</div><span class="node-tag tag-zapier">Zapier + Reach 360</span></div>
+    <div class="node tool-zapier"><div class="node-title">Missed Pulse → Reminder</div><div class="node-desc">Friday 5pm: no submission this week → Saturday morning reminder fires automatically</div><span class="node-tag tag-zapier">Zapier Schedule</span></div>
+    <div class="node tool-zapier"><div class="node-title">Module Transition → JIT Kit</div><div class="node-desc">Session # crosses S6/S11/S16/S20 → corresponding Loom kit email fires to teacher</div><span class="node-tag tag-zapier">Zapier</span></div>
+    <div class="node tool-zapier"><div class="node-title">Showcase T-21 Sequence</div><div class="node-desc">Daily check: Showcase Date = today+21 → client re-confirm email + status update</div><span class="node-tag tag-zapier">Zapier Schedule</span></div>
+    <div class="node tool-zapier"><div class="node-title">Post-Showcase Surveys</div><div class="node-desc">Showcase Date = today → student + teacher survey links auto-send within 24h</div><span class="node-tag tag-zapier">Zapier Schedule</span></div>
+    <div class="node tool-zapier"><div class="node-title">Monday Digest</div><div class="node-desc">8am Monday → Airtable query → formatted digest email to Ivan, all schools sorted by tier</div><span class="node-tag tag-zapier">Zapier Schedule</span></div>
+  </div>
+</div>
+<div class="arrow-row"><div class="arrow-spacer"></div><div class="arrows"><div class="arrow"><div class="arrow-line"></div><span class="arrow-label">All automations read from and write to Airtable as the single source of truth</span></div></div></div>
+<div class="layer">
+  <div class="layer-label">Data layer</div>
+  <div class="layer-content">
+    <div class="node tool-airtable" style="max-width:240px"><div class="node-title">Program Implementation Table</div><div class="node-desc">One record per school. Status, tier (G/Y/R), current session, last pulse date, pulse score, milestone dates, launch gate checkboxes, training fields, employer status, renewal disposition.</div><span class="node-tag tag-airtable">Airtable</span></div>
+    <div class="node tool-airtable"><div class="node-title">Weekly Pulse Log Table</div><div class="node-desc">One record per submission. Linked to parent implementation. Enables trend analysis across weeks.</div><span class="node-tag tag-airtable">Airtable</span></div>
+    <div class="node tool-airtable"><div class="node-title">MI Client Partner Table</div><div class="node-desc">One record per employer. Brief status, engagement quality, renewal interest.</div><span class="node-tag tag-airtable">Airtable</span></div>
+    <div class="flow-note"><strong>Formula logic:</strong> Current Tier auto-updates from pulse data. Open Flag fires when risk threshold crossed. Date fields drive all Zapier date-based triggers.</div>
+  </div>
+</div>
+<div class="arrow-row"><div class="arrow-spacer"></div><div class="arrows"><div class="arrow"><div class="arrow-line"></div><span class="arrow-label">Airtable surfaces data to Ivan via Interface dashboard + Monday digest email</span></div></div></div>
+<div class="layer">
+  <div class="layer-label">Admin layer</div>
+  <div class="layer-content">
+    <div class="node tool-ivan"><div class="node-title">Control Center Interface</div><div class="node-desc">Airtable Interface: stat blocks, Red/Yellow alert section, module risk view, upcoming showcases. Ivan opens Monday morning.</div><span class="node-tag tag-airtable">Airtable Interface</span></div>
+    <div class="node tool-ivan"><div class="node-title">Monday Digest Email</div><div class="node-desc">All active schools, tier, session, last pulse date, open flags. Sorted Red first. Arrives 8am automatically.</div><span class="node-tag tag-zapier">Zapier → Email</span></div>
+    <div class="node tool-claude"><div class="node-title">Claude (manual use)</div><div class="node-desc">Ivan pastes week's open-text pulse responses → Claude returns 3-bullet qualitative summary with flags</div><span class="node-tag tag-claude">Claude</span></div>
+    <div class="flow-note"><strong>Ivan's Monday triage:</strong> Reads digest (10 min). Reviews Red/Yellow. Makes 1-3 direct calls or texts. Pastes open text into Claude for qualitative summary. Green schools: no action needed.</div>
+  </div>
+</div>
+<div class="arrow-row"><div class="arrow-spacer"></div><div class="arrows"><div class="arrow"><div class="arrow-line"></div><span class="arrow-label">Ivan intervenes manually: direct call/text to Red/Yellow sites; everything else automated</span></div></div></div>
+<div class="layer">
+  <div class="layer-label">Outputs to field</div>
+  <div class="layer-content">
+    <div class="node tool-loom"><div class="node-title">JIT Loom Kits (M1-M5)</div><div class="node-desc">2-3 min videos auto-delivered at each module entry. Coaching moves for each module's hardest facilitation moment.</div><span class="node-tag tag-loom">Loom</span></div>
+    <div class="node tool-teacher"><div class="node-title">Teacher Outreach</div><div class="node-desc">Red/Yellow: Ivan personal text or call. Green: automated reminders only. Missed pulses: Saturday auto-reminder.</div><span class="node-tag tag-zapier">Manual + Zapier</span></div>
+    <div class="node tool-teacher"><div class="node-title">Client Touchpoints</div><div class="node-desc">Automated: T-21 re-confirm, T-14 logistics, T-1 reminder, post-showcase surveys. Manual: Ivan client debrief call only.</div><span class="node-tag tag-zapier">Zapier + Manual</span></div>
+  </div>
+</div>
+</div>
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:#e8f5e9;border:0.5px solid #a5d6a7"></div>Google (Forms, Sheets, Drive)</div>
+  <div class="leg"><div class="leg-dot" style="background:#fbe9e7;border:0.5px solid #ffab91"></div>Articulate 360 / Reach 360</div>
+  <div class="leg"><div class="leg-dot" style="background:#fce4ec;border:0.5px solid #f48fb1"></div>Airtable (database)</div>
+  <div class="leg"><div class="leg-dot" style="background:#fff3e0;border:0.5px solid #ffcc80"></div>Zapier (automation)</div>
+  <div class="leg"><div class="leg-dot" style="background:#e8eaf6;border:0.5px solid #9fa8da"></div>Loom (JIT content)</div>
+  <div class="leg"><div class="leg-dot" style="background:#f3e5f5;border:0.5px solid #ce93d8"></div>Claude</div>
+  <div class="leg"><div class="leg-dot" style="background:#e0f7fa;border:0.5px solid #80deea"></div>Teacher inputs</div>
+  <div class="leg"><div class="leg-dot" style="background:#fff8e1;border:0.5px solid #ffe082"></div>Ivan / admin</div>
+</div>
+</div>
+</body>
+</html>
