@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>What Ivan Actually Does — Year 1 IMS Maintenance</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f4f0;padding:2rem;color:#3d3d3a;font-size:12px;line-height:1.6}
+.page{max-width:900px;margin:0 auto}
+h1{font-size:13px;font-weight:500;color:#888;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem}
+.subtitle{font-size:11px;color:#aaa;margin-bottom:1.5rem}
+.section{margin-bottom:1.5rem}
+.section-title{font-size:13px;font-weight:600;color:#2c2c2a;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid #e0ddd8}
+.phase-grid{display:grid;grid-template-columns:160px 1fr;gap:0;margin-bottom:1rem}
+.phase-label{font-size:10px;font-weight:600;color:#888;letter-spacing:.05em;text-transform:uppercase;padding-right:16px;padding-top:3px;border-right:2px solid #e0ddd8}
+.phase-content{padding-left:16px}
+.phase-content p{font-size:11px;color:#555;margin-bottom:6px}
+.time-pill{font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;display:inline-block;margin-bottom:6px}
+.t-auto{background:#eaf5e8;color:#2a6e1a}
+.t-manual{background:#fff8e6;color:#a07010}
+.task-list{list-style:none;padding:0;margin:0}
+.task-list li{font-size:11px;color:#555;padding:3px 0;display:flex;gap:8px;align-items:flex-start;border-bottom:0.5px solid #f5f4f0}
+.task-list li:last-child{border-bottom:none}
+.task-list li::before{content:'--&gt;';color:#ccc;flex-shrink:0;margin-top:1px;font-size:9px}
+.auto-note{color:#2a6e1a;font-size:10px;font-style:italic}
+.manual-note{color:#a07010;font-size:10px;font-style:italic}
+.card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:14px 16px;margin-bottom:10px}
+.card h3{font-size:12px;font-weight:600;color:#2c2c2a;margin-bottom:6px}
+.time-estimate{font-size:22px;font-weight:500;color:#2c2c2a}
+.time-label{font-size:10px;color:#888}
+.time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+.time-card{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:12px 14px;text-align:center}
+.scenario-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+.scenario{background:#fff;border:0.5px solid #e0ddd8;border-radius:8px;padding:14px 16px}
+.scenario-label{font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+.scenario-green .scenario-label{color:#2a6e1a}
+.scenario-red .scenario-label{color:#8a1a1a}
+.scenario p{font-size:11px;color:#555;line-height:1.5}
+.warning-note{background:#fde8e8;border:0.5px solid #f0a0a0;border-radius:6px;padding:10px 12px;font-size:11px;color:#712b13;margin-bottom:1rem}
+.success-note{background:#eaf5e8;border:0.5px solid #8dc880;border-radius:6px;padding:10px 12px;font-size:11px;color:#2a6e1a;margin-bottom:1rem}
+</style>
+</head>
+<body>
+<div class="page">
+<h1>What Ivan Actually Does — Year 1 IMS</h1>
+<p class="subtitle">A plain-language account of the balance between automation maintenance and manual labor across a full fall cycle. Written for honest team expectations-setting.</p>
+<div class="section">
+<div class="section-title">The Short Version</div>
+<p style="font-size:11px;color:#555;margin-bottom:12px">Once the H1 system is built and running, Ivan's job shifts from <em>doing implementation management</em> to <em>watching the system do it and intervening where the system flags a need</em>. The system handles routine — Ivan handles judgment. The hard part is the 3-4 week build before fall launch. After that, steady-state maintenance is lighter than what's currently happening manually.</p>
+<div class="time-grid">
+  <div class="time-card"><div class="time-estimate">3-4 wk</div><div class="time-label">Build phase (before launch)</div></div>
+  <div class="time-card"><div class="time-estimate">~3 hrs</div><div class="time-label">Per week, active cycle (5-school pilot)</div></div>
+  <div class="time-card"><div class="time-estimate">~30 min</div><div class="time-label">Per Green school per week</div></div>
+  <div class="time-card"><div class="time-estimate">~60-90 min</div><div class="time-label">Per Red/Yellow school per week</div></div>
+</div>
+</div>
+<div class="section">
+<div class="section-title">Phase 1 — Before Launch (Weeks 1-4): The Build</div>
+<p style="font-size:11px;color:#555;margin-bottom:12px">This is the highest-effort period. Ivan isn't doing implementation management yet — he's building the system that will do it. Estimated 20-25 hours total across 4 weeks, sequenced so content exists before automation tries to deliver it.</p>
+<div class="card">
+  <h3>Week 1: Airtable foundation</h3>
+  <ul class="task-list">
+    <li>Add 22 new fields to Program Implementation table <span class="manual-note">(~3 hrs)</span></li>
+    <li>Create Weekly Pulse Log table with linking to parent records <span class="manual-note">(~2 hrs)</span></li>
+    <li>Build pulse form in Google Forms — mobile-optimized, conditional logic for module deliverable question <span class="manual-note">(~2 hrs)</span></li>
+    <li>Build Zap 1 (welcome email) and Zap 4 (pulse form to Airtable) <span class="manual-note">(~5 hrs total — Zap 4 is complex, budget extra debugging time)</span></li>
+  </ul>
+</div>
+<div class="card">
+  <h3>Week 2: Training automation + pacing mapper</h3>
+  <ul class="task-list">
+    <li>Build pacing mapper Google Sheet (formula logic for session calendar + risk flags) <span class="manual-note">(~3 hrs)</span></li>
+    <li>Set up Calendly for Part 2 PD windows (3-4 event types) <span class="manual-note">(~1 hr)</span></li>
+    <li>Build Zap 2 (Reach 360 webhook to Part 2 window email) with Steve's help <span class="manual-note">(~2 hrs)</span></li>
+    <li>Build Zap 3 (Calendly to Airtable) and launch gate 7-item checklist + all-green alert <span class="manual-note">(~2 hrs)</span></li>
+  </ul>
+</div>
+<div class="card">
+  <h3>Week 3: JIT content + module transition automation</h3>
+  <ul class="task-list">
+    <li>Record M1 Loom kit (2-3 min): client kickoff coaching moves <span class="manual-note">(~1 hr including prep)</span></li>
+    <li>Record M2 Loom kit (2-3 min): interview quality coaching <span class="manual-note">(~1 hr)</span></li>
+    <li>Record M3 Loom kit (2-3 min): synthesis leap coaching — hardest to get right <span class="manual-note">(~2 hrs, may need second take)</span></li>
+    <li>Build Zap 5 (missed pulse to Saturday reminder) and Zap 6 (module transition to JIT kits) <span class="manual-note">(~5 hrs including testing)</span></li>
+    <li>Build client presentation rubric + 2-3 exemplar summaries <span class="manual-note">(~3 hrs — content task)</span></li>
+  </ul>
+</div>
+<div class="card">
+  <h3>Week 4: Showcase, closeout, digest, interface</h3>
+  <ul class="task-list">
+    <li>Build Zap 7 (T-21 showcase trigger), Zap 8 (post-showcase surveys), Zap 9 (Monday digest) <span class="manual-note">(~7 hrs — digest formatting is the hardest part)</span></li>
+    <li>Build Airtable Interface (Implementation Control Center) <span class="manual-note">(~3 hrs)</span></li>
+    <li>Test entire system with 2 synthetic records before any school goes live <span class="manual-note">(~2 hrs — do not skip this)</span></li>
+  </ul>
+</div>
+<div class="warning-note"><strong>The build is front-loaded.</strong> If Ivan does not finish weeks 1-2 before the first pilot school's launch date, the automation has nothing to run on. Pacing mapper and Airtable structure are blocking dependencies — everything downstream depends on them first.</div>
+</div>
+<div class="section">
+<div class="section-title">Phase 2 — Active Cycle (Weeks 5-16): Steady State</div>
+<p style="font-size:11px;color:#555;margin-bottom:12px">Once the system is running, Ivan's week looks structurally the same across all 8-10 weeks of an active implementation. Automation handles routine. Ivan handles exceptions.</p>
+<div class="phase-grid">
+  <div class="phase-label">Monday ~45-60 min</div>
+  <div class="phase-content">
+    <span class="time-pill t-auto">Auto</span> Weekly digest arrives at 8am — all schools sorted Red first, current session, tier, flags
+    <ul class="task-list">
+      <li>Read digest — identify Red and Yellow schools <span class="auto-note">(system does this; Ivan reads)</span></li>
+      <li>Call any Red school directly (M2/M3 Red = call, not text) <span class="manual-note">(~20-30 min per Red school)</span></li>
+      <li>Paste open-text pulse responses into Claude for 3-bullet qualitative summary <span class="manual-note">(~5-10 min)</span></li>
+      <li>Review Open Flag items in Airtable Control Center <span class="manual-note">(~10 min)</span></li>
+      <li>Green schools: no action — confirm digest shows green and move on</li>
+    </ul>
+  </div>
+</div>
+<div class="phase-grid">
+  <div class="phase-label">Tuesday-Thursday ~30-60 min</div>
+  <div class="phase-content">
+    <span class="time-pill t-manual">Manual</span> Reactive to flags and inbound — most weeks this is light
+    <ul class="task-list">
+      <li>Respond to teacher texts or emails since Monday <span class="manual-note">(pilot target: &lt;30 min/week)</span></li>
+      <li>Review pacing map for any school flagged behind schedule <span class="manual-note">(if flagged)</span></li>
+      <li>Spot-check that JIT kit went out at module transition <span class="manual-note">(Zapier log — 5 min)</span></li>
+    </ul>
+  </div>
+</div>
+<div class="phase-grid">
+  <div class="phase-label">Friday ~15 min</div>
+  <div class="phase-content">
+    <span class="time-pill t-auto">Auto</span> Zapier checks for missed pulses at 5pm — Saturday reminder fires
+    <ul class="task-list">
+      <li>Ivan does nothing for Green schools on Friday <span class="auto-note">(Zapier handles it)</span></li>
+      <li>Schools flagged Red all week: Ivan sends personal text Friday rather than waiting for automation</li>
+    </ul>
+  </div>
+</div>
+<div class="phase-grid">
+  <div class="phase-label">Showcase week +3-4 hrs</div>
+  <div class="phase-content">
+    <span class="time-pill t-manual">Manual</span> Highest-touch week of the cycle
+    <ul class="task-list">
+      <li>T-21: review client re-confirmation replies (auto-sent; Ivan reviews) <span class="manual-note">(~15 min)</span></li>
+      <li>T-10: call Red/Yellow schools for showcase check-in <span class="manual-note">(~20-30 min per school)</span></li>
+      <li>T-10: review Green school check-in forms (auto-sent; Ivan reads) <span class="manual-note">(~15 min total)</span></li>
+      <li>Attend showcase when possible — prioritize Red schools</li>
+    </ul>
+  </div>
+</div>
+</div>
+<div class="section">
+<div class="section-title">Phase 3 — Closeout and Renewal (~2 weeks per school)</div>
+<div class="phase-grid">
+  <div class="phase-label">Post-showcase ~2-3 hrs per school</div>
+  <div class="phase-content">
+    <span class="time-pill t-auto">Auto</span> Surveys fire automatically. Scheduling link fires automatically.
+    <ul class="task-list">
+      <li>Review pre-debrief form responses before the call <span class="manual-note">(~15 min)</span></li>
+      <li>Conduct client debrief call — Ivan always owns this, never automated <span class="manual-note">(~30-45 min)</span></li>
+      <li>Log renewal disposition: Yes/No/Maybe <span class="manual-note">(~5 min)</span></li>
+      <li>Fill in post-mortem fields in Airtable <span class="manual-note">(~15-20 min)</span></li>
+      <li>Monitor student survey completion — text teacher if &lt;70% at Day 7 <span class="manual-note">(~5 min)</span></li>
+      <li>30-day and 60-day renewal follow-up reminders auto-schedule on disposition log <span class="auto-note">(Zapier)</span></li>
+    </ul>
+  </div>
+</div>
+</div>
+<div class="section">
+<div class="section-title">System Maintenance: What Can Break and How to Fix It</div>
+<div class="card">
+  <h3>Zap failures (most common issue)</h3>
+  <ul class="task-list">
+    <li><strong>Prevention:</strong> never rename Airtable fields or edit form question text without also updating the corresponding Zap</li>
+    <li><strong>Detection:</strong> Monday digest doesn't arrive — check Zapier error log immediately</li>
+    <li><strong>Fix:</strong> Zapier error screen shows exactly which step failed and why. Most fixes take under 15 minutes.</li>
+    <li><strong>If Zap 4 (pulse form to Airtable) breaks:</strong> collect pulse responses manually from Google Forms until fixed. Don't let it sit more than 24 hours.</li>
+  </ul>
+</div>
+<div class="card">
+  <h3>Airtable formula errors</h3>
+  <ul class="task-list">
+    <li><strong>Detection:</strong> tier field shows blank or wrong value; survey completion rate shows 0% despite submissions</li>
+    <li><strong>Fix:</strong> check that Weekly Pulse Log records are correctly linked to parent implementation records. Re-link manually if not.</li>
+    <li><strong>Prevention:</strong> test with 2 synthetic records before any school goes live.</li>
+  </ul>
+</div>
+<div class="card">
+  <h3>Pulse form compliance dropping</h3>
+  <ul class="task-list">
+    <li><strong>One school misses two consecutive weeks:</strong> Ivan direct call — this is a Red flag by definition</li>
+    <li><strong>Multiple schools miss the same week:</strong> the form itself may have broken (link expired, form closed). Check Google Forms admin.</li>
+    <li><strong>Compliance below 70% after 4 weeks:</strong> adjust incentive structure before spring — this is a pilot retrospective agenda item</li>
+  </ul>
+</div>
+<div class="card">
+  <h3>Loom kit tracking</h3>
+  <ul class="task-list">
+    <li><strong>Setup once:</strong> use Mailchimp or Gmail link tracking to track JIT kit email open and click rates before pilot launches</li>
+    <li><strong>Check monthly:</strong> if a kit has under 50% open rate, send it as a personal text with the Loom link instead of batch email</li>
+    <li><strong>When curriculum changes significantly:</strong> re-record the corresponding kit (~1 hr)</li>
+  </ul>
+</div>
+</div>
+<div class="section">
+<div class="section-title">Before vs. After: The Honest Comparison</div>
+<div class="scenario-grid">
+  <div class="scenario scenario-green">
+    <div class="scenario-label">With H1 IMS (fall pilot)</div>
+    <p>Ivan opens a digest email Monday. 4 Green schools — no action. 1 Yellow school entering M3 with a missed pulse — sends a personal text, follows up Wednesday. JIT kits already went out automatically. Client check-ins already went out automatically. Monday triage: 30 minutes. Remaining week: under 1 hour reactive.</p>
+  </div>
+  <div class="scenario scenario-red">
+    <div class="scenario-label">Without IMS (current state)</div>
+    <p>Ivan has no signal unless a teacher reaches out. He doesn't know School C entered M3 last week or that School A hasn't submitted anything in 10 days. Farah is building manual pacing maps. JIT kits don't exist. The M3 moment passes without support. By the time it's visible at the showcase, it's too late to fix.</p>
+  </div>
+</div>
+</div>
+<div class="success-note"><strong>The system's core value:</strong> it doesn't make Ivan's job easier when things go wrong. It makes things go wrong less often — because drift is caught at week 2, not week 8. The Monday digest is 30 minutes, not 3 hours, because you're triaging flags rather than reconstructing status from scratch.</div>
+</div>
+</body>
+</html>
