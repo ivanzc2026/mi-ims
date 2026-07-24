@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D8 — Sequence & Trigger Map | MI Implementation Management System</title>
+<style>
+  :root{
+    --bg:#141B24;
+    --panel:#1B242E;
+    --panel-hover:#212B36;
+    --border:#2B3844;
+    --text:#E7EBEF;
+    --text-dim:#8DA0B3;
+    --text-dimmer:#5E7186;
+    --time:#8FA8BF;
+    --c-teacher:#E4B363;
+    --c-client:#5FB3B3;
+    --c-leader:#9B87C4;
+    --c-admin:#D65A6E;
+    --c-system:#6B8CAE;
+    --radius:10px;
+    --font-body: -apple-system, "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+    --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1040px;margin:0 auto;padding:36px 24px 80px;}
+
+  /* Header */
+  header{margin-bottom:28px;}
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--c-system);
+    margin-bottom:10px;
+  }
+  h1{
+    font-size:28px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    margin:0 0 10px;
+  }
+  .sub{color:var(--text-dim);font-size:15px;max-width:640px;margin:0 0 22px;}
+
+  .stats{
+    display:flex;
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    overflow:hidden;
+    margin-bottom:28px;
+    flex-wrap:wrap;
+  }
+  .stat{
+    flex:1 1 140px;
+    background:var(--panel);
+    padding:14px 16px;
+  }
+  .stat .n{font-family:var(--font-mono);font-size:22px;font-weight:700;}
+  .stat .l{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;}
+
+  /* Controls */
+  .controls{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    margin-bottom:24px;
+    padding:14px 16px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+  }
+  .ctrl-group{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+  .ctrl-label{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-dimmer);margin-right:4px;}
+  .chip{
+    font-family:var(--font-body);
+    font-size:12.5px;
+    padding:5px 11px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:transparent;
+    color:var(--text-dim);
+    cursor:pointer;
+    transition:all .15s ease;
+    user-select:none;
+  }
+  .chip[data-active="true"]{color:#0d1117;font-weight:600;border-color:transparent;}
+  .chip[data-lane="teacher"][data-active="true"]{background:var(--c-teacher);}
+  .chip[data-lane="client"][data-active="true"]{background:var(--c-client);}
+  .chip[data-lane="leader"][data-active="true"]{background:var(--c-leader);}
+  .chip[data-lane="admin"][data-active="true"]{background:var(--c-admin);}
+  .chip[data-lane="system"][data-active="true"]{background:var(--c-system);}
+  .chip:hover{border-color:var(--text-dimmer);}
+  .spacer{flex:1;}
+  .toggle-btn{
+    font-family:var(--font-body);
+    font-size:12.5px;
+    padding:6px 12px;
+    border-radius:6px;
+    border:1px solid var(--border);
+    background:var(--panel-hover);
+    color:var(--text);
+    cursor:pointer;
+  }
+  .toggle-btn:hover{border-color:var(--text-dimmer);}
+
+  /* Stage sections */
+  .stage{
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    margin-bottom:14px;
+    overflow:hidden;
+    background:var(--panel);
+  }
+  .stage[data-fall="false"] .stage-head{opacity:0.62;}
+  .stage-head{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:14px 18px;
+    cursor:pointer;
+    user-select:none;
+  }
+  .stage-head:hover{background:var(--panel-hover);}
+  .stage-num{
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--text-dimmer);
+    min-width:20px;
+  }
+  .stage-title{font-weight:600;font-size:15px;flex:1;}
+  .stage-note{font-size:12px;color:var(--text-dimmer);font-style:italic;}
+  .chevron{
+    font-family:var(--font-mono);
+    color:var(--text-dimmer);
+    transition:transform .18s ease;
+    font-size:13px;
+  }
+  .stage.open .chevron{transform:rotate(90deg);}
+
+  .stage-body{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .25s ease;
+    border-top:1px solid transparent;
+  }
+  .stage.open .stage-body{border-top:1px solid var(--border);}
+
+  .timeline{padding:6px 18px 14px;}
+  .event{
+    display:grid;
+    grid-template-columns:78px 14px 1fr;
+    gap:0 14px;
+    padding:9px 0;
+    border-bottom:1px solid var(--border);
+    align-items:start;
+  }
+  .event:last-child{border-bottom:none;}
+  .event[hidden]{display:none;}
+  .t{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--time);
+    font-weight:600;
+    padding-top:2px;
+    white-space:nowrap;
+  }
+  .rail{position:relative;display:flex;justify-content:center;}
+  .dot{
+    width:10px;height:10px;border-radius:50%;
+    margin-top:4px;
+    flex-shrink:0;
+  }
+  .dot.teacher{background:var(--c-teacher);}
+  .dot.client{background:var(--c-client);}
+  .dot.leader{background:var(--c-leader);}
+  .dot.admin{background:var(--c-admin);}
+  .dot.system{background:var(--c-system);}
+
+  .desc{font-size:13.5px;line-height:1.45;}
+  .desc .who{
+    font-size:10.5px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:1px 7px;
+    border-radius:4px;
+    margin-right:7px;
+    display:inline-block;
+    vertical-align:middle;
+  }
+  .who.teacher{background:rgba(228,179,99,0.15);color:var(--c-teacher);}
+  .who.client{background:rgba(95,179,179,0.15);color:var(--c-client);}
+  .who.leader{background:rgba(155,135,196,0.15);color:var(--c-leader);}
+  .who.admin{background:rgba(214,90,110,0.15);color:var(--c-admin);}
+  .who.system{background:rgba(107,140,174,0.15);color:var(--c-system);}
+  .mode{
+    font-family:var(--font-mono);
+    font-size:10px;
+    color:var(--text-dimmer);
+    margin-left:8px;
+  }
+  .new-tag{
+    font-size:10px;
+    font-family:var(--font-mono);
+    color:#0d1117;
+    background:#8CD98C;
+    padding:1px 6px;
+    border-radius:4px;
+    margin-left:7px;
+    font-weight:700;
+  }
+
+  footer{margin-top:36px;color:var(--text-dimmer);font-size:12px;}
+  footer a{color:var(--time);}
+
+  @media (max-width:600px){
+    .event{grid-template-columns:60px 12px 1fr;}
+    .t{font-size:11px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">D8 — Deliverable</div>
+    <h1>Sequence &amp; Trigger Map</h1>
+    <p class="sub">Every automated message and manual touchpoint across the 8-stage implementation arc, in order, with exactly who receives it and what fires it. This is the timeline the other deliverables don't show — D1–D7 describe stages and systems; this shows the moment-to-moment sequence between stakeholders.</p>
+
+    <div class="stats" id="statBar">
+      <div class="stat"><div class="n" id="statTotal">—</div><div class="l">Total triggers</div></div>
+      <div class="stat"><div class="n" id="statAuto">—</div><div class="l">Automated</div></div>
+      <div class="stat"><div class="n" id="statManual">—</div><div class="l">Manual / Ivan</div></div>
+      <div class="stat"><div class="n">1–6</div><div class="l">Fall-live stages</div></div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="ctrl-group">
+      <span class="ctrl-label">Lane</span>
+      <button class="chip" data-lane="teacher" data-active="true">Teacher</button>
+      <button class="chip" data-lane="client" data-active="true">Client / Partner</button>
+      <button class="chip" data-lane="leader" data-active="true">School Leader</button>
+      <button class="chip" data-lane="admin" data-active="true">Admin (Ivan)</button>
+      <button class="chip" data-lane="system" data-active="true">System-only</button>
+    </div>
+    <div class="spacer"></div>
+    <div class="ctrl-group">
+      <button class="toggle-btn" id="expandAll">Expand all</button>
+      <button class="toggle-btn" id="collapseAll">Collapse all</button>
+    </div>
+  </div>
+
+  <div id="stages"></div>
+
+  <footer>
+    Companion to D1–D7 in the MI Implementation Management System. Green NEW tags mark additions from the school-leadership and module-check-in work folded in after v3 — not yet reflected elsewhere. Build once, filter always: lane and stage-relevance filters persist as this fills out for Stages 7–8 in a later pass.
+  </footer>
+
+</div>
+
+<script>
+const DATA = [
+  {
+    stage: 1, fall: true, title: "Teacher / School Commitment", note: "",
+    events: [
+      {t:"Day 0", lane:"system", who:"System", text:"Signed MOU received → Implementation record created in Airtable, status = Committed", mode:"AUTO"},
+      {t:"Day 0", lane:"teacher", who:"Teacher", text:"Welcome email + stakeholder mapping form sent to teacher and site coordinator", mode:"AUTO"},
+      {t:"Day 0", lane:"leader", who:"School Leader", text:"Leadership awareness email sent — separate track from the teacher welcome sequence", mode:"AUTO", isNew:true},
+      {t:"+48h", lane:"admin", who:"Admin", text:"Missing-info alert to Ivan if any required field is empty", mode:"AUTO"},
+      {t:"Day 5", lane:"teacher", who:"System", text:"Auto email requesting site coordinator name, if still missing", mode:"AUTO"},
+      {t:"Day 10", lane:"admin", who:"Admin", text:"Ivan sends a personal text to the school contact if there's still no response", mode:"MANUAL"},
+      {t:"Day 14", lane:"admin", who:"Admin", text:"Ivan flags to Farah; team evaluates whether to hold the commitment slot", mode:"MANUAL"}
+    ]
+  },
+  {
+    stage: 2, fall: true, title: "Teacher Onboarding & Training", note: "",
+    events: [
+      {t:"Day 0", lane:"teacher", who:"Teacher", text:"Welcome email with A360 Part 1 link", mode:"AUTO"},
+      {t:"T-28", lane:"admin", who:"Admin", text:"Risk flag if Part 1 not yet started", mode:"AUTO"},
+      {t:"T-21", lane:"system", who:"System", text:"Part 1 deadline; completion fires the Reach 360 webhook", mode:"AUTO"},
+      {t:"On completion", lane:"teacher", who:"Teacher", text:"Part 2 Calendly window-selection email auto-sends", mode:"AUTO"},
+      {t:"T-18", lane:"admin", who:"Admin", text:"Risk flag if Part 2 window not yet selected", mode:"AUTO"},
+      {t:"T-14", lane:"teacher", who:"Teacher", text:"Part 2 live session deadline", mode:"LIVE"},
+      {t:"If missed", lane:"teacher", who:"Teacher", text:"Automated re-offer of next window after 48h; escalates to site coordinator if still missed", mode:"AUTO"},
+      {t:"On Part 2", lane:"teacher", who:"Teacher", text:"Materials packet shared; bot introduced as the module check-in mechanism going forward (fall test)", mode:"AUTO/MANUAL", isNew:true},
+      {t:"On Part 2", lane:"admin", who:"Admin", text:"30-minute onboarding call with Ivan — facilitation coaching, pacing preview", mode:"MANUAL"},
+      {t:"On call", lane:"teacher", who:"Teacher", text:"Facilitator readiness checkpoint submitted; auto-flag if score ≤2 on M2/M3 confidence", mode:"MANUAL→AUTO"}
+    ]
+  },
+  {
+    stage: 3, fall: true, title: "Implementation Planning", note: "",
+    events: [
+      {t:"On Training Complete", lane:"teacher", who:"Teacher", text:"Pacing mapper link auto-sends", mode:"AUTO"},
+      {t:"+72h", lane:"admin", who:"Admin", text:"Ivan text (not email) if mapper not yet started", mode:"MANUAL"},
+      {t:"On submission", lane:"admin", who:"Admin", text:"Ivan reviews pacing map within 48 hours", mode:"MANUAL"},
+      {t:"On review", lane:"client", who:"Client", text:"Confirmed pacing map + Client Success Guide sent with proposed kickoff / midpoint / showcase dates", mode:"MANUAL"},
+      {t:"+5 days, no response", lane:"admin", who:"Admin", text:"Ivan direct call to client", mode:"MANUAL"},
+      {t:"On confirmation", lane:"client", who:"Client", text:"Calendar confirmation email auto-sends once dates are logged", mode:"AUTO"},
+      {t:"All 4 dates logged", lane:"admin", who:"Admin", text:"Launch-approval queue notification to Ivan; status flips to Launch Ready", mode:"AUTO"}
+    ]
+  },
+  {
+    stage: 4, fall: true, title: "Project Launch", note: "",
+    events: [
+      {t:"Pre-launch", lane:"admin", who:"Admin", text:"Ivan reviews the 7-item launch gate checklist; go/no-go decision", mode:"MANUAL"},
+      {t:"All green", lane:"admin", who:"Admin", text:"Launch-approval queue notification fires automatically", mode:"AUTO"},
+      {t:"Status → Active", lane:"teacher", who:"Teacher", text:"\"You're ready to launch\" text auto-sends", mode:"AUTO"},
+      {t:"Launch day", lane:"teacher", who:"Teacher", text:"M1 JIT Loom kit auto-emails", mode:"AUTO"},
+      {t:"+5 days, brief unsigned", lane:"client", who:"Client", text:"Ivan personal call to the client", mode:"MANUAL"},
+      {t:"+5 days, no S1 run", lane:"admin", who:"Admin", text:"Risk signal flagged for follow-up", mode:"AUTO"}
+    ]
+  },
+  {
+    stage: 5, fall: true, title: "Active Implementation", note: "Module check-in redesign in progress — see note below",
+    events: [
+      {t:"Module boundary", lane:"teacher", who:"Teacher", text:"Module check-in fires — being redesigned from weekly to module-boundary-triggered, delivered conversationally through the bot rather than a cold form", mode:"AUTO trigger / teacher-completed", isNew:true},
+      {t:"Module boundary", lane:"teacher", who:"Teacher", text:"Corresponding JIT Loom kit auto-emails (M1–M5) when Current Session crosses S6 / S11 / S16 / S20", mode:"AUTO"},
+      {t:"If missed", lane:"teacher", who:"Teacher", text:"Reminder sent (previously: Saturday morning after a missed Friday pulse — timing needs re-mapping to module cadence)", mode:"AUTO"},
+      {t:"Weekly", lane:"admin", who:"Admin", text:"Digest email: all schools, current session, tier, open flags", mode:"AUTO"},
+      {t:"M3 window, score ≤2", lane:"admin", who:"Admin", text:"Ivan direct call within 24 hours — auto-elevated regardless of score during this window", mode:"MANUAL"}
+    ]
+  },
+  {
+    stage: 6, fall: true, title: "Showcase Preparation", note: "",
+    events: [
+      {t:"T-21", lane:"client", who:"Client", text:"Re-confirmation email auto-fires; prep checklist activates in Airtable", mode:"AUTO"},
+      {t:"T-14", lane:"client", who:"Client", text:"Availability reconfirmed; logistics finalized", mode:"AUTO/MANUAL"},
+      {t:"T-10 (Green sites)", lane:"teacher", who:"Teacher", text:"Automated structured check-in form auto-sends", mode:"AUTO"},
+      {t:"T-10 (Red/Yellow)", lane:"admin", who:"Admin", text:"Ivan calls directly instead of the automated form", mode:"MANUAL"},
+      {t:"T-7", lane:"teacher", who:"Teacher + Client", text:"Presentation rubric and structure guide shared with both", mode:"AUTO"},
+      {t:"T-7 / ongoing", lane:"leader", who:"School Leader", text:"Invitation-readiness gate evaluated (Green tier + no rubric-flagged coherence issues); invitation sent if criteria met", mode:"MANUAL/AUTO", isNew:true},
+      {t:"T-1", lane:"client", who:"Teacher + Client", text:"Automated reminder to both", mode:"AUTO"}
+    ]
+  },
+  {
+    stage: 7, fall: false, title: "Program Closeout", note: "Stages 7–8 are lightly built this year — full sequence pass deferred",
+    events: [
+      {t:"+24h post-showcase", lane:"teacher", who:"Teacher + Student", text:"Survey links auto-send", mode:"AUTO"},
+      {t:"+48h pre-debrief", lane:"client", who:"Teacher + Client", text:"Pre-debrief form sent, capturing renewal interest ahead of the call", mode:"AUTO"},
+      {t:"+5 days", lane:"client", who:"Admin", text:"Client debrief call — Ivan owns this, never replaced by a form", mode:"MANUAL"},
+      {t:"+7 days, <70% completion", lane:"teacher", who:"Admin", text:"Ivan texts the teacher directly to nudge survey completion", mode:"MANUAL"},
+      {t:"Day 10", lane:"admin", who:"Admin", text:"Self-reminder fires if post-mortem fields are still empty", mode:"AUTO"}
+    ]
+  },
+  {
+    stage: 8, fall: false, title: "Renewal / Future Planning", note: "Stages 7–8 are lightly built this year — full sequence pass deferred",
+    events: [
+      {t:"At debrief", lane:"client", who:"Admin", text:"Renewal question asked directly, every debrief, every time", mode:"MANUAL"},
+      {t:"+24h", lane:"admin", who:"Admin", text:"Renewal disposition logged (Yes / No / Maybe / Not Contacted)", mode:"MANUAL"},
+      {t:"On Yes/Maybe", lane:"admin", who:"Admin", text:"30-day and 60-day follow-up reminders auto-fire", mode:"AUTO"},
+      {t:"3+ schools, same network", lane:"admin", who:"Admin", text:"Network-level renewal summary auto-view appears in Airtable", mode:"AUTO"}
+    ]
+  }
+];
+
+const stagesEl = document.getElementById('stages');
+let total=0, autoCount=0, manualCount=0;
+
+DATA.forEach((stage, idx) => {
+  const stageDiv = document.createElement('div');
+  stageDiv.className = 'stage' + (idx===0 ? ' open' : '');
+  stageDiv.dataset.fall = stage.fall;
+
+  const head = document.createElement('div');
+  head.className = 'stage-head';
+  head.innerHTML = `
+    <span class="stage-num">S${stage.stage}</span>
+    <span class="stage-title">${stage.title}</span>
+    ${stage.note ? `<span class="stage-note">${stage.note}</span>` : ''}
+    <span class="chevron">▸</span>
+  `;
+  head.addEventListener('click', () => stageDiv.classList.toggle('open'));
+
+  const body = document.createElement('div');
+  body.className = 'stage-body';
+  const tl = document.createElement('div');
+  tl.className = 'timeline';
+
+  stage.events.forEach(ev => {
+    total++;
+    if(/AUTO/.test(ev.mode)) autoCount++;
+    if(/MANUAL/.test(ev.mode) || ev.mode==="LIVE") manualCount++;
+
+    const row = document.createElement('div');
+    row.className = 'event';
+    row.dataset.lane = ev.lane;
+    row.innerHTML = `
+      <div class="t">${ev.t}</div>
+      <div class="rail"><div class="dot ${ev.lane}"></div></div>
+      <div class="desc">
+        <span class="who ${ev.lane}">${ev.who}</span>${ev.text}<span class="mode">[${ev.mode}]</span>${ev.isNew ? '<span class="new-tag">NEW</span>' : ''}
+      </div>
+    `;
+    tl.appendChild(row);
+  });
+
+  body.appendChild(tl);
+  stageDiv.appendChild(head);
+  stageDiv.appendChild(body);
+  stagesEl.appendChild(stageDiv);
+});
+
+document.getElementById('statTotal').textContent = total;
+document.getElementById('statAuto').textContent = autoCount;
+document.getElementById('statManual').textContent = manualCount;
+
+// Lane filtering
+const activeLanes = new Set(['teacher','client','leader','admin','system']);
+document.querySelectorAll('.chip[data-lane]').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const lane = chip.dataset.lane;
+    const nowActive = chip.dataset.active !== 'true';
+    chip.dataset.active = nowActive;
+    if(nowActive) activeLanes.add(lane); else activeLanes.delete(lane);
+    document.querySelectorAll('.event').forEach(ev => {
+      ev.hidden = !activeLanes.has(ev.dataset.lane);
+    });
+  });
+});
+
+document.getElementById('expandAll').addEventListener('click', () => {
+  document.querySelectorAll('.stage').forEach(s => s.classList.add('open'));
+});
+document.getElementById('collapseAll').addEventListener('click', () => {
+  document.querySelectorAll('.stage').forEach(s => s.classList.remove('open'));
+});
+</script>
+</body>
+</html>
